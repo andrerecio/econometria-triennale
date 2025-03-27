@@ -95,8 +95,8 @@ wage1 <- wage1 %>%
   mutate(wage_100 = wage/100)
 
 
-
 reg2 <- feols(wage_100 ~ educ, data = wage1, vcov = "hetero")
+
 modelsummary(list("Wage" = reg1, "Wage centinaia di $" = reg2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
 
@@ -130,11 +130,12 @@ modelsummary(list("Wage Hourly" = reg1), output = "markdown", gof_omit = "AIC|BI
 tabledummy <- table(wage1$female)
 
 kable(tabledummy, 
-      caption = "Numero di Maschi (0) e Femmine (1)")         %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+      caption = "Numero di Maschi (0) e Femmine (1)") %>%
+      kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
 
 
-stat_genere <- wage1 %>% 
+stat_genere <- wage1 %>%
   group_by(female) %>%
   summarize(
     wage_mean = mean(wage, na.rm = TRUE),
@@ -173,7 +174,3 @@ modelsummary(list("Female = 1" = reg_female, "Male = 1" = reg_male),output = "ma
 
 reg2dummy <- feols(wage ~ male + female, data = wage1, vcov = "hetero")
 reg2dummy
-
-
-
-

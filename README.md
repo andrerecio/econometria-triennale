@@ -8,3 +8,7 @@ Questo repository contiene il materiale relativo alle esercitazioni del corso di
 
 👉 [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html)
 
+📥 [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione1_script.R)
+
+
+
