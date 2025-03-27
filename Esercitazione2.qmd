@@ -1,0 +1,24 @@
+---
+title: "Esercitazione N.2"
+author: "Econometria (Prof. Giuseppe Ragusa)"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+## Pacchetti necessari
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+```
