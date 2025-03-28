@@ -1,6 +1,6 @@
 ---
 title: "Esercitazione N.1"
-author: "Econometria (Prof. Giuseppe Ragusa)"
+author: "Econometria"
 format: 
   html:
     toc: true
@@ -38,11 +38,10 @@ In alternativa caricate i pacchetti singolarmente: `library(ggplot2)` o `library
 
 ```{r}
 #| warning: false
-library(AER)
 library(wooldridge)
 ```
 
-Consideriamo nel dataset **wage1** in `library(wooldridge)` e guardiamo la struttura usando `head(wage).`
+Consideriamo il dataset **wage1** in `library(wooldridge)` tratto dalla Current Population Survey del 1976 e guardiamo la struttura usando `head(wage).`
 
 ```{r}
 data("wage1", package = "wooldridge")
@@ -143,7 +142,7 @@ $wage$ è misurato in dollari per ora and $educ$ sono gli anni di istruzione.
 
 `library(fixest)` è una libreria molto versatile soprattutto per dati panel e permette di correggere facilmente gli standard errors usando `vcov = "hetero"` o `vcov = "hc1"`
 
-In altri corsi potreste aver visto la regressione stimata con `lm(y~x)`. In questo caso, l'output della regressione riporta errori standard omoschedastici e possono essere corretti utilizzando `library(sandwich)`
+In altri corsi potreste aver visto la regressione stimata con `lm(y~x)`. In questo caso, l'output della regressione riporta errori standard omoschedastici e possono essere corretti utilizzando `library(sandwich)` con la funzione `vcovHC()`.
 
 ```{r}
 # Modello di regressione base
@@ -167,29 +166,34 @@ reg1_ho
 
 `feols(y ~ x)` sarà equivalente a `lm(y ~ x)`
 
-##### Eteroschedasticità:
+#### Eteroschedasticità:
 
-Assumendo omoschedasticità $Var(u_i|educ_i)= \sigma^2$ che è equivalente ad assumere $Var(wage_i|educ_i) = \sigma^2$
+L'assunzione $E(u_i|educ_i)=0$ implica che $E(wage_i|educ_i)= \beta_0 + \beta_1 educ_i$. Assumendo omoschedasticità $Var(u_i|educ_i)= \sigma^2$  è equivalente ad assumere $Var(wage_i|educ_i) = \sigma^2$.
 
-Così stiamo assumendo che la varianza del salario condizionata all’istruzione sia costante.
+Mentre il valore atteso di $wage$ può aumentare al crescere degli anni di istruzione (ed è ciò a cui siamo interessati), sotto omoschedasticità la varianza di $wage$ non cambia al variare di $educ$.
+
+Stiamo assumendo che la varianza del salario condizionata all’istruzione sia costante.
 
 Questo non è realistico. Persone con più istruzione hanno una varietà maggiore di opportunità di lavoro e interessi, che porta maggiore variabilità di $wage$ ai livelli più alti di istruzione.
 
 Persone con un basso livello di istruzione hanno minori opportunità e spesso $wage$ vicino al salario minimo. Questo tende a ridurre la variabilità di $wage$ nei livelli più bassi di istruzione.
 
+
+Quando $Var(u_i|x_i)$ dipende da x, il termine d'errore mostra eteroschedasticità (varianza non costante). Poiché $Var(u_i|x)=Var(y|x)$, l'eteroschedasticità è presente ogni volta che $Var(y_i|x_i)$ è una funzione di $x_i$
+
 ```{r}
 # Seleziona valori specifici di educ
-educ_target <- c(4, 8, 12, 16)
+educ_valori <- c(4, 8, 12, 16)
 
-# Calcola varianza di wage per quei valori specifici
-varianza_fissa <- wage1 %>%
-  filter(educ %in% educ_target) %>%
+# Calcola varianza di wage per quei valori specifici di educ
+varianza_valori <- wage1 %>%
+  filter(educ %in% educ_valori) %>%
   group_by(educ) %>%
   summarise(varianza = var(wage, na.rm = TRUE)) %>%
   ungroup()
 
 # Grafico
-ggplot(varianza_fissa, aes(x = educ, y = varianza)) +
+ggplot(varianza_valori, aes(x = educ, y = varianza)) +
   geom_point(size = 3, color = "darkblue") +
   labs(title = "Varianza del salario per valori specifici di istruzione",
        x = "Anni di istruzione",

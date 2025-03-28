@@ -1,13 +1,13 @@
 #Esercitazione N.1 script
 
-library(AER)
-library(wooldridge)
+
 library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(modelsummary)
+library(wooldridge)
 
-
+# Caricamento del dataset
 data("wage1", package = "wooldridge")
 head(wage1)
 
@@ -21,11 +21,7 @@ stat <- wage1 %>%
     education_years_median = median(educ, na.rm = TRUE)
   )
 
-# Visualizzazione dei risultati
-stat %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+stat
 
 # Istogramma con ggplot
 ggplot(wage1, aes(x = wage)) +
@@ -45,14 +41,14 @@ ggplot(wage1, aes(x = educ)) +
 
 
 
-ggplot(wage1, aes(y = wage, x = educ)) + 
-  geom_point(color = "black") + 
+ggplot(wage1, aes(y = wage, x = educ)) +
+  geom_point(color = "black") +
   theme_minimal()
 
 
 
-ggplot(wage1, aes(y = wage, x = educ)) + 
-  geom_point(color = "black") + 
+ggplot(wage1, aes(y = wage, x = educ)) +
+  geom_point(color = "black") +
   geom_smooth(method = "lm", color = "blue", se = FALSE) +
   theme_minimal()
 
@@ -68,19 +64,18 @@ reg1_ho <- feols(wage ~ educ, data = wage1)
 reg1_ho
 
 
-
 # Seleziona valori specifici di educ
-educ_target <- c(4, 8, 12, 16)
+educ_valori <- c(4, 8, 12, 16)
 
-# Calcola varianza di wage per quei valori specifici
-varianza_fissa <- wage1 %>%
-  filter(educ %in% educ_target) %>%
+# Calcola varianza di wage per quei valori specifici di educ
+varianza_valori <- wage1 %>%
+  filter(educ %in% educ_valori) %>%
   group_by(educ) %>%
   summarise(varianza = var(wage, na.rm = TRUE)) %>%
   ungroup()
 
 # Grafico
-ggplot(varianza_fissa, aes(x = educ, y = varianza)) +
+ggplot(varianza_valori, aes(x = educ, y = varianza)) +
   geom_point(size = 3, color = "darkblue") +
   labs(title = "Varianza del salario per valori specifici di istruzione",
        x = "Anni di istruzione",
@@ -129,7 +124,7 @@ modelsummary(list("Wage Hourly" = reg1), output = "markdown", gof_omit = "AIC|BI
 
 tabledummy <- table(wage1$female)
 
-kable(tabledummy, 
+kable(tabledummy,
       caption = "Numero di Maschi (0) e Femmine (1)") %>%
       kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
