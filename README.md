@@ -2,7 +2,7 @@
 
 ## Esercitazioni di Econometria
 
-Questo repository contiene il materiale relativo alle esercitazioni del corso di **Econometria I**
+Questa repository contiene il materiale relativo alle esercitazioni del corso di **Econometria I**
 
 ### 📄 Esercitazione 1
 
