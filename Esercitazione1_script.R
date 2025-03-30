@@ -1,10 +1,10 @@
 #Esercitazione N.1 script
+# Il seguente script riproduce l'esercitazione 1 del corso di Econometria
+# ad eccezione delle tabelle di regressione che sono state create con il pacchetto modelsummary
+# e le tabelle con le statistiche descrittive che sono state create con il pacchetto kableExtra
 
-
+#Pacchetti necessari
 library(tidyverse)
-library(knitr)
-library(kableExtra)
-library(modelsummary)
 library(wooldridge)
 
 # Caricamento del dataset
@@ -23,7 +23,7 @@ stat <- wage1 %>%
 
 stat
 
-# Istogramma con ggplot
+# Istogramma con ggplot di wage
 ggplot(wage1, aes(x = wage)) +
   geom_histogram(fill = "lightblue", color = "black", bins = 15) +
   labs(title = "Distribuzione di wage",
@@ -31,7 +31,7 @@ ggplot(wage1, aes(x = wage)) +
        y = "Frequenza") +
   theme_minimal()
 
-
+#Istogramma di educ
 ggplot(wage1, aes(x = educ)) +
   geom_histogram(fill = "lightblue", color = "black", bins = 15) +
   labs(title = "Distribuzione dell'istruzione",
@@ -40,30 +40,33 @@ ggplot(wage1, aes(x = educ)) +
   theme_minimal()
 
 
-
+#Scatterpplot
 ggplot(wage1, aes(y = wage, x = educ)) +
   geom_point(color = "black") +
   theme_minimal()
 
 
-
+#Scatterplot con retta di regressione
 ggplot(wage1, aes(y = wage, x = educ)) +
   geom_point(color = "black") +
   geom_smooth(method = "lm", color = "blue", se = FALSE) +
   theme_minimal()
 
 
-
+#Pacchetto per le regressioni
+# vcov = "hetero" per calcolare gli errori standard robusti
 library(fixest)
 reg1 <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 reg1
 
 
-
+# Regressione senza opzione di errore standard 
 reg1_ho <- feols(wage ~ educ, data = wage1)
 reg1_ho
 
 
+
+#Calcolo della varianza di wage per valori specifici di educ
 # Seleziona valori specifici di educ
 educ_valori <- c(4, 8, 12, 16)
 
@@ -82,54 +85,37 @@ ggplot(varianza_valori, aes(x = educ, y = varianza)) +
        y = "Varianza di wage") +
   theme_minimal()
 
-
-modelsummary(list("Wage" = reg1, "Wage" = reg1_ho), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
+#Cambiamento unità di misura di wage
 wage1 <- wage1 %>%
   mutate(wage_100 = wage/100)
 
-
 reg2 <- feols(wage_100 ~ educ, data = wage1, vcov = "hetero")
+reg2
 
-modelsummary(list("Wage" = reg1, "Wage centinaia di $" = reg2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
+# Cambiamento unità di misura di wage in mensile (in base a 140 ore lavorative al mese)
 wage1 <- wage1 %>%
   mutate(wage_monthly = wage*140)
-
 
 reg3 <- feols(wage_monthly ~ educ, data = wage1, vcov = "hetero")
 reg3
 
 
-modelsummary(
-  list("Wage Hourly" = reg1, "Wage Monthly" = reg3),
-  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj."
-)
 
-
+# Cambiamento unità di misura di educ in mensile (12 mesi)
+# educ è in anni, quindi lo moltiplichiamo per 12 per ottenere i mesi
 wage1 <- wage1 %>%
   mutate(educ_mesi = educ*12)
 
 
 reg4 <- feols(wage ~ educ_mesi, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg1, "Wage" = reg4), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+reg4
 
+# ---- Parte 2 ----
 
-
-modelsummary(list("Wage Hourly" = reg1), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-
+#Tabella di contigenza per il genere
 tabledummy <- table(wage1$female)
 
-kable(tabledummy,
-      caption = "Numero di Maschi (0) e Femmine (1)") %>%
-      kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-
-
-
+# Statistiche descrittive per il genere
 stat_genere <- wage1 %>%
   group_by(female) %>%
   summarize(
@@ -140,32 +126,22 @@ stat_genere <- wage1 %>%
     education_years_median = median(educ, na.rm = TRUE)
   )
 
-# Visualizzazione dei risultati
-stat_genere %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+stat_genere
 
 
-
+#Regressione con varibaile dummy (female =1)
 reg_female <- feols(wage ~ female, data = wage1, vcov = "hetero")
+reg_female
 
-
-
-modelsummary(reg_female, output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-stat_genere %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-
+#Creazione di una variabile dummy per il genere (male =1)
 wage1 <- wage1 %>%
   mutate(male = ifelse(female == 1, 0, 1))
 
+
 reg_male <- feols(wage ~ male, data = wage1, vcov = "hetero")
-modelsummary(list("Female = 1" = reg_female, "Male = 1" = reg_male),output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.", title = "Nota: La variabile dipendente è `wage`")
+reg_male
 
-
+#Regressione con male e female
 reg2dummy <- feols(wage ~ male + female, data = wage1, vcov = "hetero")
 reg2dummy
