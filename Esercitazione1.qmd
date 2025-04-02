@@ -314,7 +314,8 @@ $$ {#eq-ci}
 
 Dove $z_{1-\alpha/2}$ è il valore critico della distribuzione normale standard: per $\alpha = 0.05$, abbiamo $z_{0.975} = 1.96$.
 
-Sostituendo i valori del coefficiente e dell'errore standard: $$
+Sostituendo i valori del coefficiente e dell'errore standard: 
+$$
 \beta_1 \pm 1.96 \times SE(\beta_1) \implies 0.541 \pm 1.96 \times 0.061 \implies
 0.541 \pm 0.119
 $$
@@ -343,11 +344,16 @@ Per costruire il test, iniziamo calcolando la statistica $z$:
 
 $$
    z = \frac{\beta_1}{SE(\beta_1)} = \frac{0.541}{0.061} = 8.87
-$$ Poi confrontiamo il valore critico $z_{0.975} = 1.96$ con il valore assoluto di $z$. Possiamo rifiutiamo l'ipotesi nulla se $|z|$ è maggiore di 1.96. Nel caso opposto, $|z|$ minore di 1.96, non possiamo rifiutare l'ipotesi nulla.
+$$ 
 
-Nel nostro caso: $$
+Poi confrontiamo il valore critico $z_{0.975} = 1.96$ con il valore assoluto di $z$. Possiamo rifiutiamo l'ipotesi nulla se $|z|$ è maggiore di 1.96. Nel caso opposto, $|z|$ minore di 1.96, non possiamo rifiutare l'ipotesi nulla.
+
+Nel nostro caso: 
+$$
   |z| = 8.87 > 1.96
-$$ quindi rifiutiamo l'ipotesi nulla $H_0$ al livello di significatività del 5%. Di conseguenza, possiamo affermare che il coefficiente $\beta_1$ è *statisticamente significativo* al livello del 5% che significa che abbiamo evidenza statistica per concludere che esiste un'associazione tra $educ$ and $wage$.
+$$ 
+
+quindi rifiutiamo l'ipotesi nulla $H_0$ al livello di significatività del 5%. Di conseguenza, possiamo affermare che il coefficiente $\beta_1$ è *statisticamente significativo* al livello del 5% che significa che abbiamo evidenza statistica per concludere che esiste un'associazione tra $educ$ and $wage$.
 
 ## Variabili dummy
 
@@ -394,9 +400,11 @@ dobbiamo pensare bene all'interpretazione di $\beta_0$ e $\beta_1$.
 
 ### Interpretazione con $E(u_i|female_i)=0$
 
-Se assumiamo che $E(u_i|female_i)=0$, possiamo dare un'interpretazione causale ai coefficienti della regressione. In questo caso, $\beta_0$ rappresenta il valore atteso del salario quando $female_i=0$, cioè per i lavoratori maschi: $$
+Se assumiamo che $E(u_i|female_i)=0$, possiamo dare un'interpretazione causale ai coefficienti della regressione. In questo caso, $\beta_0$ rappresenta il valore atteso del salario quando $female_i=0$, cioè per i lavoratori maschi: 
+$$
   E(wage_i|female_i=0)=\beta_0.
-$$ Analogamente, per le lavoratrici femmine ($female_i=1$), il valore atteso del salario è:
+$$ 
+Analogamente, per le lavoratrici femmine ($female_i=1$), il valore atteso del salario è:
 
 $$
 E(wage_i|female_i=1)=\beta_0+\beta_1.
