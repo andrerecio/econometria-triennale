@@ -85,6 +85,24 @@ ggplot(varianza_valori, aes(x = educ, y = varianza)) +
        y = "Varianza di wage") +
   theme_minimal()
 
+# 1. Raggruppa educ in intervalli
+varianza_educ <- wage1 %>%
+  mutate(gruppo_educ = cut(educ, breaks = 10)) %>%
+  group_by(gruppo_educ) %>%
+  summarise(
+    varianza = var(wage, na.rm = TRUE),
+    media_educ = mean(educ, na.rm = TRUE)
+  )
+
+# 2. Grafico della varianza in funzione di educ
+ggplot(varianza_educ, aes(x = media_educ, y = varianza)) +
+  geom_point(size = 3, color = "darkblue") +
+  labs(title = "Varianza del salario per livello di istruzione",
+       x = "Anni di istruzione (media per gruppo)",
+       y = "Varianza di wage") +
+  theme_minimal()
+
+
 #Cambiamento unità di misura di wage
 wage1 <- wage1 %>%
   mutate(wage_100 = wage/100)
