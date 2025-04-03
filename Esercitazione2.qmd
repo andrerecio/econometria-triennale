@@ -92,7 +92,7 @@ In questo caso l'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, e
 
 **Il terzo modello**:
 
-Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64\$ mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
+Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59\$ mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
 
 L'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
 
@@ -262,7 +262,7 @@ E se fossimo interessati altri due coefficienti?
 
 - A parità di $hsGPA$ e $ACT$, una lezione persa (saltata) in più a settimana è associata a un calo, in media, di 0.083 punti in $colGPA$.
 
-### Effeti del PC su college GPA
+### Effetti del PC su college GPA
 
 Regrediamo $colGPA$ su una variabile dummy $PC$ che è uguale ad uno se lo studente ha un personal computer.
 
@@ -282,11 +282,9 @@ modelsummary(list("colGPA" = reg_gpa_pc1, "colGPA" = reg_gpa_pc2, "colGPA" = reg
 
 - Prima regressione: Uno studente che possiede un PC ha, in media, un $colGPA$ più alto di circa 0.17 punti rispetto a uno studente che non lo possiede
 
+- Seconda regressione: A parità di $hsGPA$ e di punteggio $ACT$, uno studente che possiede un PC ha, in media, $colGPA$ più alto di circa 0.16 punti rispetto a uno studente che non lo possiede.
 
-- Seconda regressione: A parità $hsGPA$ e di punteggio $ACT$, il possesso di un PC è associato, in media, a un aumento di circa 0.16 punti in $colGPA$.
-
-- Terza regressione:  A parità $hsGPA$, punteggio $ACT$ e istruzione dei genitori ($mothcoll$ e $fathcoll$), il possesso di un PC è associato, in media, a un aumento di circa 0.15 punti in $colGPA$.
-
+- Terza regressione:  A parità di $hsGPA$, punteggio $ACT$ e istruzione dei genitori ($mothcoll$ e $fathcoll$), uno studente che possiede un PC ha, in media, $colGPA$ più alto di circa 0.15 punti rispetto a uno studente che non lo possiede.
 
 ## Dummy con categorie multiple:
 
