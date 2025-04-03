@@ -325,11 +325,11 @@ modelsummary(list("Wage" = reg_wage_sm1, "Wage" = reg_wage_sm2), output = "markd
 
 **Interpretazione dei coefficienti (seconda colonna):**
 
-- In media, un uomo sposato, guadagna 1.822 dollari in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
+- In media, un uomo sposato, guadagna 1.822 dollari (per ora) in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
 
-- In media, una donna sposata, guadagna 0.882 dollari in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna sposata, guadagna 0.882 dollari (per ora) in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
 
-- In media, una donna single, guadagna 0.309 dollari in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna single, guadagna 0.309 dollari (per ora) in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
 
 **Attenzione!**: sono statisticamente significativi al 5%? 
 
