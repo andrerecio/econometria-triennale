@@ -1,0 +1,254 @@
+---
+title: "Esercitazione N.3"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+## Nonlinearità
+
+**Pacchetti necessari:**
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+```
+
+**Per i dati:**
+```{r}
+#| warning: false
+library(wooldridge)
+```
+
+```{r}
+data("wage1", package = "wooldridge")
+```
+
+```{r}
+reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
+```
+
+Le trasformazioni logaritmiche permettono di modellare le relazioni in termini “percentuali” invece che lineari.
+
+Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una percentuale (costante):
+
+Consideriamo:
+
+$$
+log(wage_i) = \beta_0 + \beta_1 educ_i + u_i
+$$
+
+E stimiamo:
+
+```{r}
+reg_logwage <- feols(log(wage) ~ educ, data = wage1, vcov = "hetero")
+```
+
+Prendendo l'esponenziale si scrive:
+$$
+wage_i = exp(\beta_0 + \beta_1 educ_i + u_i)
+$$
+
+**Nota:** Qui abbiamo anche $exp^{u_{i}}$. Stiamo assumendo per ragioni didattiche che sia uguale a zero per mostrarlo graficamente. La questione di come calcolare le previsioni di $Y$ quando è in log è discussa nel paragrafo 8.2 di Stock e Watson (pp. 215-216).
+
+```{r}
+# Previsione valori stimati dal modello log-lineare
+wage1 <- wage1 %>%
+  mutate(
+    logwage_pred = predict(reg_logwage),     #valori predetti in log
+    wage_pred = exp(logwage_pred)           #salario predetto in scala originale
+  )
+
+# Grafico con curva log-lineare + retta OLS
+ggplot(wage1, aes(x = educ)) +
+  geom_line(aes(y = wage_pred), color = "blue", size = 1.2) +          # curva log-lineare
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
+  labs(
+    title = "Confronto: regressione lineare vs log-lineare",
+    x = "Anni di istruzione",
+    y = "Salario orario predetto"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+modelsummary(list("Wage" = reg_wage, "Log Wage" = reg_logwage), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+Il coefficiente $\beta_1$ ha una interpretazione in termini percentuali una volta moltiplicato per 100.
+
+In media, un anno aggiuntivo di istruzione è associato ad un aumento del salario orario ($wage$) del'8.3%
+
+$R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in log($wage$) (no $wage$)
+
+I logaritmi possono essere usati per trasformare la variabile dipendente $Y$, una variabile indipendente $X$ e entrambe (devono essere positive). 
+Interpretazione del coefficiente $\beta_1$
+
+
+### Specificazioni in log
+
+
+::: {.callout-note title="Specificazioni in log"}
+
+| Forma del modello       | Interpretazione                                                                 |
+|-------------------------|----------------------------------------------------------------------------------|
+| $\log(Y)$ ~ $X$         | Un'unità in più in $X$ determina una variazione di $100 \cdot \beta_1$\% in $Y$              |
+| $Y$ ~ $\log(X)$         | Un aumento dell'1\% in $X$ determina una variazione di $0{,}01 \cdot \beta_1$\% in $Y$       |
+| $\log(Y)$ ~ $\log(X)$   | Un aumento dell'1\% in $X$ determina una variazione di $\beta_1$\% in $Y$                    |
+
+:::
+
+
+**3 casi con wage e educ:**
+
+```{r}
+reg_wagelog <- feols(wage ~ log(educ), data = wage1, vcov = "hetero")
+reg_logwagelog <- feols(lwage ~ log(educ), data = wage1, vcov = "hetero")
+modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+ - **Primo modello:** (log-level): Ad ogni anno in più di istruzione è associato in media un aumento dell'8.3 % del salario orario.
+
+- **Secondo modello:** (level-log): Un aumento del 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario di 0.053 dollari. In modo equivalente un aumento del 10% degli anni di istruzione è associato ad un aumento, in media, il salario orario di 0.53$ (10 $\cdot$ 0.053).
+
+- **Terzo modello:** (log-log): Un aumento dell' 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario dello 0.825 %.
+
+La scelta della specificazione (forma funzionale) dev’essere guidata dal ragionamento – quale
+interpretazione ha più senso?
+
+
+::: {.callout-note title="Unità di misura e log"}
+
+Con le variabili espresse in log, il cambiamento di unità di misura è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$.
+Lo stesso vale se la $X$ è in log o entrambi sono in log.
+L'intercetta invece cambierà. Provate.
+:::
+
+
+### Interpretazione dummy e log:
+
+
+Esempio finale dell'Esercitazione 2 con $wage$ espresso in log e dummy con categorie mutliple.
+
+Costruiamo le seguenti dummy:
+
+```{r}
+wage1 <- wage1 %>%
+  mutate(
+    marrmale = ifelse(female == 0 & married == 1, 1, 0),
+    marrfemale = ifelse(female == 1 & married == 1, 1, 0),
+    singfem = ifelse(female == 1 & married == 0, 1, 0)
+  )
+```
+
+
+```{r}
+reg_logwage_dummy <- feols(log(wage) ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
+modelsummary(list("Log Wage" = reg_logwage_dummy), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+```
+
+
+Ricordiamo: 
+
+- le dummy si interpretano rispetto alla categoria omessa (uomini single)
+- la variabile dipendente è in log (log($wage$))
+
+
+Quindi i coefficienti delle tre dummy misurano la differenza (percentuale) in $wage$ relativamente agli uomini single.
+
+- Gli uomini sposati ($marrmale$) guadagnano in media il 29.2 % in più rispetto agli uomini single, a parità di anni di istruzione, anni di esperienza e anni con lo stesso datore di lavoro.
+
+- Le donne sposate guadagnano in media il 12% in meno rispetto agli uomini single, a parità di anni di istruzione, anni di esperienza e anni con lo stesso datore di lavoro.
+
+
+- Le donne single guadagnano in media il 9.7% in meno rispetto agli uomini single, a parità di anni di istruzione, anni di esperienza e anni con lo stesso datore di lavoro.
+
+
+
+
+### Campus Crime
+
+`campus` contiene dati su 97 college e università negli USA  da FBI's Uniform Crime Reports e sul numero di iscrizioni (enrollment)
+
+```{r}
+data("campus", package = "wooldridge")
+```
+
+::: {.callout-note title="Esercizio"}
+Potete provare a fare un po' di statistiche descrittive 
+:::
+
+
+```{r}
+reg_log_crime <- feols(log(crime) ~ log(enroll), data = campus, vcov = "hetero")
+reg_log_crime2 <- feols(log(crime) ~ log(enroll) + log(police), data = campus, vcov = "hetero")
+modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+**Coefficienti:**
+- Un aumento del'1% degli iscritti è associato ad un aumento dei crimini del 1.27% (se gli iscritti aumentassero del 2%?)
+
+- A parità di poliziotti, un aumento del 1% degli iscritti è associato ad un aumento dei crimini dello 0.92%.
+
+**Limiti della regressione:** Non stiamo considerando altri fattori. Potrebbe essere il caso che più alte iscrizioni sono correlate con altri fattori che causano maggior crimine: università più grandi possono essere in città più grandi con più alto crimini.
+
+
+
+
+## Polinomi:
+
+Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). In questo caso una funziona quadratica:
+
+```{r}
+reg_wage_exper <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
+reg_wage_exper
+```
+
+
+```{r}
+# 1. Previsione dei valori stimati
+wage1 <- wage1 %>%
+  mutate(wageexp_pred = predict(reg_wage_exper))
+
+# 2. Filtro per esper ≤ 40
+wage_cut <- wage1 %>% filter(exper <= 40)
+
+# 3. Trova il punto massimo della curva wageexp_pred
+punto_max <- wage_cut %>%
+  filter(wageexp_pred == max(wageexp_pred, na.rm = TRUE))
+
+# 4. Grafico
+ggplot(wage_cut, aes(x = exper)) +  
+  geom_line(aes(y = wageexp_pred), color = "blue", size = 1.2) +              # curva stimata
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
+  geom_point(data = punto_max, aes(y = wageexp_pred), color = "red", size = 3) +      
+  labs(
+    title = "Confronto: retta lineare vs polinomio quadratico",
+    x = "Anni di Esperienza",
+    y = "Salario orario in $ predetto"
+  ) +
+  theme_minimal()
+```
+
+
+```{r}
+reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
