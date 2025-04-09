@@ -63,6 +63,7 @@ $$
 wage_i = \beta_0 + \beta_1 educ_i + \beta_2 exper_i + \beta_3 tenure_i + u_i
 $$
 
+
 ```{r}
 # Regressione
 library(fixest)
@@ -126,6 +127,8 @@ modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), output 
 
 Un anno in più di istruzione è associato, in media, a un aumento del salario orario 0.572$ in più, a parità di genere, esperienza e $tenure$
 
+
+Un anno in più di istruzione è associato, in media, a un aumento del salario mensile di 80$ in più, a parità di genere, esperienza e $tenure$
 
 Vedremo in futuro poi cosa cambia considerando l'interazione $educ$ * $female$.
 
@@ -317,6 +320,25 @@ wage1 <- wage1 %>%
 
 Nel caso in cui è necessario creare diversi dummy per Regione (ad esempio) è utile usare la libreria `library(fastDummies)`
 
+
+::: {.callout-note title="Ricorda"}
+La media di una dummy è la proporzione nel campione:
+:::
+
+```{r}
+statdummy <- wage1 %>%
+  summarise(
+    marrmale_mean = mean(marrmale, na.rm = TRUE),
+    marrfemale_mean = mean(marrfemale, na.rm = TRUE),
+    singfem_mean = mean(singfem, na.rm = TRUE)
+  )
+
+statdummy
+```
+
+il 35\% sono uomini sposati, il 25\% donne sposate, il 22\% donne single. (100-35-25-22 = 18\%  uomini single)
+
+
 ```{r}
 reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
 reg_wage_sm2 <- feols(wage ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
@@ -325,13 +347,15 @@ modelsummary(list("Wage" = reg_wage_sm1, "Wage" = reg_wage_sm2), output = "markd
 
 **Interpretazione dei coefficienti (seconda colonna):**
 
-- In media, un uomo sposato, guadagna 1.822 dollari (per ora) in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
+- In media, un uomo sposato, guadagna 1.822 dollari all'ora in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
 
-- In media, una donna sposata, guadagna 0.882 dollari (per ora) in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna sposata, guadagna 0.882 dollari all'ora  in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
 
-- In media, una donna single, guadagna 0.309 dollari (per ora) in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna single, guadagna 0.309 dollari all'ora in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
 
-**Attenzione!**: sono statisticamente significativi al 5%? 
+::: {.callout-caution title="Attenzione"}
+Sono statisticamente significativi al 5%?
+:::
 
 
 
@@ -350,7 +374,8 @@ reg_wage_sm3 <- feols(wage ~ marrmale + marrfemale + singfem + female + male, da
 reg_wage_sm3
 ```
 
-$female$ e $male$ non sono necessarie.
+::: {.callout-important title="Attenzione"}
+$female$ e $male$ sono perfettamente collineari.
 
 Perché:
 
@@ -359,3 +384,73 @@ Perché:
 - $male$ = $marrmale$ + $singmale$ (il nostro gruppo di riferimento per come abbiamo costruito le dummy)
 
 R rimuove automaticamente le due variabili perfettamente collineari.
+:::
+
+
+### Ipotesi Congiunte:
+
+Consideriamo la regressione `reg_wage_sm2` (seconda colonna).
+Testiamo l'ipotesi nulla che non ci siano differenze nei salari fra le categorie (dopo aver tenuto conto degli anni di istruzione, esperienza e anni con lo stesso datore di lavoro):
+
+Cioè:
+$$
+H_0: \beta_1 = \beta_2 = \beta_3 = 0
+$$
+
+
+Usando la  funzione `wald()` inclusa in `library(fixest)`
+
+```{r}
+wald(reg_wage_sm2, 
+     keep = "marrmale|marrfemale|singfem")
+```
+
+
+In alternativa, possiamo usare `linearHypothesis` dal pacchetto `library(car)`
+
+```{r}
+library(car)
+# Test di ipotesi
+linearHypothesis(reg_wage_sm2, 
+                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"), test = "F")
+```
+
+Se non selezioniamo `test = F`, allora:
+
+```{r}
+linearHypothesis(reg_wage_sm2, 
+                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"))
+```
+
+
+
+::: {.callout-note title="Ricorda"}
+
+| q (restrizioni) | Valore critico $\chi^2$ (α = 0.05) | Valore critico $F$ (α = 0.05) |
+|------------------|-----------------------------|-----------------------------|
+| 1                | 3.84                        | 3.84                        |
+| 2                | 6.00                        | 3.00                        |
+| 3                | 7.80                        | 2.60                        |
+
+*Nota:* Per $n$ grande la statistica $F$ ha distribuzione $\chi^2$/q
+:::
+
+Nel nostro caso:
+
+- 24 > 2.60
+
+- 72.04 > 7.80
+
+
+Esiste una formula semplice per la statistica $F$, valida solo in condizini di **omoschedasticità**, che tuttavia può aiutare a comprendere che cosa fa la statistica $F$.
+
+La statistica $F$ in condizioni di omoschedasticità pura:
+
+- eseguire due regressioni, una sotto l’ipotesi nulla (regressione “vincolata”) e una sotto l’ipotesi alternativa (regressione senza vincolo).
+
+- confrontare gli adattamenti delle regressioni – gli $R^2$ – se il modello “non vincolato” si datta sufficientemente meglio, rifiutare l’ipotesi nulla
+
+
+La statistica $F$ classica è storicamente importante e può aiutare l’intuizione, ma non è valida in presenza di eteroschedasticità.
+
+
