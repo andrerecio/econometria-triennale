@@ -99,6 +99,19 @@ wage1 <- wage1 %>%
     marrfemale = ifelse(female == 1 & married == 1, 1, 0),
     singfem = ifelse(female == 1 & married == 0, 1, 0))
 
+# Statistiche descrittive
+
+statdummy <- wage1 %>%
+  summarise(
+    marrmale_mean = mean(marrmale, na.rm = TRUE),
+    marrfemale_mean = mean(marrfemale, na.rm = TRUE),
+    singfem_mean = mean(singfem, na.rm = TRUE)
+  )
+
+statdummy
+
+
+
 #Regressione
 reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
 reg_wage_sm2 <- feols(wage ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
@@ -112,3 +125,15 @@ wage1 <- wage1 %>%
 
 reg_wage_sm3 <- feols(wage ~ marrmale + marrfemale + singfem + female + male, data = wage1, vcov = "hetero")
 reg_wage_sm3
+
+## Test ipotesi congiunte
+
+wald(reg_wage_sm2, keep = "marrmale|marrfemale|singfem")
+
+    
+
+library(car)
+# Test di ipotesi
+linearHypothesis(reg_wage_sm2, c("marrmale = 0", "marrfemale = 0", "singfem = 0"), test = "F")
+
+linearHypothesis(reg_wage_sm2, c("marrmale = 0", "marrfemale = 0", "singfem = 0"))
