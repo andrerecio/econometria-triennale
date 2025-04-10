@@ -42,7 +42,7 @@ reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 
 Le trasformazioni logaritmiche permettono di modellare le relazioni in termini “percentuali” invece che lineari.
 
-Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una percentuale (costante):
+Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una percentuale:
 
 Consideriamo:
 
@@ -61,13 +61,13 @@ $$
 wage_i = exp(\beta_0 + \beta_1 educ_i + u_i)
 $$
 
-**Nota:** Qui abbiamo anche $exp^{u_{i}}$. Stiamo assumendo per ragioni didattiche che sia uguale a zero per mostrarlo graficamente. La questione di come calcolare le previsioni di $Y$ quando è in log è discussa nel paragrafo 8.2 di Stock e Watson (pp. 215-216).
+**Nota:** Qui abbiamo anche $exp^{u_{i}}$. Stiamo assumendo per ragioni didattiche che sia uguale a zero per mostrarlo graficamente. La questione di come calcolare le previsioni di $Y$ quando abbiamo $log(Y)$ è discussa nel paragrafo 8.2 di Stock e Watson (pp. 215-216).
 
 ```{r}
 # Previsione valori stimati dal modello log-lineare
 wage1 <- wage1 %>%
   mutate(
-    logwage_pred = predict(reg_logwage),     #valori predetti in log
+    logwage_pred = predict(reg_logwage),    #valori predetti in log
     wage_pred = exp(logwage_pred)           #salario predetto in scala originale
   )
 
@@ -78,7 +78,7 @@ ggplot(wage1, aes(x = educ)) +
   labs(
     title = "Confronto: regressione lineare vs log-lineare",
     x = "Anni di istruzione",
-    y = "Salario orario predetto"
+    y = "Salario orario $"
   ) +
   theme_minimal()
 ```
@@ -125,8 +125,11 @@ modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =re
 
 - **Terzo modello:** (log-log): Un aumento dell' 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario dello 0.825 %.
 
-La scelta della specificazione (forma funzionale) dev’essere guidata dal ragionamento – quale
-interpretazione ha più senso?
+La scelta della specificazione (forma funzionale) dev’essere guidata dal ragionamento – quale interpretazione ha più senso?
+
+I logaritmi sono spesso utilizzati quando la variabile è in dollari (ad esempio wage o income) o variabili come popolazione (in particolare quando c'è abbastanza variazione).
+
+Sono meno usati per variabili misurate in anni o che sono già percentuali o proporzioni (ad esempio tasso di disoccupazione).
 
 
 ::: {.callout-note title="Unità di misura e log"}
@@ -180,7 +183,8 @@ Quindi i coefficienti delle tre dummy misurano la differenza (percentuale) in $w
 
 ### Campus Crime
 
-`campus` contiene dati su 97 college e università negli USA  da FBI's Uniform Crime Reports e sul numero di iscrizioni (enrollment)
+`campus` contiene dati su 97 college e università.
+$crime$ rappresenta il numero annuale di crimini nel college e $enroll$ il numero di iscritti.
 
 ```{r}
 data("campus", package = "wooldridge")
@@ -199,7 +203,7 @@ modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), o
 
 
 **Coefficienti:**
-- Un aumento del'1% degli iscritti è associato ad un aumento dei crimini del 1.27% (se gli iscritti aumentassero del 2%?)
+- Un aumento del'1% degli iscritti è associato ad un aumento in media dei crimini del 1.27% (se gli iscritti aumentassero del 2%?)
 
 - A parità di poliziotti, un aumento del 1% degli iscritti è associato ad un aumento dei crimini dello 0.92%.
 
@@ -207,16 +211,17 @@ modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), o
 
 
 
-
 ## Polinomi:
 
-Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). In questo caso una funziona quadratica:
+Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). il polinomio quadratico è spesso utilizzaro in applicazioni economiche per catturare effetti marginali crescenti e decrescenti.
 
 ```{r}
 reg_wage_exper <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
 reg_wage_exper
 ```
 
+
+In questo caso (ma non solo) $\beta_1$ è positivo e $\beta_2$ negativo.
 
 ```{r}
 # 1. Previsione dei valori stimati
@@ -236,9 +241,9 @@ ggplot(wage_cut, aes(x = exper)) +
   geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
   geom_point(data = punto_max, aes(y = wageexp_pred), color = "red", size = 3) +      
   labs(
-    title = "Confronto: retta lineare vs polinomio quadratico",
+    title = "Confronto: lineare vs polinomio quadratico",
     x = "Anni di Esperienza",
-    y = "Salario orario in $ predetto"
+    y = "Salario orario in $"
   ) +
   theme_minimal()
 ```
@@ -246,7 +251,6 @@ ggplot(wage_cut, aes(x = exper)) +
 
 ```{r}
 reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1, vcov = "hetero")
-
 modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
