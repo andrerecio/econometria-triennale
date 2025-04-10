@@ -105,7 +105,7 @@ Interpretazione del coefficiente $\beta_1$
 | Forma del modello       | Interpretazione                                                                 |
 |-------------------------|----------------------------------------------------------------------------------|
 | $\log(Y)$ ~ $X$         | Un'unità in più in $X$ determina una variazione di $100 \cdot \beta_1$\% in $Y$              |
-| $Y$ ~ $\log(X)$         | Un aumento dell'1\% in $X$ determina una variazione di $0{,}01 \cdot \beta_1$\% in $Y$       |
+| $Y$ ~ $\log(X)$         | Un aumento dell'1\% in $X$ determina una variazione di $0{,}01 \cdot \beta_1$ in $Y$       |
 | $\log(Y)$ ~ $\log(X)$   | Un aumento dell'1\% in $X$ determina una variazione di $\beta_1$\% in $Y$                    |
 
 :::
