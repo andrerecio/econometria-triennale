@@ -133,7 +133,7 @@ modelsummary(list("Wage" = reg_wage_marrfe, "Wage" = reg_wage_marrmal), output =
 In questo caso il coefficiente di $married$ rappresenta l'effetto del matrimonio sul salario orario delle donne. In media le donne sposate guadagnano 0.046 dollari all'ora in meno rispetto alle donne non sposate.
 
 
-L'intercetta rappresenta il salario medio per gli uomini single cioè quando $male$ = 0 e $married$ = 0.
+L'intercetta rappresenta il salario medio per le donne single cioè quando $male$ = 0 e $married$ = 0.
 
 
 
