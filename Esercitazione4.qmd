@@ -1,0 +1,216 @@
+---
+title: "Esercitazione N.4"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+# Interazioni 
+
+### Pacchetti necessari:
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+library(wooldridge)
+data("wage1", package = "wooldridge")
+```
+
+
+
+::: {.callout-note title="Ripasso dummy e log"}
+
+```{r}
+reg_wage_dummy <- feols(wage ~ female, data = wage1, vcov = "hetero")
+reg_wagemonthly_dummy <- feols((wage*140) ~ female, data = wage1, vcov = "hetero")
+reg_logwage_dummy <- feols(log(wage) ~  female, data = wage1, vcov = "hetero")
+reg_logwagemonthly_dummy <- feols(log(wage * 140) ~  female, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_dummy, "Wage Monthly" = reg_wagemonthly_dummy, "Log Wage"= reg_logwage_dummy, "Log (Wage Monthly)" = reg_logwagemonthly_dummy ), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+*Nota: Wage Monthly è pari a Wage x 140*
+
+Interpretate i coefficienti:
+
+- Cosa rappresenta l'intercetta uguale a 7.099 e il coefficiente associato a female pari a -2.51?
+- Coefficienti nelle regressioni log? 
+- Intercetta nella regressione log(Wage Monthly) è uguale a $\beta_0 + log(140)$.
+
+:::
+
+
+Nelle scorse esercitazioni abbiamo creato 3 dummy (donne sposate, uomini sposati e donne single) e interpetato i coefficienti rispetto agli uomini single (la categoria omessa):
+
+```{r}
+wage1 <- wage1 %>%
+  mutate(
+    marrmale = ifelse(female == 0 & married == 1, 1, 0),
+    marrfemale = ifelse(female == 1 & married == 1, 1, 0),
+    singfem = ifelse(female == 1 & married == 0, 1, 0)
+  )
+```
+
+Per semplicità (senza altri regressori):
+```{r}
+reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_sm1), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+Come si interpretano i coefficienti?
+
+1. L'intercetta rappresenta il salario orario medio in dollari della categoria omessa (**uomini single**). Quando $marrmale$, $marrfemale$ e $singfem$ sono uguali a zero
+2. il coefficiente associato a $marrmale$: in media gli uomini sposati gudagnano 2.815 dollari in più rispetto agli uomini single
+3. le donne sposate guadagnano in media 0.60 dollari all'ora in meno rispetto agli uomini single
+4. le donne single guadagnano guadagnano in media 0.55 dollari all'ora in meno rispetto agli uomini single
+
+**Nota:** non stiamo controllando per anni di istruzioni, anni di esperrienza...
+
+
+## Interazione tra due variabili dummy:
+
+Ora creiamo l'interazione tra due variabili dummy: $female$ e $married$. Ciò consente di vedere se "ritorno" del matrimonio dipende dal genere.
+
+```{r}
+reg_wage_marrfe <- feols(wage ~ female * married, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_marrfe), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+I risultati della regressione mostrano che l'interazione tra genere e stato coniugale è statisticamente significativa (calcolate il valore critico).
+
+
+Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini non sposati. In media le donne non sposate guadagnano 0.556 dollari all'ora in meno rispetto agli uomini non sposati.
+
+
+Coefficiente di $married$ rappresenta l'effetto del matrimonio sul salario orario degli uomini. In media gli uomini sposati guadagnano 2.815 dollari all'ora in più rispetto agli uomini non sposati (single).
+
+
+Coefficiente dell'interazione $female*married$ rappresenta la differenza nell'effetto del matrimonio tra donne e uomini. L'effetto del matrimonio sul salario orario è 2.861 dollari inferiore per le donne rispetto agli uomini.
+
+
+In media le donne sposate guadagnano 0.046 dollari in meno rispetto alle donne non sposate ($2,815 - 2,861 = -0,046$).
+
+
+::: {.callout-note title="Nota"}
+**Possiamo usare la regressione stimata per stimare il salario medio orario per ciascuna delle quattro combinazioni possibili:**
+:::
+
+- L'intercetta uguale a 5.168 rappresenta il salario orario medio per gli uomini single cioè  quando $female$ = 0 e $married$ = 0
+
+- Considerando $female$ = 0 e $married$ = 1 otteniamo 7.983 (5.168 + 2.815) che rappresenta il salario orario medio in dollari degli uomini sposati.
+
+- Quando $female$ = 1 e $married$ = 0 otteniamo 4.612 (5.168 - 0.556), che rappresenta il salario orario medio delle donne single
+
+- Quando $female$ = 1 e $married$ = 1 otteniamo 4.566 (5.168 - 0.556 + 2.815 - 2.861) salario orario medio delle donne sposate
+
+**Nota:** non stiamo controllando per altri fattori come anni di istruzione...
+
+Se l'interazione fosse con $male$?
+
+```{r}
+wage1 <- wage1 %>% 
+  mutate(male = 1 - female)
+```
+
+```{r}
+reg_wage_marrmal <- feols(wage ~ male * married, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_marrfe, "Wage" = reg_wage_marrmal), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+In questo caso il coefficiente di $married$ rappresenta l'effetto del matrimonio sul salario orario delle donne. In media le donne sposate guadagnano 0.046 dollari all'ora in meno rispetto alle donne non sposate.
+
+
+L'intercetta rappresenta il salario medio per gli uomini single cioè quando $male$ = 0 e $married$ = 0.
+
+
+
+## Interazione tra variabile dummy e continua
+
+In questa esercitazione consideriamo il caso che il libro (Stock e Watson p. 220) definisce pendenza e intercette diverse.
+
+
+```{r}
+##Prima modello regressione di wage su educ, female e la loro interazione
+reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
+
+
+#Risultati
+modelsummary(list("Wage" = reg_wage_educfe), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- Coefficiente di $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario per gli uomini (quando $female$ = 0). L'effetto di un anno aggiuntivo di istruzione per gli uomini è pari a 0.539$
+
+- Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini quando l'istruzione è zero ($educ$ = 0).
+
+- Coefficiente di $educ* female$ rappresenta la differenza nell'effetto dell'istruzione tra donne e uomini. Le donne ricevono un "premio" per l’istruzione inferiore di circa 0.086$ all'ora rispetto agli uomini.
+Ogni anno di istruzione in più è meno remunerativo per le donne rispetto agli uomini di circa 0.086$ all'ora.
+
+- L'effetto di un anno aggiuntivo di istruzione per le donne è pari a $\beta_1 + \beta_3$ cioè $0.539 - 0.086 = 0.453$ dollari
+
+E infatti $0.453 - 0.539 = - 0.086$
+
+```{r}
+##install.packages("marginaleffects")
+library(marginaleffects)
+plot_predictions(reg_wage_educfe, 
+                condition = c("educ", "female"),
+                ) + 
+  labs(title = "Salario predetto per livelli di istruzione e genere",
+       x = "Anni di istruzione",
+       y = "Salario predetto")
+```
+
+
+## Interazione tra due variabili continue
+
+```{r}
+##Prima modello regressione di wage su edud, female e la loro interazione
+reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
+
+reg_wage_educexper2 <- feols(wage ~ educ * exper + female + tenure, data = wage1, vcov = "hetero")
+#Risultati
+modelsummary(list("Wage" = reg_wage_educexper, "Wage" = reg_wage_educexper2), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- il coefficiente associato a $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario quando l'esperienza ($exper$) è zero.
+
+- il coefficiente di $exper$: rappresenta l'effetto di un anno aggiuntivo di esperienza sul salario quando l'istruzione ($educ$) è zero.
+
+
+Il coefficiente di interazione è positivo, significa che l'effetto dell'istruzione aumenta con l'esperienza (o viceversa). 
+
+Qual è l'effetto parziale di $educ$ su $wage$?
+  
+Per stimare l'effetto parziale consideriamo dei valori rilevanti di $exper$ come la mediana, la media o il terzo quartile:
+
+```{r}
+summary(wage1$exper)
+```
+
+$0.602+0.002*13.5 = 0.632$
+
+- Per un individuo con 13.5 anni di esperienza, una anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari
+
+
+- Per un individuo con 26 anni di esperienza (terzo quartile), un anno in più di istruzione è associato a un aumento medio del salario orario di circa $0.602+0.002*26 = 0.654$ dollari 
+
+
+
+
+
+
