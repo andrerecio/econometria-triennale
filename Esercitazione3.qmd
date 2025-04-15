@@ -12,7 +12,7 @@ execute:
 ---
 
 
-## Nonlinearità
+# Nonlinearità
 
 **Pacchetti necessari:**
 
@@ -91,7 +91,7 @@ Il coefficiente $\beta_1$ ha una interpretazione in termini percentuali una volt
 
 In media, un anno aggiuntivo di istruzione è associato ad un aumento del salario orario ($wage$) del'8.3%
 
-$R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in log($wage$) (no $wage$)
+$R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in log($wage$) (no $wage$). $R^2$ non può essere usato per confrontare queste due regressioni perché hanno variabile dipendente diversa ($wage$ e log($wage$), vedete Stock e Watson p. 215).
 
 I logaritmi possono essere usati per trasformare la variabile dipendente $Y$, una variabile indipendente $X$ e entrambe (devono essere positive). 
 Interpretazione del coefficiente $\beta_1$
@@ -119,7 +119,8 @@ reg_logwagelog <- feols(lwage ~ log(educ), data = wage1, vcov = "hetero")
 modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
- - **Primo modello:** (log-level): Ad ogni anno in più di istruzione è associato in media un aumento dell'8.3 % del salario orario.
+
+- **Primo modello:** (log-level): Ad ogni anno in più di istruzione è associato in media un aumento dell'8.3 % del salario orario.
 
 - **Secondo modello:** (level-log): Un aumento del 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario di 0.053 dollari. In modo equivalente un aumento del 10% degli anni di istruzione è associato ad un aumento, in media, il salario orario di 0.53$ (10 $\cdot$ 0.053).
 
@@ -221,7 +222,7 @@ reg_wage_exper
 ```
 
 
-In questo caso (ma non solo) $\beta_1$ è positivo e $\beta_2$ negativo.
+In questo caso $\beta_1$ è positivo e $\beta_2$ negativo.
 
 ```{r}
 # 1. Previsione dei valori stimati
@@ -254,5 +255,43 @@ reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1
 modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
+### Interpretazione dei coefficienti del primo modello:
+
+Non possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. 
 
 
+**Primo modello:** Consideriamo la variazione nel salario nel caso si passi da 1 a 2 anni di esperienza.
+
+$$
+\Delta \hat{Y} = (\beta_0 + \beta_1 * 1 - \beta_2 * 1^{2}) - (\beta_0 + \beta_1 * 2 - \beta_2 * 2^{2})
+$$
+
+Uguale a $4.297 - 4.017 = 0.28$ dollari
+
+Ora considerando da 10 a 11 anni di esperienza:
+
+- *10 anni*: $3.725 + 2.98 - 0.006 (100)$
+- *11 anni*: $3.725 + 3.278 - 0.006 (121)$
+ $\Delta \hat{Y} = 6.277 - 6.105 = 0.172$ dollari
+
+
+### Log e polinomi:
+
+E se $wage$ fosse espresso in log?
+
+```{r}
+reg_logwage_exper <- feols(log(wage) ~ exper + I(exper^2), data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+**Secondo modello (log):** Consideriamo la variazione nel salario predetto nel caso si passi da 10 a 11 anni di esperienza.
+
+
+- *10 anni*: $1.295 + 0.046(10) - 0.001 (10)^{2}$ = 1.655
+- *11 anni* = $1.295 + 0.046(11) - 0.001 (11)^{2}$ = 1.68
+
+$\Delta \hat{Y} = 1.68 - 1.655 = 0.025$ cioè **2.5%** 
+
+::: {.callout-note title="Esercizio"}
+Calcolate da 2 a 3 anni di esperienza
+:::
