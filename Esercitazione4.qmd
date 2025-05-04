@@ -203,7 +203,7 @@ summary(wage1$exper)
 
 $0.602+0.002*13.5 = 0.632$
 
-- Per un individuo con 13.5 anni di esperienza, una anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari
+- Per un individuo con 13.5 anni di esperienza, un anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari
 
 
 - Per un individuo con 26 anni di esperienza (terzo quartile), un anno in più di istruzione è associato a un aumento medio del salario orario di circa $0.602+0.002*26 = 0.654$ dollari 
