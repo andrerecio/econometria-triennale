@@ -178,7 +178,6 @@ plot_predictions(reg_wage_educfe,
 ## Interazione tra due variabili continue
 
 ```{r}
-##Prima modello regressione di wage su edud, female e la loro interazione
 reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
 
 reg_wage_educexper2 <- feols(wage ~ educ * exper + female + tenure, data = wage1, vcov = "hetero")
