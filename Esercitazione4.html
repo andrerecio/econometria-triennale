@@ -3718,8 +3718,8 @@ Ripasso dummy e log
 
     <script>
 
-      function styleCell_5fgmhz49slovcw94fryk(i, j, css_id) {
-          var table = document.getElementById("tinytable_5fgmhz49slovcw94fryk");
+      function styleCell_9g18mnx3guvlfezvt5p1(i, j, css_id) {
+          var table = document.getElementById("tinytable_9g18mnx3guvlfezvt5p1");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3729,7 +3729,7 @@ Ripasso dummy e log
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_5fgmhz49slovcw94fryk');
+        var table = document.getElementById('tinytable_9g18mnx3guvlfezvt5p1');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3737,8 +3737,8 @@ Ripasso dummy e log
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_5fgmhz49slovcw94fryk(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_5fgmhz49slovcw94fryk");
+      function spanCell_9g18mnx3guvlfezvt5p1(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_9g18mnx3guvlfezvt5p1");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3768,20 +3768,20 @@ Ripasso dummy e log
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 11, j: 1 },  ], css_id: 'tinytable_css_lv8v7ubf0xxcz2dnmrvt',}, 
-          { positions: [ { i: 8, j: 1 },  ], css_id: 'tinytable_css_axtq2rredadf3ub9r5bx',}, 
-          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_268k0ognsqb7no194ehf',}, 
-          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_fn29ew9n5w6sgojclrwy',}, 
-          { positions: [ { i: 11, j: 0 },  ], css_id: 'tinytable_css_sjq14n317tvg5oxysnbv',}, 
-          { positions: [ { i: 8, j: 0 },  ], css_id: 'tinytable_css_yqtohji5e97k1onro9hz',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_mtorfaz54w1vu64ievps',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_qs8xqtskneteq1s4lerr',}, 
+          { positions: [ { i: 11, j: 1 },  ], css_id: 'tinytable_css_lkzg043r51ssecm14kub',}, 
+          { positions: [ { i: 8, j: 1 },  ], css_id: 'tinytable_css_s15jwqbjh8pslihilhkg',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_8e8bcnl80of54etr9tze',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_vru5nohodgf5s7vpv6kf',}, 
+          { positions: [ { i: 11, j: 0 },  ], css_id: 'tinytable_css_njf85gfxv6rvdw8yl3am',}, 
+          { positions: [ { i: 8, j: 0 },  ], css_id: 'tinytable_css_vzzdcds4cntjj8oi08et',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_m4yyu6gyj473ndf5cx4d',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_g193itlwyo0r73si7ixc',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_5fgmhz49slovcw94fryk(cell.i, cell.j, group.css_id);
+                  styleCell_9g18mnx3guvlfezvt5p1(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3789,17 +3789,17 @@ Ripasso dummy e log
 
     <style>
 
-.table td.tinytable_css_lv8v7ubf0xxcz2dnmrvt, .table th.tinytable_css_lv8v7ubf0xxcz2dnmrvt { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_axtq2rredadf3ub9r5bx, .table th.tinytable_css_axtq2rredadf3ub9r5bx { text-align: center; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_268k0ognsqb7no194ehf, .table th.tinytable_css_268k0ognsqb7no194ehf { text-align: center; }
-.table td.tinytable_css_fn29ew9n5w6sgojclrwy, .table th.tinytable_css_fn29ew9n5w6sgojclrwy { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-.table td.tinytable_css_sjq14n317tvg5oxysnbv, .table th.tinytable_css_sjq14n317tvg5oxysnbv { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_yqtohji5e97k1onro9hz, .table th.tinytable_css_yqtohji5e97k1onro9hz { text-align: left; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_mtorfaz54w1vu64ievps, .table th.tinytable_css_mtorfaz54w1vu64ievps { text-align: left; }
-.table td.tinytable_css_qs8xqtskneteq1s4lerr, .table th.tinytable_css_qs8xqtskneteq1s4lerr { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_lkzg043r51ssecm14kub, .table th.tinytable_css_lkzg043r51ssecm14kub { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_s15jwqbjh8pslihilhkg, .table th.tinytable_css_s15jwqbjh8pslihilhkg { text-align: center; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_8e8bcnl80of54etr9tze, .table th.tinytable_css_8e8bcnl80of54etr9tze { text-align: center; }
+.table td.tinytable_css_vru5nohodgf5s7vpv6kf, .table th.tinytable_css_vru5nohodgf5s7vpv6kf { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_njf85gfxv6rvdw8yl3am, .table th.tinytable_css_njf85gfxv6rvdw8yl3am { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_vzzdcds4cntjj8oi08et, .table th.tinytable_css_vzzdcds4cntjj8oi08et { text-align: left; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_m4yyu6gyj473ndf5cx4d, .table th.tinytable_css_m4yyu6gyj473ndf5cx4d { text-align: left; }
+.table td.tinytable_css_g193itlwyo0r73si7ixc, .table th.tinytable_css_g193itlwyo0r73si7ixc { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_5fgmhz49slovcw94fryk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_9g18mnx3guvlfezvt5p1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -3879,8 +3879,8 @@ Ripasso dummy e log
 
     <script>
 
-      function styleCell_zv67bouew6cwr5kcgeok(i, j, css_id) {
-          var table = document.getElementById("tinytable_zv67bouew6cwr5kcgeok");
+      function styleCell_0jkl95yepqdvgatyai2x(i, j, css_id) {
+          var table = document.getElementById("tinytable_0jkl95yepqdvgatyai2x");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3890,7 +3890,7 @@ Ripasso dummy e log
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_zv67bouew6cwr5kcgeok');
+        var table = document.getElementById('tinytable_0jkl95yepqdvgatyai2x');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3898,8 +3898,8 @@ Ripasso dummy e log
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_zv67bouew6cwr5kcgeok(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_zv67bouew6cwr5kcgeok");
+      function spanCell_0jkl95yepqdvgatyai2x(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_0jkl95yepqdvgatyai2x");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3929,20 +3929,20 @@ Ripasso dummy e log
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 11, j: 1 },  ], css_id: 'tinytable_css_f4l0xg2nkjmemdxmy1ue',}, 
-          { positions: [ { i: 8, j: 1 },  ], css_id: 'tinytable_css_1x7qnaip9k9mz1phpa79',}, 
-          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_3y98g4u1k5dp2364w179',}, 
-          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_c6yr6rrpeb31h3qk4kmo',}, 
-          { positions: [ { i: 11, j: 0 },  ], css_id: 'tinytable_css_bir1l66f9ta9e1hug1fl',}, 
-          { positions: [ { i: 8, j: 0 },  ], css_id: 'tinytable_css_1yvnlxjrdkbspkgbet6z',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_pmylln2tlhlo3xrwjqf4',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_x90h7ewm706womb080vi',}, 
+          { positions: [ { i: 11, j: 1 },  ], css_id: 'tinytable_css_z2dx92sy2133aipa5n8g',}, 
+          { positions: [ { i: 8, j: 1 },  ], css_id: 'tinytable_css_hgnswbpq3621pv01hy39',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_izez6qq943n0qbnt7b4y',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_jsw7bdxm8wb4byr0lz8f',}, 
+          { positions: [ { i: 11, j: 0 },  ], css_id: 'tinytable_css_lb70djhglej7zjl8qtuq',}, 
+          { positions: [ { i: 8, j: 0 },  ], css_id: 'tinytable_css_4lq0hyxjdtfoilypy069',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 },  ], css_id: 'tinytable_css_9ireqzdiiz0ou8unqq1g',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_gisgjsrpyq9mj8zus0ne',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_zv67bouew6cwr5kcgeok(cell.i, cell.j, group.css_id);
+                  styleCell_0jkl95yepqdvgatyai2x(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3950,17 +3950,17 @@ Ripasso dummy e log
 
     <style>
 
-.table td.tinytable_css_f4l0xg2nkjmemdxmy1ue, .table th.tinytable_css_f4l0xg2nkjmemdxmy1ue { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_1x7qnaip9k9mz1phpa79, .table th.tinytable_css_1x7qnaip9k9mz1phpa79 { text-align: center; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_3y98g4u1k5dp2364w179, .table th.tinytable_css_3y98g4u1k5dp2364w179 { text-align: center; }
-.table td.tinytable_css_c6yr6rrpeb31h3qk4kmo, .table th.tinytable_css_c6yr6rrpeb31h3qk4kmo { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-.table td.tinytable_css_bir1l66f9ta9e1hug1fl, .table th.tinytable_css_bir1l66f9ta9e1hug1fl { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_1yvnlxjrdkbspkgbet6z, .table th.tinytable_css_1yvnlxjrdkbspkgbet6z { text-align: left; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_pmylln2tlhlo3xrwjqf4, .table th.tinytable_css_pmylln2tlhlo3xrwjqf4 { text-align: left; }
-.table td.tinytable_css_x90h7ewm706womb080vi, .table th.tinytable_css_x90h7ewm706womb080vi { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_z2dx92sy2133aipa5n8g, .table th.tinytable_css_z2dx92sy2133aipa5n8g { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_hgnswbpq3621pv01hy39, .table th.tinytable_css_hgnswbpq3621pv01hy39 { text-align: center; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_izez6qq943n0qbnt7b4y, .table th.tinytable_css_izez6qq943n0qbnt7b4y { text-align: center; }
+.table td.tinytable_css_jsw7bdxm8wb4byr0lz8f, .table th.tinytable_css_jsw7bdxm8wb4byr0lz8f { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_lb70djhglej7zjl8qtuq, .table th.tinytable_css_lb70djhglej7zjl8qtuq { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_4lq0hyxjdtfoilypy069, .table th.tinytable_css_4lq0hyxjdtfoilypy069 { text-align: left; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_9ireqzdiiz0ou8unqq1g, .table th.tinytable_css_9ireqzdiiz0ou8unqq1g { text-align: left; }
+.table td.tinytable_css_gisgjsrpyq9mj8zus0ne, .table th.tinytable_css_gisgjsrpyq9mj8zus0ne { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_zv67bouew6cwr5kcgeok" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_0jkl95yepqdvgatyai2x" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -4356,7 +4356,7 @@ Nota
 </div>
 <p><span class="math inline">\(0.602+0.002*13.5 = 0.632\)</span></p>
 <ul>
-<li><p>Per un individuo con 13.5 anni di esperienza, una anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari</p></li>
+<li><p>Per un individuo con 13.5 anni di esperienza, un anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari</p></li>
 <li><p>Per un individuo con 26 anni di esperienza (terzo quartile), un anno in più di istruzione è associato a un aumento medio del salario orario di circa <span class="math inline">\(0.602+0.002*26 = 0.654\)</span> dollari</p></li>
 </ul>
 </section>
