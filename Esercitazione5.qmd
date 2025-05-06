@@ -1,0 +1,325 @@
+---
+title: "Esercitazione 5"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+
+# Nonlinearità e interazioni (parte 2)
+
+In questa esercitazione riprendiamo alcuni concetti della precedente esercitazione e approfondiamo altri aspetti legati all'interpretazione dei coefficienti.
+
+### Pacchetti necessari:
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+library(wooldridge)
+```
+
+
+## Esercizio:
+
+Consideriamo i dati in `wage2`
+
+```{r}
+data("wage2", package = "wooldridge")
+```
+
+
+- $wage$ sono le retribuzioni mensili
+- $educ$ sono gli anni di istruzioni
+- $exper$ anni di esperienza
+
+Stimiamo le seguente regressioni:
+
+```{r}
+reg_wage1 <- feols(wage ~ educ + exper + tenure, data = wage2, vcov = "hetero")
+reg_logwage1 <- feols(log(wage) ~ educ + exper + tenure, data = wage2, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+::: {.callout-note title="Domande"}
+1. Come si interpretano i coefficienti di $educ$ nelle due regressioni?
+2. I coefficienti sono statisticamente significativi al 5%? (Calcolare anche l'intervallo di confidenza al 95%)
+3. Wald test (statistica F robusta all'eteroschedasticità) che tutti i coefficienti della regressione siano uguali a zero
+:::
+
+
+
+## Polinomi (importante)
+
+Nell'Esercitazione 3 avevamo stimato le seguente regressioni:
+
+```{r}
+reg_wagepol <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
+reg_logwagepol <- feols(log(wage) ~ + exper + I(exper^2), data = wage1, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wagepol, "Log Wage" = reg_logwagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
+
+### Interpretazione dei coefficienti del primo modello:
+
+**Non** possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. Consideriamo la variazione nel salario nel caso si passi da 1 a 2 anni di esperienza.
+
+$$
+\Delta \hat{Y} = (\beta_0 + \beta_1 * 1 - \beta_2 * 1^{2}) - (\beta_0 + \beta_1 * 2 - \beta_2 * 2^{2})
+$$
+
+Uguale a $4.297 - 4.017 = 0.28$ dollari
+
+Possiamo interpetare i coefficienti per una variazione marginale derivando la seguente **formula:**
+
+Abbiamo che:
+
+$$
+y = \beta_0 + \beta_1 x + \beta_2  x^2 + u
+$$
+
+
+L'equazione stimata è:
+
+$$
+\hat{y} = \hat{\beta_0} + \hat{\beta_1} x + \hat{\beta_2} x^2
+$$
+
+
+Otteniamo la seguente approssimazione:
+
+$$
+\Delta \hat{y} \approx  (\hat{\beta_1} + 2  \hat{\beta_2} x) \Delta x
+$$
+
+e quindi:
+
+$$
+\Delta \hat{y}/ \Delta x \approx  \hat{\beta_1} + 2  \hat{\beta_2} x
+$$
+
+Nel nostro esempio:
+
+- Passare da un anno a due anni di istruzione: $0.298 - (2* 0.006) * 1 = 0.286$
+
+- Da 10 a 11 anni: $0.298 - 2(0.006) *10 = 0.178$
+
+- Nel secondo modello (Log Wage): passare da un anno a due anni di istruzione: $0.046 - (2* 0.001) * 1 = 0.044$ è associato ad un aumento del salario di circa il 4.4%
+
+
+**Nota:** nel secondo modello, passare da zero a 1 anno di istruzione è associato ad un aumento del salario orario di circa il 4.6% (0.046 * 100)
+
+
+
+### In deviazione dalla media
+
+Creiamo $expercenter = exper - media(exper)$
+
+```{r}
+data("wage1", package = "wooldridge")
+
+wage1 <- wage1 %>%
+  mutate(exper_center = exper - mean(exper, na.rm = TRUE))
+```
+
+
+Regressione semplice senza polinomio:
+```{r}
+reg_experc <- feols(wage ~ exper_center, data = wage1, vcov = "hetero")
+
+reg_exper <- feols(wage ~ exper, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_experc, "Wage" = reg_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+Cosa cambia?
+
+- **L'intercetta!** Perché nel primo modello rappresenta il salario predetto per un individuo con **esperienza uguale alla media** 
+
+- Nel secondo modello l'intercetta rappresenta il salario predetto con zero anni di esperienza.
+
+
+**Con polinomi:**
+
+```{r}
+reg_wagepolcenter <- feols(wage ~ educ + exper_center + I(exper_center^2) + tenure, data = wage1, vcov = "hetero")
+reg_wagepol <- feols(wage ~ educ + exper + I(exper^2) + tenure, data = wage1, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+Ora il coefficiente di $expercenter$ rappresenta l'incremento del salario quando $exper$ è uguale alla media (effetto marginale medio).
+
+Nel secondo modello, il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. 
+
+
+## Interazioni
+
+Usiamo il dataset `wage2` considerando $pareduc$ che rappresenta la somma degli anni di istruzione dei genitori. Ricordiamo $wage$ in `wage2` è il salario espresso in dollari mensili:
+
+```{r}
+wage2 <- wage2 %>%
+  mutate(pareduc = meduc + feduc)
+```
+
+```{r}
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_intlog <- feols(log(wage) ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
+**Effetto marginale di un anno in più di istruzione:**
+
+$$
+\frac{\partial wage}{\partial educ} = \beta_1 + \beta_5 \cdot pareduc
+$$
+
+- $\beta_1$ è l'effetto di un anno in più di istruzione quando $pareduc =0$
+
+- $\beta_5$ mostra come l'effetto di un anno in più di istruzione cambia al crescere di $pareduc$
+
+
+### In deviazione dalla media
+
+Come nel caso dei polinomi anche qui può essere utile ricentrare le variabili (ci sono alcuni missing values):
+
+```{r}
+wage2 <- wage2 %>%
+  mutate(
+    pareduc_center = pareduc - mean(pareduc, na.rm = TRUE),
+    educ_center = educ - mean(educ, na.rm = TRUE)
+  )
+
+```
+
+
+Confronto con la precendente regressione:
+
+```{r}
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_int_mean <- feols(wage ~ educ_center * pareduc_center + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
+Ora $\beta_3$ (seconda regressione 61.239) misura l’effetto marginale medio. Quando $pareduc$ è uguale alla sua media.
+
+
+$$
+\frac{\partial wage}{\partial educ} = \beta_3 + \beta_5 \cdot pareduccenter
+$$
+
+
+Quando $pareduccenter = 0$, abbiamo che $pareduc$ è uguale alla sua media, l’effetto marginale corrisponde a $\beta_1$, ossia l’effetto marginale medio. Quando $pareduccenter = 2$, cioè due unità sopra la media, l’effetto marginale diventa: $\beta_3 +  \beta_5 \cdot 2$
+
+
+Quindi nella seconda regressione ($pareduccenter$ e $educcenter$), il coefficiente associato a $\beta_3$  rappresenta l'effetto marginale medio degli anni di istruzioni quando l'istruzione dei genitori è uguale al valore medio.
+
+
+Ricordate $pareducenter = pareduc - media(pareduc)$
+
+L'interazione è statisticamente significativa al 5%?
+
+
+
+### Esempio Esercitazione 4
+
+Riprendiamo gli stessi passaggi dell'Esercizitazione 4 sull'interazione tra due variabili continue usando i dati in `wage1`.
+
+```{r}
+reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
+
+#Risultati
+modelsummary(list("Wage" = reg_wage_educexper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- il coefficiente associato a $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario quando l'esperienza ($exper$) è zero.
+
+- il coefficiente di $exper$: rappresenta l'effetto di un anno aggiuntivo di esperienza sul salario quando l'istruzione ($educ$) è zero.
+
+
+Il coefficiente di interazione è positivo, significa che l'effetto dell'istruzione aumenta con l'esperienza (o viceversa). 
+
+Qual è l'effetto parziale di $educ$ su $wage$?
+  
+Per stimare l'effetto parziale consideriamo dei valori rilevanti di $exper$ come la mediana, la media o il terzo quartile:
+
+```{r}
+summary(wage1$exper)
+```
+
+$0.602+0.002*13.5 = 0.632$
+
+- Per un individuo con 13.5 anni di esperienza, un anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari
+
+- Per un individuo con 26 anni di esperienza (terzo quartile), un anno in più di istruzione è associato a un aumento medio del salario orario di circa $0.602+0.002*26 = 0.654$ dollari 
+
+
+- Per un individuo con 17.02 anni di esperienza, un anno in più di istruzione è associato a un aumento medio del salario orario di circa **0.637** (approssimando) dollari (0.602 + 0.002 *17.02)
+
+
+**Definiamo:**
+
+
+```{r}
+wage1 <- wage1 %>%
+  mutate(
+    educ_center= educ - mean(educ, na.rm = TRUE),
+    exper_center = exper - mean(exper, na.rm = TRUE)
+  )
+```
+
+
+
+```{r}
+reg_wage_educexper_center <- feols(wage ~ educ_center * exper_center, data = wage1, vcov = "hetero")
+#Risultati
+modelsummary(list("Wage" = reg_wage_educexper_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+Ora il coefficiente associato a $educcenter$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario quando l'esperienza ($exper$) è uguale alla media.
+
+
+### Interazione dummy e continua
+
+Anche nel caso dell'interazione tra una variabile dummy e una variabile continua potrebbe essere utile centrare la variabile continua:
+
+```{r}
+##Primo modello regressione di wage su educ, female e la loro interazione
+reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
+reg_wage_educfe_center <- feols(wage ~ educ_center * female, data = wage1, vcov = "hetero")
+
+#Risultati
+modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+**Senza centratura:**
+
+- Coefficiente di $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario per gli uomini (quando $female$ = 0). L'effetto di un anno aggiuntivo di istruzione per gli uomini è pari a 0.539$
+
+- Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini quando l'istruzione è zero ($educ$ = 0).
+
+**Secondo modello:**
+
+- Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini quando gli anni di istruzione ($educ$) sono al loro valore medio.
