@@ -228,7 +228,7 @@ $$
 $$
 
 
-Quando $pareduccenter = 0$, abbiamo che $pareduc$ è uguale alla sua media, l’effetto marginale corrisponde a $\beta_1$, ossia l’effetto marginale medio. Quando $pareduccenter = 2$, cioè due unità sopra la media, l’effetto marginale diventa: $\beta_3 +  \beta_5 \cdot 2$
+Quando $pareduccenter = 0$, abbiamo che $pareduc$ è uguale alla sua media, l’effetto marginale corrisponde a $\beta_3$, ossia l’effetto marginale medio. Quando $pareduccenter = 2$, cioè due unità sopra la media, l’effetto marginale diventa: $\beta_3 +  \beta_5 \cdot 2$
 
 
 Quindi nella seconda regressione ($pareduccenter$ e $educcenter$), il coefficiente associato a $\beta_3$  rappresenta l'effetto marginale medio degli anni di istruzioni quando l'istruzione dei genitori è uguale al valore medio.
