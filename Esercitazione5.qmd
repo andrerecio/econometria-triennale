@@ -85,7 +85,7 @@ $$
 
 Uguale a $4.297 - 4.017 = 0.28$ dollari
 
-Possiamo interpetare i coefficienti per una variazione marginale derivando la seguente **formula:**
+Possiamo interpetare i coefficienti derivando la seguente **formula:**
 
 Abbiamo che:
 
@@ -163,7 +163,7 @@ modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), output = "k
 ```
 
 
-Ora il coefficiente di $expercenter$ rappresenta l'incremento del salario quando $exper$ è uguale alla media (effetto marginale medio).
+Ora il coefficiente di $expercenter$ rappresenta l'incremento del salario quando $exper$ è uguale alla media.
 
 Nel secondo modello, il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. 
 
@@ -185,7 +185,7 @@ modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), output =
 
 
 
-**Effetto marginale di un anno in più di istruzione:**
+**Effetto di un anno in più di istruzione:**
 
 $$
 \frac{\partial wage}{\partial educ} = \beta_1 + \beta_5 \cdot pareduc
@@ -220,7 +220,7 @@ modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), output = "
 
 
 
-Ora $\beta_3$ (seconda regressione 61.239) misura l’effetto marginale medio. Quando $pareduc$ è uguale alla sua media.
+Ora $\beta_3$ (seconda regressione 61.239) misura l’effetto quando $pareduc$ è uguale alla media.
 
 
 $$
@@ -228,10 +228,10 @@ $$
 $$
 
 
-Quando $pareduccenter = 0$, abbiamo che $pareduc$ è uguale alla sua media, l’effetto marginale corrisponde a $\beta_3$, ossia l’effetto marginale medio. Quando $pareduccenter = 2$, cioè due unità sopra la media, l’effetto marginale diventa: $\beta_3 +  \beta_5 \cdot 2$
+Quando $pareduccenter = 0$, abbiamo che $pareduc$ è uguale alla sua media.
 
 
-Quindi nella seconda regressione ($pareduccenter$ e $educcenter$), il coefficiente associato a $\beta_3$  rappresenta l'effetto marginale medio degli anni di istruzioni quando l'istruzione dei genitori è uguale al valore medio.
+Quindi nella seconda regressione ($pareduccenter$ e $educcenter$), il coefficiente associato a $\beta_3$  rappresenta l'effetto di un anno aggiuntivo di istruzione quando gli anni di istruzione dei genitori sono uguali al valore medio.
 
 
 Ricordate $pareducenter = pareduc - media(pareduc)$
