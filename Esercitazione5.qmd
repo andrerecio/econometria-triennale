@@ -115,14 +115,14 @@ $$
 
 Nel nostro esempio:
 
-- Passare da un anno a due anni di istruzione: $0.298 - (2* 0.006) * 1 = 0.286$
+- Passare da un anno a due anni di esperienza: $0.298 - (2* 0.006) * 1 = 0.286$
 
 - Da 10 a 11 anni: $0.298 - 2(0.006) *10 = 0.178$
 
-- Nel secondo modello (Log Wage): passare da un anno a due anni di istruzione: $0.046 - (2* 0.001) * 1 = 0.044$ è associato ad un aumento del salario di circa il 4.4%
+- Nel secondo modello (Log Wage): passare da un anno a due anni di esperienza: $0.046 - (2* 0.001) * 1 = 0.044$ è associato ad un aumento del salario di circa il 4.4%
 
 
-**Nota:** nel secondo modello, passare da zero a 1 anno di istruzione è associato ad un aumento del salario orario di circa il 4.6% (0.046 * 100)
+**Nota:** nel secondo modello, passare da zero a 1 anno di esperienza è associato ad un aumento del salario orario di circa il 4.6% (0.046 * 100)
 
 
 
