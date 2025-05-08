@@ -1,0 +1,294 @@
+---
+title: "Esercitazione N.6"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+# Regressione con dati panel
+
+Un panel contiene osservazioni su più unità (individui, stati, imprese) in cui ogni entità è osservata in due o più istanti temporali diversi:
+
+Ad Esempio:
+
+- Dati su 50 stati USA, ognuno è osservato per 3 anni, per un totale di 150 osservazioni.
+- Dati su 1000 individuali, in quattro mesi diversi, per 4000 osservazioni in totale.
+
+Con i dati panel possiamo controllare per fattori che:
+
+- Variano tra le unità ma non nel tempo (ad esempio variabili inosservate che variano da stato a stato, ma che non cambiano nel tempo)
+- Variabili che variano nel tempo, ma che non variano tra le unità
+- Potrebbero causare distorsione da variabili omesse
+- Sono inosservati o non misurati, e perciò non possono essere inclusi in una regressione multipla
+
+**Idea chiave:** Se una variabile omessa non varia nel tempo, allora qualsiasi variazione in $Y$ nel tempo non può essere causata dalla variabile omessa.
+
+### Pacchetti necessari:
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+library(wooldridge)
+```
+
+
+
+## Crimine e disoccupazione
+
+Carichiamo il dataset `crime2` su 46 città osservate nel 1982 e 1987:
+
+- $crmrte$: è il tasso di crimine per 1,000 abitanti cioè (crimini/popolazione) *1000
+- $unem$: tasso di disoccupazione
+
+```{r}
+data("crime2", package = "wooldridge")
+head(crime2)
+```
+
+Regressione del tasso di criminalità sul tasso di disoccupazione (1982 e 1987)
+
+```{r}
+regcrimcs <- feols(crmrte ~ unem, data = crime2, vcov = "hetero")
+regcrimcs
+```
+
+
+Un aumento di un punto percentuale del tasso di disoccupazione è associato, in media, a una riduzione di 0.307 crimini per 1,000 abitanti.
+
+
+### Dummy con l'anno
+
+Regressione del tasso di criminalità (1982 e 1987) con variabile dummy relativa all'anno 1987 ($d87$ uguale ad uno se 1987 = 1)
+
+```{r}
+regcrimcs2 <- feols(crmrte ~ unem + d87, data = crime2, vcov = "hetero")
+regcrimcs2
+```
+
+
+Questo è equivalente a stimare:
+
+```{r}
+regcrimcs_fe <- feols(crmrte ~ unem | year, data = crime2, vcov = "hetero")
+regcrimcs_fe
+```
+
+
+### Deviazione dalle medie dell'anno (trasformazione within):
+
+Stimiamo OLS usando dati “in deviazione dalle medie dell’anno”
+
+```{r}
+# Calcola media per gruppo (year)
+crime2_dev <- crime2 %>% 
+  group_by(year) %>%
+  mutate(crmrte_bar = mean(crmrte),  # media crmrte per anno
+         unem_bar = mean(unem)) %>%   # media unem per anno
+  ungroup() %>%
+  mutate(Wcrmrte = crmrte - crmrte_bar,  # deviazione crmrte
+         Wunem = unem - unem_bar)        # deviazione unem
+
+# Stima modello sulle deviazioni
+mod_crime_within <- feols(Wcrmrte ~ Wunem -1, data = crime2_dev, vcov = "hetero")
+mod_crime_within
+```
+
+La regressione sulle variabili centrate ha già eliminato la media. Non c’è nulla da spiegare con l'intercetta.
+
+Otteniamo lo stesso coefficiente 0.42.
+
+Il coefficiente è lo stesso ottenuto usando `|nr`. In questo caso lo standard error è leggermente diverso perchè `feols` non sa che abbiamo trasformato i dati.
+
+### First difference
+
+
+Quando $T = 2$, calcolare la differenza prima ed **includere l’intercetta** fornisce esattamente la stessa regressione di includere effetti individuali e temporali (vedete pagina 283, Stock e Watson).
+
+
+- $ccrmrte$: variazione in crmrte (first difference già presente in `crime2`)
+- $cunem$: variazione in unemployment rate (first difference già presente in `crime2`)
+
+```{r}
+regcrimcs_fd <- feols(ccrmrte ~ cunem, data = crime2, vcov = "hetero")
+regcrimcs_fd
+```
+
+
+Questo è coerente con molte teorie economiche e criminologiche:
+
+- più disoccupazione potrebbe comportare più individui in difficoltà economica e quindi più incentivi a commettere reati
+
+- meno opportunità lavorative potrebbe comportare più marginalizzazione sociale
+
+
+
+## Panel Wage (wagepan)
+
+```{r}
+data("wagepan", package = "wooldridge")
+datasummary_skim(wagepan)
+```
+
+Il dataset `wagepan`contiene dati sui salari di 545 lavoratori dal 1981 al 1987.
+
+
+In particolare usiamo:
+
+- $lwage$: logaritmo del salario
+- $union$: variabile dummy uguale ad 1 se il lavoratore è sindacalizzato
+- $exper$: anni di esperienza
+- $expersq$: anni di esperienza al quadrato
+- $educ$: anni di istruzione
+- $black$: dummy uguale a 1 se il lavoratore è nero
+- $hispanic$: dummy uguale a 1 se il lavoratore è ispanico
+- $married$: dummy uguale a 1 se il lavoratore è sposato
+
+
+Regressione senza effetti fissi individuali e temporali.
+
+```{r}
+reg_logwageunion <- feols(lwage ~ union + exper + expersq + educ + black + hisp + married, data = wagepan, vcov = "hetero")
+reg_logwageunion
+```
+
+::: {.callout-note title="Domande"}
+1. Come si interpretano i coefficienti di $educ$ e $union$ nella regressione?
+:::
+
+- L'effetto *ceteris paribus* di essere sindacalizzato è associato a un salario medio più alto del 18% circa, a parità delle altre variabili.
+
+- Ogni anno aggiuntivo di istruzione è associato a un salario medio più alto di circa 9.9%, a parità delle altre variabili.
+
+
+### Dummy per anno (effetti temporali)
+```{r}
+feols(lwage ~ union + exper + expersq + educ + black + hisp + married + d81 + d82 + d83 + d84 + d85 + d86 + d87, data = wagepan, vcov = "hetero")
+```
+
+Otteniamo gli stessi risultati stimando la seguente regressione con `|year` che significa effetti fissi su $year$
+
+```{r}
+feols(lwage ~ union + exper + expersq + educ + black + hisp + married | year , data = wagepan, vcov = "hetero")
+```
+
+
+### Effetti fissi individuali
+
+Usando `| nr` in `feols()`
+
+```{r}
+feols(lwage ~ union + exper + expersq + educ + black + hisp + married | nr , data = wagepan, vcov = "hetero")
+```
+
+Come vedete dall'output della regressione 3 variabili vengono rimosse ($educ$, $black$ and $hispan$).
+
+
+### Deviazione dalla media (trasformazione within)
+
+Usando `crime2` avevamo calcolato la trasformazione within per gli effetti temporali con `group_by(year)`.
+
+Calcoliamo la traformazione within per gli effetti individuali `group_by(nr)`
+
+```{r}
+wagepan_demeaned <- wagepan %>%
+  group_by(nr) %>%
+  mutate(
+    lwage_dm = lwage - mean(lwage, na.rm = TRUE),
+    union_dm = union - mean(union, na.rm = TRUE),
+    exper_dm = exper - mean(exper, na.rm = TRUE),
+    expersq_dm = expersq - mean(expersq, na.rm = TRUE),
+    educ_dm = educ - mean(educ, na.rm = TRUE),
+    black_dm = black - mean(black, na.rm = TRUE),
+    hisp_dm = hisp - mean(hisp, na.rm = TRUE),
+    married_dm = married - mean(married, na.rm = TRUE)
+  ) %>%
+  ungroup()
+```
+
+
+```{r}
+#L'intercetta sarà zero e la rimuovo con -1
+feols(lwage_dm ~ union_dm + exper_dm + expersq_dm + educ_dm + black_dm + hisp_dm + married_dm  -1, data = wagepan_demeaned, vcov = "hetero")
+```
+
+Il coefficiente è lo stesso ottenuto usando `|nr`. In questo caso lo standard error è leggermente diverso perchè `feols` non sa che abbiamo trasformato i dati.
+
+### Effetti fissi individuali e temporali
+
+```{r}
+reg_logwageunion_fe <- feols(lwage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "hetero")
+reg_logwageunion_fe
+```
+
+
+In questo modello stiamo tenendo conto e quindi rimuoviamo la distorsione derivante da variabili omesse che non variano nel tempo (ma possono differire fra individui) e variabili che non variano fra individui (ma possono differire nel tempo).
+
+
+Come vedete dall'output della regressione 4 variabili vengono rimosse ($exper$, $educ$, $black$ and $hispan$).
+
+- Le variabili costanti a livello individuale sono perfettamente collineari con gli effetti fissi individuali
+- con effetti fissi individuali e temporali ora viene rimossa anche $exper$
+
+Il coefficiente associate a $union$ ora è uguale a 0.08 (il modello è log-lineare)
+
+
+
+Stiamo controllando per tutte le caratteristiche dell’individuo che non cambiano nel tempo (ad esempio genere, etnia), ma variano tra individui; e stiamo controllando per tutto ciò che cambia nel tempo ma è comune a tutti gli individui (ad esempio inflazione, trend)
+
+
+**Confronto tra i modelli:**
+
+```{r}
+modelsummary(list("Log Wage" = reg_logwageunion, "Log Wage" = reg_logwageunion_fe), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+###  Wage espresso in dollari
+
+```{r}
+wagepan <- wagepan %>%
+  mutate(wage = exp(lwage))
+summary(wagepan$wage)
+```
+
+57.5043 $ è un possibile outlier, la trasformazione logaritmica applicata in precedenza ha aiutato (vedete istogramma in `datasummary_skim`)
+
+
+```{r}
+reg_wageunion_fe <- feols(wage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "hetero")
+reg_wageunion_fe
+```
+
+
+
+### Errori standard per dati raggruppati ("clustered")
+
+
+Gli errori standard clustered per dati panel sono l’estensione logica di quelli robusti all’eteroschedasticità per dati sezionali. 
+
+
+Nella regressione con dati sezionali, gli errori standard robusti all’eteroschedasticità sono validi indipendentemente dal fatto che vi sia eteroschedasticità. Nella regressione con dati panel, gli errori standard clustered sono validi indipendentemente dal fatto che vi sia eteroschedasticità e/o correlazione seriale.
+
+
+Il termine “clustered” deriva dal fatto che si consente correlazione in un “cluster” (o “gruppo”) di osservazioni (in una entità) ma non tra cluster.
+
+
+`feols` calcola gli errori standard clustered con l'opzione `vcov = cluster`
+
+```{r}
+feols(wage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "cluster")
+```
+
+
