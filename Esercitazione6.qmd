@@ -141,7 +141,7 @@ data("wagepan", package = "wooldridge")
 datasummary_skim(wagepan)
 ```
 
-Il dataset `wagepan`contiene dati sui salari di 545 lavoratori dal 1981 al 1987.
+Il dataset `wagepan`contiene dati sui salari di 545 lavoratori dal 1980 al 1987.
 
 
 In particolare usiamo:
