@@ -3573,8 +3573,8 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
 
     <script>
 
-      function styleCell_9dc1v9y5hajvrhlilywf(i, j, css_id) {
-          var table = document.getElementById("tinytable_9dc1v9y5hajvrhlilywf");
+      function styleCell_mofpcoipjcsi0epvg05z(i, j, css_id) {
+          var table = document.getElementById("tinytable_mofpcoipjcsi0epvg05z");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3584,7 +3584,7 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_9dc1v9y5hajvrhlilywf');
+        var table = document.getElementById('tinytable_mofpcoipjcsi0epvg05z');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -3592,8 +3592,8 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_9dc1v9y5hajvrhlilywf(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_9dc1v9y5hajvrhlilywf");
+      function spanCell_mofpcoipjcsi0epvg05z(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_mofpcoipjcsi0epvg05z");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -3623,15 +3623,15 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 44, j: 6 }, { i: 44, j: 3 }, { i: 44, j: 4 }, { i: 44, j: 7 }, { i: 44, j: 0 }, { i: 44, j: 1 }, { i: 44, j: 2 }, { i: 44, j: 5 }, { i: 44, j: 8 },  ], css_id: 'tinytable_css_dobi91bk6vc1nfalilr2',}, 
-          { positions: [ { i: 4, j: 0 }, { i: 9, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 13, j: 0 }, { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 26, j: 0 }, { i: 27, j: 0 }, { i: 15, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 31, j: 0 }, { i: 32, j: 0 }, { i: 20, j: 0 }, { i: 34, j: 0 }, { i: 35, j: 0 }, { i: 36, j: 0 }, { i: 37, j: 0 }, { i: 25, j: 0 }, { i: 39, j: 0 }, { i: 40, j: 0 }, { i: 41, j: 0 }, { i: 42, j: 0 }, { i: 43, j: 0 }, { i: 30, j: 3 }, { i: 5, j: 0 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 10, j: 0 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 19, j: 0 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 24, j: 0 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 33, j: 0 }, { i: 29, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 38, j: 0 }, { i: 34, j: 1 }, { i: 35, j: 1 }, { i: 36, j: 1 }, { i: 37, j: 1 }, { i: 38, j: 1 }, { i: 39, j: 1 }, { i: 40, j: 1 }, { i: 41, j: 1 }, { i: 42, j: 1 }, { i: 43, j: 1 }, { i: 30, j: 4 }, { i: 5, j: 1 }, { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 19, j: 1 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 33, j: 1 }, { i: 29, j: 2 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 33, j: 2 }, { i: 34, j: 2 }, { i: 35, j: 2 }, { i: 36, j: 2 }, { i: 37, j: 2 }, { i: 38, j: 2 }, { i: 39, j: 2 }, { i: 40, j: 2 }, { i: 41, j: 2 }, { i: 42, j: 2 }, { i: 43, j: 2 }, { i: 30, j: 5 }, { i: 14, j: 0 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 28, j: 0 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 16, j: 6 }, { i: 31, j: 3 }, { i: 32, j: 3 }, { i: 33, j: 3 }, { i: 34, j: 3 }, { i: 35, j: 3 }, { i: 36, j: 3 }, { i: 37, j: 3 }, { i: 38, j: 3 }, { i: 39, j: 3 }, { i: 40, j: 3 }, { i: 41, j: 3 }, { i: 42, j: 3 }, { i: 43, j: 3 }, { i: 30, j: 6 }, { i: 14, j: 1 }, { i: 1, j: 4 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 5, j: 4 }, { i: 6, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 11, j: 4 }, { i: 12, j: 4 }, { i: 13, j: 4 }, { i: 28, j: 1 }, { i: 15, j: 4 }, { i: 16, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 23, j: 4 }, { i: 24, j: 4 }, { i: 25, j: 4 }, { i: 26, j: 4 }, { i: 27, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 16, j: 7 }, { i: 31, j: 4 }, { i: 32, j: 4 }, { i: 33, j: 4 }, { i: 34, j: 4 }, { i: 35, j: 4 }, { i: 36, j: 4 }, { i: 37, j: 4 }, { i: 38, j: 4 }, { i: 39, j: 4 }, { i: 40, j: 4 }, { i: 41, j: 4 }, { i: 42, j: 4 }, { i: 43, j: 4 }, { i: 30, j: 7 }, { i: 14, j: 2 }, { i: 1, j: 5 }, { i: 2, j: 5 }, { i: 3, j: 5 }, { i: 4, j: 5 }, { i: 5, j: 5 }, { i: 6, j: 5 }, { i: 7, j: 5 }, { i: 8, j: 5 }, { i: 9, j: 5 }, { i: 10, j: 5 }, { i: 11, j: 5 }, { i: 12, j: 5 }, { i: 13, j: 5 }, { i: 28, j: 2 }, { i: 15, j: 5 }, { i: 16, j: 5 }, { i: 17, j: 5 }, { i: 18, j: 5 }, { i: 19, j: 5 }, { i: 20, j: 5 }, { i: 21, j: 5 }, { i: 22, j: 5 }, { i: 23, j: 5 }, { i: 24, j: 5 }, { i: 25, j: 5 }, { i: 26, j: 5 }, { i: 27, j: 5 }, { i: 28, j: 5 }, { i: 29, j: 5 }, { i: 16, j: 8 }, { i: 31, j: 5 }, { i: 32, j: 5 }, { i: 33, j: 5 }, { i: 34, j: 5 }, { i: 35, j: 5 }, { i: 36, j: 5 }, { i: 37, j: 5 }, { i: 38, j: 5 }, { i: 39, j: 5 }, { i: 40, j: 5 }, { i: 41, j: 5 }, { i: 42, j: 5 }, { i: 43, j: 5 }, { i: 30, j: 8 }, { i: 14, j: 3 }, { i: 1, j: 6 }, { i: 2, j: 6 }, { i: 3, j: 6 }, { i: 4, j: 6 }, { i: 5, j: 6 }, { i: 6, j: 6 }, { i: 7, j: 6 }, { i: 8, j: 6 }, { i: 9, j: 6 }, { i: 10, j: 6 }, { i: 11, j: 6 }, { i: 12, j: 6 }, { i: 13, j: 6 }, { i: 14, j: 6 }, { i: 15, j: 6 }, { i: 11, j: 7 }, { i: 17, j: 6 }, { i: 18, j: 6 }, { i: 19, j: 6 }, { i: 20, j: 6 }, { i: 21, j: 6 }, { i: 22, j: 6 }, { i: 23, j: 6 }, { i: 24, j: 6 }, { i: 25, j: 6 }, { i: 26, j: 6 }, { i: 27, j: 6 }, { i: 28, j: 6 }, { i: 29, j: 6 }, { i: 25, j: 7 }, { i: 31, j: 6 }, { i: 32, j: 6 }, { i: 33, j: 6 }, { i: 34, j: 6 }, { i: 35, j: 6 }, { i: 36, j: 6 }, { i: 37, j: 6 }, { i: 38, j: 6 }, { i: 39, j: 6 }, { i: 40, j: 6 }, { i: 41, j: 6 }, { i: 42, j: 6 }, { i: 43, j: 6 }, { i: 39, j: 7 }, { i: 14, j: 4 }, { i: 1, j: 7 }, { i: 2, j: 7 }, { i: 3, j: 7 }, { i: 4, j: 7 }, { i: 5, j: 7 }, { i: 6, j: 7 }, { i: 7, j: 7 }, { i: 8, j: 7 }, { i: 9, j: 7 }, { i: 10, j: 7 }, { i: 6, j: 8 }, { i: 12, j: 7 }, { i: 13, j: 7 }, { i: 14, j: 7 }, { i: 15, j: 7 }, { i: 11, j: 8 }, { i: 17, j: 7 }, { i: 18, j: 7 }, { i: 19, j: 7 }, { i: 20, j: 7 }, { i: 21, j: 7 }, { i: 22, j: 7 }, { i: 23, j: 7 }, { i: 24, j: 7 }, { i: 20, j: 8 }, { i: 26, j: 7 }, { i: 27, j: 7 }, { i: 28, j: 7 }, { i: 29, j: 7 }, { i: 25, j: 8 }, { i: 31, j: 7 }, { i: 32, j: 7 }, { i: 33, j: 7 }, { i: 34, j: 7 }, { i: 35, j: 7 }, { i: 36, j: 7 }, { i: 37, j: 7 }, { i: 38, j: 7 }, { i: 34, j: 8 }, { i: 40, j: 7 }, { i: 41, j: 7 }, { i: 42, j: 7 }, { i: 43, j: 7 }, { i: 39, j: 8 }, { i: 14, j: 5 }, { i: 1, j: 8 }, { i: 2, j: 8 }, { i: 3, j: 8 }, { i: 4, j: 8 }, { i: 5, j: 8 }, { i: 19, j: 8 }, { i: 7, j: 8 }, { i: 8, j: 8 }, { i: 9, j: 8 }, { i: 10, j: 8 }, { i: 24, j: 8 }, { i: 12, j: 8 }, { i: 13, j: 8 }, { i: 14, j: 8 }, { i: 15, j: 8 }, { i: 29, j: 8 }, { i: 17, j: 8 }, { i: 18, j: 8 }, { i: 32, j: 8 }, { i: 33, j: 8 }, { i: 21, j: 8 }, { i: 22, j: 8 }, { i: 23, j: 8 }, { i: 37, j: 8 }, { i: 38, j: 8 }, { i: 26, j: 8 }, { i: 27, j: 8 }, { i: 28, j: 8 }, { i: 42, j: 8 }, { i: 43, j: 8 }, { i: 31, j: 8 }, { i: 36, j: 8 }, { i: 41, j: 8 }, { i: 35, j: 8 }, { i: 40, j: 8 },  ], css_id: 'tinytable_css_0mjgvah4gazrdd2lzcd3',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 3 }, { i: 0, j: 6 }, { i: 0, j: 7 }, { i: 0, j: 8 }, { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_9itidtqz18150ow2nyqk',}, 
+          { positions: [ { i: 44, j: 6 }, { i: 44, j: 3 }, { i: 44, j: 4 }, { i: 44, j: 7 }, { i: 44, j: 0 }, { i: 44, j: 1 }, { i: 44, j: 2 }, { i: 44, j: 5 }, { i: 44, j: 8 },  ], css_id: 'tinytable_css_al2nyp7bdqo5dapin50a',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 9, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 13, j: 0 }, { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 }, { i: 23, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 26, j: 0 }, { i: 27, j: 0 }, { i: 15, j: 0 }, { i: 29, j: 0 }, { i: 30, j: 0 }, { i: 31, j: 0 }, { i: 32, j: 0 }, { i: 20, j: 0 }, { i: 34, j: 0 }, { i: 35, j: 0 }, { i: 36, j: 0 }, { i: 37, j: 0 }, { i: 25, j: 0 }, { i: 39, j: 0 }, { i: 40, j: 0 }, { i: 41, j: 0 }, { i: 42, j: 0 }, { i: 43, j: 0 }, { i: 30, j: 3 }, { i: 5, j: 0 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 10, j: 0 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 19, j: 0 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 24, j: 0 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 23, j: 1 }, { i: 24, j: 1 }, { i: 25, j: 1 }, { i: 26, j: 1 }, { i: 27, j: 1 }, { i: 33, j: 0 }, { i: 29, j: 1 }, { i: 30, j: 1 }, { i: 31, j: 1 }, { i: 32, j: 1 }, { i: 38, j: 0 }, { i: 34, j: 1 }, { i: 35, j: 1 }, { i: 36, j: 1 }, { i: 37, j: 1 }, { i: 38, j: 1 }, { i: 39, j: 1 }, { i: 40, j: 1 }, { i: 41, j: 1 }, { i: 42, j: 1 }, { i: 43, j: 1 }, { i: 30, j: 4 }, { i: 5, j: 1 }, { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 12, j: 2 }, { i: 13, j: 2 }, { i: 19, j: 1 }, { i: 15, j: 2 }, { i: 16, j: 2 }, { i: 17, j: 2 }, { i: 18, j: 2 }, { i: 19, j: 2 }, { i: 20, j: 2 }, { i: 21, j: 2 }, { i: 22, j: 2 }, { i: 23, j: 2 }, { i: 24, j: 2 }, { i: 25, j: 2 }, { i: 26, j: 2 }, { i: 27, j: 2 }, { i: 33, j: 1 }, { i: 29, j: 2 }, { i: 30, j: 2 }, { i: 31, j: 2 }, { i: 32, j: 2 }, { i: 33, j: 2 }, { i: 34, j: 2 }, { i: 35, j: 2 }, { i: 36, j: 2 }, { i: 37, j: 2 }, { i: 38, j: 2 }, { i: 39, j: 2 }, { i: 40, j: 2 }, { i: 41, j: 2 }, { i: 42, j: 2 }, { i: 43, j: 2 }, { i: 30, j: 5 }, { i: 14, j: 0 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 10, j: 3 }, { i: 11, j: 3 }, { i: 12, j: 3 }, { i: 13, j: 3 }, { i: 28, j: 0 }, { i: 15, j: 3 }, { i: 16, j: 3 }, { i: 17, j: 3 }, { i: 18, j: 3 }, { i: 19, j: 3 }, { i: 20, j: 3 }, { i: 21, j: 3 }, { i: 22, j: 3 }, { i: 23, j: 3 }, { i: 24, j: 3 }, { i: 25, j: 3 }, { i: 26, j: 3 }, { i: 27, j: 3 }, { i: 28, j: 3 }, { i: 29, j: 3 }, { i: 16, j: 6 }, { i: 31, j: 3 }, { i: 32, j: 3 }, { i: 33, j: 3 }, { i: 34, j: 3 }, { i: 35, j: 3 }, { i: 36, j: 3 }, { i: 37, j: 3 }, { i: 38, j: 3 }, { i: 39, j: 3 }, { i: 40, j: 3 }, { i: 41, j: 3 }, { i: 42, j: 3 }, { i: 43, j: 3 }, { i: 30, j: 6 }, { i: 14, j: 1 }, { i: 1, j: 4 }, { i: 2, j: 4 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 5, j: 4 }, { i: 6, j: 4 }, { i: 7, j: 4 }, { i: 8, j: 4 }, { i: 9, j: 4 }, { i: 10, j: 4 }, { i: 11, j: 4 }, { i: 12, j: 4 }, { i: 13, j: 4 }, { i: 28, j: 1 }, { i: 15, j: 4 }, { i: 16, j: 4 }, { i: 17, j: 4 }, { i: 18, j: 4 }, { i: 19, j: 4 }, { i: 20, j: 4 }, { i: 21, j: 4 }, { i: 22, j: 4 }, { i: 23, j: 4 }, { i: 24, j: 4 }, { i: 25, j: 4 }, { i: 26, j: 4 }, { i: 27, j: 4 }, { i: 28, j: 4 }, { i: 29, j: 4 }, { i: 16, j: 7 }, { i: 31, j: 4 }, { i: 32, j: 4 }, { i: 33, j: 4 }, { i: 34, j: 4 }, { i: 35, j: 4 }, { i: 36, j: 4 }, { i: 37, j: 4 }, { i: 38, j: 4 }, { i: 39, j: 4 }, { i: 40, j: 4 }, { i: 41, j: 4 }, { i: 42, j: 4 }, { i: 43, j: 4 }, { i: 30, j: 7 }, { i: 14, j: 2 }, { i: 1, j: 5 }, { i: 2, j: 5 }, { i: 3, j: 5 }, { i: 4, j: 5 }, { i: 5, j: 5 }, { i: 6, j: 5 }, { i: 7, j: 5 }, { i: 8, j: 5 }, { i: 9, j: 5 }, { i: 10, j: 5 }, { i: 11, j: 5 }, { i: 12, j: 5 }, { i: 13, j: 5 }, { i: 28, j: 2 }, { i: 15, j: 5 }, { i: 16, j: 5 }, { i: 17, j: 5 }, { i: 18, j: 5 }, { i: 19, j: 5 }, { i: 20, j: 5 }, { i: 21, j: 5 }, { i: 22, j: 5 }, { i: 23, j: 5 }, { i: 24, j: 5 }, { i: 25, j: 5 }, { i: 26, j: 5 }, { i: 27, j: 5 }, { i: 28, j: 5 }, { i: 29, j: 5 }, { i: 16, j: 8 }, { i: 31, j: 5 }, { i: 32, j: 5 }, { i: 33, j: 5 }, { i: 34, j: 5 }, { i: 35, j: 5 }, { i: 36, j: 5 }, { i: 37, j: 5 }, { i: 38, j: 5 }, { i: 39, j: 5 }, { i: 40, j: 5 }, { i: 41, j: 5 }, { i: 42, j: 5 }, { i: 43, j: 5 }, { i: 30, j: 8 }, { i: 14, j: 3 }, { i: 1, j: 6 }, { i: 2, j: 6 }, { i: 3, j: 6 }, { i: 4, j: 6 }, { i: 5, j: 6 }, { i: 6, j: 6 }, { i: 7, j: 6 }, { i: 8, j: 6 }, { i: 9, j: 6 }, { i: 10, j: 6 }, { i: 11, j: 6 }, { i: 12, j: 6 }, { i: 13, j: 6 }, { i: 14, j: 6 }, { i: 15, j: 6 }, { i: 11, j: 7 }, { i: 17, j: 6 }, { i: 18, j: 6 }, { i: 19, j: 6 }, { i: 20, j: 6 }, { i: 21, j: 6 }, { i: 22, j: 6 }, { i: 23, j: 6 }, { i: 24, j: 6 }, { i: 25, j: 6 }, { i: 26, j: 6 }, { i: 27, j: 6 }, { i: 28, j: 6 }, { i: 29, j: 6 }, { i: 25, j: 7 }, { i: 31, j: 6 }, { i: 32, j: 6 }, { i: 33, j: 6 }, { i: 34, j: 6 }, { i: 35, j: 6 }, { i: 36, j: 6 }, { i: 37, j: 6 }, { i: 38, j: 6 }, { i: 39, j: 6 }, { i: 40, j: 6 }, { i: 41, j: 6 }, { i: 42, j: 6 }, { i: 43, j: 6 }, { i: 39, j: 7 }, { i: 14, j: 4 }, { i: 1, j: 7 }, { i: 2, j: 7 }, { i: 3, j: 7 }, { i: 4, j: 7 }, { i: 5, j: 7 }, { i: 6, j: 7 }, { i: 7, j: 7 }, { i: 8, j: 7 }, { i: 9, j: 7 }, { i: 10, j: 7 }, { i: 6, j: 8 }, { i: 12, j: 7 }, { i: 13, j: 7 }, { i: 14, j: 7 }, { i: 15, j: 7 }, { i: 11, j: 8 }, { i: 17, j: 7 }, { i: 18, j: 7 }, { i: 19, j: 7 }, { i: 20, j: 7 }, { i: 21, j: 7 }, { i: 22, j: 7 }, { i: 23, j: 7 }, { i: 24, j: 7 }, { i: 20, j: 8 }, { i: 26, j: 7 }, { i: 27, j: 7 }, { i: 28, j: 7 }, { i: 29, j: 7 }, { i: 25, j: 8 }, { i: 31, j: 7 }, { i: 32, j: 7 }, { i: 33, j: 7 }, { i: 34, j: 7 }, { i: 35, j: 7 }, { i: 36, j: 7 }, { i: 37, j: 7 }, { i: 38, j: 7 }, { i: 34, j: 8 }, { i: 40, j: 7 }, { i: 41, j: 7 }, { i: 42, j: 7 }, { i: 43, j: 7 }, { i: 39, j: 8 }, { i: 14, j: 5 }, { i: 1, j: 8 }, { i: 2, j: 8 }, { i: 3, j: 8 }, { i: 4, j: 8 }, { i: 5, j: 8 }, { i: 19, j: 8 }, { i: 7, j: 8 }, { i: 8, j: 8 }, { i: 9, j: 8 }, { i: 10, j: 8 }, { i: 24, j: 8 }, { i: 12, j: 8 }, { i: 13, j: 8 }, { i: 14, j: 8 }, { i: 15, j: 8 }, { i: 29, j: 8 }, { i: 17, j: 8 }, { i: 18, j: 8 }, { i: 32, j: 8 }, { i: 33, j: 8 }, { i: 21, j: 8 }, { i: 22, j: 8 }, { i: 23, j: 8 }, { i: 37, j: 8 }, { i: 38, j: 8 }, { i: 26, j: 8 }, { i: 27, j: 8 }, { i: 28, j: 8 }, { i: 42, j: 8 }, { i: 43, j: 8 }, { i: 31, j: 8 }, { i: 36, j: 8 }, { i: 41, j: 8 }, { i: 35, j: 8 }, { i: 40, j: 8 },  ], css_id: 'tinytable_css_2nohap291lurdz4y9556',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 3 }, { i: 0, j: 6 }, { i: 0, j: 7 }, { i: 0, j: 8 }, { i: 0, j: 1 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_rkzdbe05lpmzzcry0bl5',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_9dc1v9y5hajvrhlilywf(cell.i, cell.j, group.css_id);
+                  styleCell_mofpcoipjcsi0epvg05z(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3639,12 +3639,12 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
 
     <style>
 
-.table td.tinytable_css_dobi91bk6vc1nfalilr2, .table th.tinytable_css_dobi91bk6vc1nfalilr2 { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_0mjgvah4gazrdd2lzcd3, .table th.tinytable_css_0mjgvah4gazrdd2lzcd3 { text-align: left; }
-.table td.tinytable_css_9itidtqz18150ow2nyqk, .table th.tinytable_css_9itidtqz18150ow2nyqk { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_al2nyp7bdqo5dapin50a, .table th.tinytable_css_al2nyp7bdqo5dapin50a { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_2nohap291lurdz4y9556, .table th.tinytable_css_2nohap291lurdz4y9556 { text-align: left; }
+.table td.tinytable_css_rkzdbe05lpmzzcry0bl5, .table th.tinytable_css_rkzdbe05lpmzzcry0bl5 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_9dc1v9y5hajvrhlilywf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_mofpcoipjcsi0epvg05z" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -4151,7 +4151,7 @@ RMSE: 19.6   Adj. R2: 0.106852</code></pre>
 <!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
-<p>Il dataset <code>wagepan</code>contiene dati sui salari di 545 lavoratori dal 1981 al 1987.</p>
+<p>Il dataset <code>wagepan</code>contiene dati sui salari di 545 lavoratori dal 1980 al 1987.</p>
 <p>In particolare usiamo:</p>
 <ul>
 <li><span class="math inline">\(lwage\)</span>: logaritmo del salario</li>
@@ -4356,8 +4356,8 @@ RMSE: 0.327891     Adj. R2: 0.565718
 
     <script>
 
-      function styleCell_gleb4ujpx0kl796lalh9(i, j, css_id) {
-          var table = document.getElementById("tinytable_gleb4ujpx0kl796lalh9");
+      function styleCell_pn0sm3uqm72iqqs4vq0w(i, j, css_id) {
+          var table = document.getElementById("tinytable_pn0sm3uqm72iqqs4vq0w");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -4367,7 +4367,7 @@ RMSE: 0.327891     Adj. R2: 0.565718
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_gleb4ujpx0kl796lalh9');
+        var table = document.getElementById('tinytable_pn0sm3uqm72iqqs4vq0w');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -4375,8 +4375,8 @@ RMSE: 0.327891     Adj. R2: 0.565718
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_gleb4ujpx0kl796lalh9(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_gleb4ujpx0kl796lalh9");
+      function spanCell_pn0sm3uqm72iqqs4vq0w(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_pn0sm3uqm72iqqs4vq0w");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -4406,20 +4406,20 @@ RMSE: 0.327891     Adj. R2: 0.565718
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 23, j: 1 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_iicyi9iuutv18lqsin8f',}, 
-          { positions: [ { i: 16, j: 2 }, { i: 16, j: 1 },  ], css_id: 'tinytable_css_qmkxy0n5in5qdlcx7ugp',}, 
-          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 7, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 5, j: 2 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 12, j: 2 }, { i: 11, j: 1 }, { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 18, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 20, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 17, j: 2 }, { i: 22, j: 2 }, { i: 19, j: 2 }, { i: 21, j: 2 },  ], css_id: 'tinytable_css_rkatb1bs35u96ic3sn14',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_5xflpcshtye142q94pa2',}, 
-          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_20hp9lwebjch1hhvm78i',}, 
-          { positions: [ { i: 16, j: 0 },  ], css_id: 'tinytable_css_49a8cghel19fx8vyyr65',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 20, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 },  ], css_id: 'tinytable_css_53tdcb2382anxptj4hnt',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_sql0yjtksx7pv5vrllnl',}, 
+          { positions: [ { i: 23, j: 1 }, { i: 23, j: 2 },  ], css_id: 'tinytable_css_f4xdxox155lqlhl0s5n9',}, 
+          { positions: [ { i: 16, j: 2 }, { i: 16, j: 1 },  ], css_id: 'tinytable_css_6if7k60g6uk9jij3uv71',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 7, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 14, j: 1 }, { i: 15, j: 1 }, { i: 5, j: 2 }, { i: 17, j: 1 }, { i: 18, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 }, { i: 21, j: 1 }, { i: 22, j: 1 }, { i: 12, j: 2 }, { i: 11, j: 1 }, { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 18, j: 2 }, { i: 6, j: 2 }, { i: 7, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 10, j: 2 }, { i: 11, j: 2 }, { i: 20, j: 2 }, { i: 13, j: 2 }, { i: 14, j: 2 }, { i: 15, j: 2 }, { i: 17, j: 2 }, { i: 22, j: 2 }, { i: 19, j: 2 }, { i: 21, j: 2 },  ], css_id: 'tinytable_css_4l5jnvg1fbtss4w2i39n',}, 
+          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_jdbgsnryd6gyk51d7ste',}, 
+          { positions: [ { i: 23, j: 0 },  ], css_id: 'tinytable_css_3ucpcnerjuq9d7vi1yhs',}, 
+          { positions: [ { i: 16, j: 0 },  ], css_id: 'tinytable_css_xah3cfpl6z87d21iqpo0',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 14, j: 0 }, { i: 15, j: 0 }, { i: 20, j: 0 }, { i: 17, j: 0 }, { i: 18, j: 0 }, { i: 19, j: 0 }, { i: 21, j: 0 }, { i: 22, j: 0 },  ], css_id: 'tinytable_css_upi0vlq1xpfoskm3lkvf',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_01o44iq4qsg7qt2q11nv',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_gleb4ujpx0kl796lalh9(cell.i, cell.j, group.css_id);
+                  styleCell_pn0sm3uqm72iqqs4vq0w(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -4427,17 +4427,17 @@ RMSE: 0.327891     Adj. R2: 0.565718
 
     <style>
 
-.table td.tinytable_css_iicyi9iuutv18lqsin8f, .table th.tinytable_css_iicyi9iuutv18lqsin8f { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_qmkxy0n5in5qdlcx7ugp, .table th.tinytable_css_qmkxy0n5in5qdlcx7ugp { text-align: center; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_rkatb1bs35u96ic3sn14, .table th.tinytable_css_rkatb1bs35u96ic3sn14 { text-align: center; }
-.table td.tinytable_css_5xflpcshtye142q94pa2, .table th.tinytable_css_5xflpcshtye142q94pa2 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-.table td.tinytable_css_20hp9lwebjch1hhvm78i, .table th.tinytable_css_20hp9lwebjch1hhvm78i { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-.table td.tinytable_css_49a8cghel19fx8vyyr65, .table th.tinytable_css_49a8cghel19fx8vyyr65 { text-align: left; border-bottom: solid black 0.05em; }
-.table td.tinytable_css_53tdcb2382anxptj4hnt, .table th.tinytable_css_53tdcb2382anxptj4hnt { text-align: left; }
-.table td.tinytable_css_sql0yjtksx7pv5vrllnl, .table th.tinytable_css_sql0yjtksx7pv5vrllnl { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_f4xdxox155lqlhl0s5n9, .table th.tinytable_css_f4xdxox155lqlhl0s5n9 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_6if7k60g6uk9jij3uv71, .table th.tinytable_css_6if7k60g6uk9jij3uv71 { text-align: center; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_4l5jnvg1fbtss4w2i39n, .table th.tinytable_css_4l5jnvg1fbtss4w2i39n { text-align: center; }
+.table td.tinytable_css_jdbgsnryd6gyk51d7ste, .table th.tinytable_css_jdbgsnryd6gyk51d7ste { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+.table td.tinytable_css_3ucpcnerjuq9d7vi1yhs, .table th.tinytable_css_3ucpcnerjuq9d7vi1yhs { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+.table td.tinytable_css_xah3cfpl6z87d21iqpo0, .table th.tinytable_css_xah3cfpl6z87d21iqpo0 { text-align: left; border-bottom: solid black 0.05em; }
+.table td.tinytable_css_upi0vlq1xpfoskm3lkvf, .table th.tinytable_css_upi0vlq1xpfoskm3lkvf { text-align: left; }
+.table td.tinytable_css_01o44iq4qsg7qt2q11nv, .table th.tinytable_css_01o44iq4qsg7qt2q11nv { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_gleb4ujpx0kl796lalh9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_pn0sm3uqm72iqqs4vq0w" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
