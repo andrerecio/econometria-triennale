@@ -45,3 +45,11 @@ Questa repository contiene il materiale relativo alle esercitazioni del corso di
 
 📥 [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione6_script.R)
 
+
+
+### 📄 Esercitazione 7
+
+👉 [Esercitazione 7](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html)
+
+📥 [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_script.R)
+
