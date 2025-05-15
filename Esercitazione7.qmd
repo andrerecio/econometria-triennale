@@ -1,0 +1,342 @@
+---
+title: "Esercitazione N.7"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+# Regressione con variabili strumentali
+
+In questa Esercitazione vedremo le regressioni con variabili strumentali (IV) per risolvere il problema dell'endogeneità di una o più variabili esplanatorie.
+
+
+Tre importanti minacce alla validità interna sono:
+
+1. Distorsione da variabili omesse per una variabile correlata con $X$ ma inosservata (perciò non può essere inclusa nella regressione) e per cui vi sono variabili di controllo inadeguate;
+
+2. Distorsione da causalità simultanea ($X$ causa $Y$ , $Y$ causa $X$);
+
+3. Distorsione da errori nelle variabili ($X$ è misurata con errore)
+
+
+Tutti e tre i problemi comportano $𝐸(u_i | X_i) \neq 0$. La regressione con variabili strumentali può eliminare la distorsione quando $𝐸(u_i | X_i) \neq 0$ -usando una variabile strumentale (IV), $Z$.
+
+**Idea chiave:**
+
+Lo stimatore IV con un singolo regressore e un singolo strumento $Y_i = \beta_0 + \beta_1 X_i + u_i$
+
+- La regressione IV divide $X$ in due parti: una che potrebbe essere correlata con $u$, e una che non lo è.
+Isolando la parte che non è correlata con $u_i$, è possibile stimare $\beta_1$.
+
+- Per fare questo si utilizza una variabile strumentale, $Z_i$, che è correlata con $X_i$ ma non correlata con $u_i$
+
+
+Perché una variabile strumentale (uno “strumento”) $Z$ sia valida, deve soddisfare due condizioni:
+
+1. **Rilevanza:** $cor(Z_i, X_i) \neq 0$
+2. **Esogeneità:** $cor(Z_i, u_i) = 0$
+
+**Pacchetti necessari:**
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+library(wooldridge)
+```
+
+
+## Card (1995)
+
+Card (1995) ha utilizzato dati su salari e istruzione relativi ad un campione di uomini nel 1976 per stimare il rendimento dell’istruzione.
+
+Egli ha impiegato una variabile dummy che indica se un individuo è cresciuto vicino a un college quadriennale ($nearc4$) come strumento per l’istruzione.
+
+Card ha cercato di risolvere questo problema utilizzando la distanza di ciascuno studente dal college più vicino come variabile strumentale. L'ipotesi alla base di questo è che una minore distanza geografica dal college riduca il "costo" di frequentare l'università e quindi aumenti la probabilità di iscriversi. Allo stesso tempo, la distanza dal college non dovrebbe essere direttamente collegata alla variabile di interesse, ovvero "i salari futuri".
+
+
+
+Pertanto, se $nearc4$ è realmente incorrelato con i fattori non osservabili inclusi nel termine d’errore, può essere utilizzato come strumento per $educ$.
+
+
+```{r}
+data("card", package = "wooldridge")
+head(card)
+```
+
+
+- $wage$: sono le retribuzioni orarie **in centesimi** di dollari
+- $educ$: sono gli anni di istruzione
+- $exper$: anni di esperienza 
+- $smsa$: residenza in area metropolitana (dummy)
+- $black$: se la persona è nera (dummy)
+- $south$: se l'individuo risiede al sud
+- $nearc4$: dummy uguale ad 1 se l'individuo vive vicino a un college di 4 anni
+- $nearc2$: dummy uguale ad 1 se l'individuo vive vicino a un college di 2 anni
+  
+
+**Esercizio:**
+
+```{r}
+wage_educ <- feols(wage ~ educ + exper, data = card, vcov = "hetero")
+logwage_educ <- feols(log(wage) ~ educ + exper, data = card, vcov = "hetero")
+
+
+modelsummary(
+  list("Wage" = wage_educ, "Log Wage" = logwage_educ),
+  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
+```
+
+::: {.callout-note title="Domande"}
+1. Come si interpretano i coefficienti di $educ$ nelle due regressioni?
+2. Se $wage$ fosse espresso in dollari (e non centinaia di dollari) cosa cambierebbe nelle due regressioni? 
+:::
+
+
+
+### Minimi quadrati in due stadi (TSLS)
+
+```{r}
+iv_card <- feols(log(wage) ~ 1 | educ ~ nearc4, data = card, vcov = "hetero")
+iv_card
+```
+
+
+La regressione IV usando `feols` si stima `log(wage) ~ 1 | educ ~ nearc4`
+
+
+
+Il metodo del two stage least squares (TSLS), è equivalente ad usare i valori predetti del primo stadio nel secondo stadio (gli errori standard sono sbagliati perché non tengono conto della stima nel primo stadio). Come sempre usiamo errori standard robusti all'eteroschedasticità.
+
+
+```{r}
+fs_card <- feols(educ ~ nearc4, data = card, vcov = "hetero")
+fs_card
+
+card$educ_hat <- predict(fs_card)
+```
+
+
+Regressione "manuale" dei valori predetti di $educ$:
+
+```{r}
+sstage_card <- feols(log(wage) ~ educ_hat, data = card, vcov = "hetero")
+sstage_card
+```
+
+
+### Derivazione algebrica diretta
+
+In questo caso il coefficiente $\beta_1$ è equivalente al rapporto tra la covarianza campionaria di $Z$ e $Y$ e la covarianza campionaria di $Z$ e $X$.
+
+
+```{r}
+cov(card$nearc4, card$lwage)/cov(card$nearc4, card$educ)
+```
+
+
+### Derivazione dalla "Forma Ridotta"
+
+$$
+Y_i = \beta_0 + \beta_1 X_i + u_i
+$$
+
+$$
+X_i = \pi_0 + \pi_1 Z_i + v_i
+$$
+
+Sostituendo $X_i$ in $Y_i$ otteniamo:
+
+$$
+Y_i = \gamma_0 + \gamma_1 + \omega_i
+$$
+
+La regressione dell'endogena sullo strumento l'abbiamo stimata in precedenza `fs_card`. Ora stimiamo la regressione della variabile dipendente sullo strumento. 
+
+```{r}
+rf_card <- feols(log(wage) ~ nearc4, data = card, vcov = "hetero")
+rf_card
+```
+
+E dividiamo i coefficienti:
+$$
+\hat{\beta}^{TSLS} = \frac{\hat{\gamma_1}}{\hat{\pi_1}}
+$$
+
+```{r}
+# Estrai i coefficienti
+beta_fs_1 <- coef(fs_card)["nearc4"]  # coefficiente del primo stadio
+beta_rf_1 <- coef(rf_card)["nearc4"]  # coefficiente della forma ridotta
+
+beta_rf_1 / beta_fs_1  
+
+```
+
+
+### Modello generale
+
+```{r}
+iv_card_controlli <- feols(log(wage) ~ exper + black + smsa + south + married | educ ~ nearc4, data = card, vcov = "hetero")
+
+summary(iv_card_controlli)
+
+```
+
+
+**Confronto OLS:**
+
+```{r}
+ols_card_controlli <- feols(log(wage) ~ exper + black +smsa + south + educ + married, data = card, vcov = "hetero")
+
+modelsummary(
+  list("Log Wage (OLS)" = ols_card_controlli, "Log Wage (IV)" = iv_card_controlli),
+  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
+
+```
+
+
+Nella regressionke OLS, un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 7,1%, a parità delle altre variabili.
+
+La regressione TSLS riporta un valore più alto: un anno un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 12.4%.
+
+
+### Sovraidentificazione e strumenti deboli
+
+```{r}
+iv_card_overid <- feols(log(wage) ~ exper + black +smsa + south + married | educ ~ nearc4 + nearc2, data = card, vcov = "hetero")
+iv_card_overid
+```
+
+
+
+**Test restrizioni di sovraidentificazione (Sargan):** Se gli strumenti sono correlati con il termine d’errore, il primo stadio del TSLS non può isolare una componente di $X$ incorrelata con il termine d’errore, perciò ̂$X$
+è correlata con $u$ e il TSLS è inconsistente.
+
+
+Se ci sono più strumenti che regressori endogeni, è possibile verificare -**parzialmente** - l’esogeneità dello strumento.
+
+Possiamo eseguire una verifica parziale di esogeneità: se 𝑚 > 1, possiamo verificare l’ipotesi nulla che tutti gli strumenti siano esogeni contro l’alternativa che al massimo 𝑚 − 1 siano endogeni (correlati con 𝑢)
+
+- Si usa il test $J$, realizzato usando i residui TSLS.
+
+- Se il $J$ respinge l’ipotesi, allora almeno alcuni degli strumenti sono endogeni, perciò occorre prendere una decisione difficile e scartare alcuni (o tutti) gli strumenti
+
+
+$H_0$ :strumenti validi, cioè non correlati con il termine d’errore.
+
+Interpretazione: Se p-value > 0.05 allora non rigettiamo $H_0$
+
+Il test riportato usando `feols`con `vcoc = "hetero"` è robusto all'eteroschedasticità. Il libro deriva una versione valida sotto omoschedasticità.
+
+
+**Weak instrument:** Se la statistica Wald del primo stadio è minore di $m$ × 10, allora l’insieme degli strumenti è debole.
+
+
+
+## Angrist and Evans (1998)
+
+In *Children and Their Parents' Labor Supply: Evidence from Exogenous Variation in Family Size*, pubblicato su *American Economic Review*, Angrist e Evans analizzano l’effetto della presenza di figli sull’offerta di lavoro dei genitori (misurata in termini di ore lavorate settimanali).
+
+Per superare il problema di endogeneità nella decisione di avere figli — dovuto alla possibile correlazione con altri determinanti dell’offerta di lavoro — Angrist ed Evans si concentrano sui genitori con almeno due figli e utilizzano come variabile strumentale se i primi due figli sono dello stesso sesso ($samesex$) o se il secondo parto è gemellare ($multi2nd$).
+
+Rilevanza?  Le famiglie i cui primi due figli sono entrambi maschi (o entrambe femmine) hanno (avevano) più probabilità di avere un terzo figlio.
+
+Esogeneità? La composizione di genere dei figli NON dovrebbe influenzare direttamente l’offerta di lavoro della madre.
+
+Nel dataset `labsup` è contenuta una parte dei dati utilizzati da Angrist ed Evans (1998).
+
+
+```{r}
+data("labsup", package = "wooldridge")
+head(labsup)
+```
+
+```{r}
+# Modello IV senza controlli (samesex come strumento per kids)
+iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ samesex, data = labsup, vcov = "hetero")
+```
+
+
+Primo stadio:
+```{r}
+summary(iv_labsup, stage =1)
+```
+
+Secondo stadio:
+```{r}
+summary(iv_labsup, stage =2)
+```
+
+Confronto con stima OLS.
+
+```{r}
+#OLS ore e numero figli
+ols_labsup <- feols(hours ~ kids + educ + age + black + hispan, data = labsup, vcov = "hetero")
+
+modelsummary(
+  list("OLS" = ols_labsup,
+       "IV" = iv_labsup),
+  stars = TRUE,
+  gof_omit = "IC|Adj|RMSE"
+)
+```
+
+
+::: {.callout-note title="Domanda"}
+1. Come si interpretano i coefficienti di $educ$ e $kids$ nella regressione OLS? 
+:::
+
+
+Un altro possibile strumento è $multi2nd$ che assume valore 1 se il secondo parto è gemellare.
+
+Avere un parto gemellare aumenta la dimensione familiare (Rilevanza)
+
+Esogeneità? Avere gemelli al secondo parto non dovrebbe influenzare direttamente l’offerta di lavoro della madre (?)
+
+```{r}
+iv_labsup_twins <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd, data = labsup, vcov = "hetero")
+```
+
+Primo stadio:
+```{r}
+summary(iv_labsup_twins, stage =1)
+```
+
+Secondo stadio:
+```{r}
+summary(iv_labsup_twins, stage =2)
+```
+
+
+**Confronto:**
+
+```{r}
+modelsummary(
+  list("Hours (IV samesex)" = iv_labsup ,
+       "Hours (IV multi2nd)" = iv_labsup_twins),
+  stars = TRUE,
+  gof_omit = "IC|Adj|RMSE"
+)
+```
+
+### Sovraidentificazione
+
+```{r}
+iv_labsup_twins_over <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd + samesex, data = labsup, vcov = "hetero")
+iv_labsup_twins_over
+```
+
+L'F test (1st stage) è uguale a 117.9. E non rigettiamo l'ipotesi nulla del test di Sargan.
