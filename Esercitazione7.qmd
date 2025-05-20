@@ -1,5 +1,5 @@
 ---
-title: "Esercitazione N.7"
+title: "Esercitazione N.7-8"
 author: "Econometria"
 format: 
   html:
@@ -160,7 +160,7 @@ $$
 Sostituendo $X_i$ in $Y_i$ otteniamo:
 
 $$
-Y_i = \gamma_0 + \gamma_1 + \omega_i
+Y_i = \gamma_0 + \gamma_1 Z_i + \omega_i
 $$
 
 La regressione dell'endogena sullo strumento l'abbiamo stimata in precedenza `fs_card`. Ora stimiamo la regressione della variabile dipendente sullo strumento. 
@@ -208,7 +208,7 @@ modelsummary(
 ```
 
 
-Nella regressionke OLS, un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 7,1%, a parità delle altre variabili.
+Nella regressione OLS, un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 7,1%, a parità delle altre variabili.
 
 La regressione TSLS riporta un valore più alto: un anno un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 12.4%.
 
@@ -222,28 +222,64 @@ iv_card_overid
 
 
 
-**Test restrizioni di sovraidentificazione (Sargan):** Se gli strumenti sono correlati con il termine d’errore, il primo stadio del TSLS non può isolare una componente di $X$ incorrelata con il termine d’errore, perciò ̂$X$
-è correlata con $u$ e il TSLS è inconsistente.
+**Test restrizioni di sovraidentificazione:** Se gli strumenti sono correlati con il termine d’errore, il primo stadio del TSLS non può isolare una componente di $X$ incorrelata con il termine d’errore, perciò ̂$X$ è correlata con $u$ e il TSLS è inconsistente.
 
 
 Se ci sono più strumenti che regressori endogeni, è possibile verificare -**parzialmente** - l’esogeneità dello strumento.
 
-Possiamo eseguire una verifica parziale di esogeneità: se 𝑚 > 1, possiamo verificare l’ipotesi nulla che tutti gli strumenti siano esogeni contro l’alternativa che al massimo 𝑚 − 1 siano endogeni (correlati con 𝑢)
+Possiamo eseguire una verifica parziale di esogeneità: se $m > 1$, possiamo verificare l’ipotesi nulla che tutti gli strumenti siano esogeni contro l’alternativa che al massimo $m-1$ siano endogeni (correlati con $u$)
 
 - Si usa il test $J$, realizzato usando i residui TSLS.
 
 - Se il $J$ respinge l’ipotesi, allora almeno alcuni degli strumenti sono endogeni, perciò occorre prendere una decisione difficile e scartare alcuni (o tutti) gli strumenti
 
 
-$H_0$ :strumenti validi, cioè non correlati con il termine d’errore.
+- $H_0$ :strumenti esogeni, cioè non correlati con il termine d’errore.
+- $H_1$: almeno uno degli strumenti è endogeno.
 
-Interpretazione: Se p-value > 0.05 allora non rigettiamo $H_0$
+Se p-value > 0.05 allora **non** rigettiamo $H_0$
 
-Il test riportato usando `feols`con `vcoc = "hetero"` è robusto all'eteroschedasticità. Il libro deriva una versione valida sotto omoschedasticità.
+Il libro (Stock e Watson pp. 344-345 o pp. 448-449 in inglese) deriva una versione valida sotto omoschedasticità:
+
+1. Stimiano la regressione TSLS
+2. Si ottengono i residui della regressione TSLS:  
+   $\hat{u}_i = Y_i - \hat{Y}_i$
+3. Si esegue una regressione dei residui $\hat{u}_i$ sugli strumenti $Z_1, \dots, Z_m$ e le variabili esogene $W_1, \dots, W_r$
+4. Se gli strumenti fossero esogeni i coefficienti degli strumenti nella regressione di $\hat{u}_i$ dovrebbero essere uguali a zero (statisticamente non significativi)
+5. Si calcola come $J = mF$. Quindi $J = Wald$
+6. In grandi campioni si distribuisce come una chi-quadrato con $m-k$ gradi di libertà ($\chi_{m-k}$)
+
+$m-k$ è il grado di sovraidentificazione ($k$ sono i regressori endogeni)
 
 
-**Weak instrument:** Se la statistica Wald del primo stadio è minore di $m$ × 10, allora l’insieme degli strumenti è debole.
+```{r}
+library(car)
+card <- card |> mutate(uhat = log(wage) - iv_card_overid$fitted.values)
+Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "iid")
+J <- linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
+J
+```
 
+Qui rifiuto l'ipotesi nulla, almeo uno dei due strumenti è endogeno
+
+
+**Weak instrument:** Se la statistica Wald del primo stadio è minore di $m \times 10$, allora l’insieme degli strumenti è debole.
+
+```{r}
+linearHypothesis(fs_card , "nearc4=0")
+```
+
+```{r}
+linearHypothesis(fs_card , "nearc4=0", test="F")
+```
+
+**2 strumenti**:
+
+```{r}
+fs_card_overid <- feols(educ ~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "hetero")
+
+linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
+```
 
 
 ## Angrist and Evans (1998)
@@ -252,7 +288,7 @@ In *Children and Their Parents' Labor Supply: Evidence from Exogenous Variation 
 
 Per superare il problema di endogeneità nella decisione di avere figli — dovuto alla possibile correlazione con altri determinanti dell’offerta di lavoro — Angrist ed Evans si concentrano sui genitori con almeno due figli e utilizzano come variabile strumentale se i primi due figli sono dello stesso sesso ($samesex$) o se il secondo parto è gemellare ($multi2nd$).
 
-Rilevanza?  Le famiglie i cui primi due figli sono entrambi maschi (o entrambe femmine) hanno (avevano) più probabilità di avere un terzo figlio.
+Rilevanza? Le famiglie i cui primi due figli sono entrambi maschi (o entrambe femmine) hanno (avevano) più probabilità di avere un terzo figlio.
 
 Esogeneità? La composizione di genere dei figli NON dovrebbe influenzare direttamente l’offerta di lavoro della madre.
 
@@ -265,7 +301,7 @@ head(labsup)
 ```
 
 ```{r}
-# Modello IV senza controlli (samesex come strumento per kids)
+# Modello IV (samesex come strumento per kids)
 iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ samesex, data = labsup, vcov = "hetero")
 ```
 
@@ -300,11 +336,11 @@ modelsummary(
 :::
 
 
-Un altro possibile strumento è $multi2nd$ che assume valore 1 se il secondo parto è gemellare.
+Un altro possibile strumento è $multi2nd$ che assume valore 1 se il secondo parto è gemellare:
 
-Avere un parto gemellare aumenta la dimensione familiare (Rilevanza)
+- Avere un parto gemellare aumenta la dimensione familiare (Rilevanza)
 
-Esogeneità? Avere gemelli al secondo parto non dovrebbe influenzare direttamente l’offerta di lavoro della madre (?)
+- Esogeneità? Avere gemelli al secondo parto non dovrebbe influenzare direttamente l’offerta di lavoro della madre
 
 ```{r}
 iv_labsup_twins <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd, data = labsup, vcov = "hetero")
@@ -339,4 +375,6 @@ iv_labsup_twins_over <- feols(hours ~ educ + age + black + hispan | kids ~ multi
 iv_labsup_twins_over
 ```
 
-L'F test (1st stage) è uguale a 117.9. E non rigettiamo l'ipotesi nulla del test di Sargan.
+::: {.callout-note title="Domande"}
+1. Provate a calcolare Wald del primo stadio sugli strumenti e fate il test delle restrizioni da sovraidentificazione
+:::
