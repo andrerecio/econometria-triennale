@@ -1,0 +1,306 @@
+---
+title: Esercitazione 7
+subtitle: Regressione con variabili strumentali
+format: clean-typst
+author:
+  - name: Econometria I
+    email:
+    affiliations: Sapienza Università di Roma
+date: today
+date-format: long
+brand:
+  typography: 
+    fonts: 
+      - family: Roboto
+        weight: [light, bold]
+        source: google
+execute:
+  echo: true
+  warning: false
+  message: false
+  error: false        
+---
+
+# Card (1995)
+
+## College Proximity
+
+### Abstract
+
+- A convincing analysis of the causal link between schooling and earnings requires an
+exogenous source of variation in education outcomes. 
+
+- This paper explores the use of college proximity as an exogenous determinant of schooling. 
+  
+- Men who grew up in local labor markets with a nearby college have significantly higher education and earnings than other men. 
+  
+- The education and earnings gains are concentrated among men with poorly-educated parents -- men who would otherwise stop schooling 
+  
+- IV estimates of the return to schooling are higher than conventional OLS estimates
+
+
+
+## College Proximity
+
+
+## Dataset "card"
+
+
+```{r}
+library(tidyverse)
+library(wooldridge)
+library(modelsummary)
+data("card", package = "wooldridge")
+```
+
+- $wage$: sono le retribuzioni orarie **in centesimi** di dollari
+- $educ$: sono gli anni di istruzione
+- $exper$: anni di esperienza 
+- $smsa$: residenza in area metropolitana (dummy)
+- $black$: se la persona è nera (dummy)
+- $south$: se l'individuo risiede al sud
+- $nearc4$: dummy uguale ad 1 se l'individuo vive vicino a un college di 4 anni
+- $nearc2$: dummy uguale ad 1 se l'individuo vive vicino a un college di 2 anni
+
+
+
+## Regressione OLS (Esercizio)
+
+Regressione del salario orario in centesimi di dollari sugli anni di istruzione e gli anni di esperienza.
+
+```{r}
+library(fixest)
+wage_educ <- feols(wage ~ educ + exper, data = card, vcov = "hetero")
+logwage_educ <- feols(log(wage) ~ educ + exper, data = card, vcov = "hetero")
+```
+
+Cosa cambia se il salario viene espresso in dollari? (wage / 100)
+
+```{r}
+wage_educdoll <- feols(wage/100 ~ educ + exper, data = card, vcov = "hetero")
+logwage_educdoll <- feols(log(wage/100) ~ educ + exper, data = card, vcov = "hetero")
+```
+
+
+## Regressione OLS (Esercizio)
+
+::: {.slide .center .large}
+```{r}
+#| echo: false
+#| results: 'asis'
+modelsummary(list("Wage" = wage_educ, "Log Wage" = logwage_educ), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+:::
+
+- Un anno aggiuntivo di istruzione è associato ad un aumento in media del salario di 55.055 centesimi di dollari (Un anno aggiuntivo di istruzione è associato ad aumento del salario, in media, di circa il 9.3%) a parità di anni esperienza.
+
+
+## Regressione OLS (Esercizio)
+
+::: {.slide .center .large}
+```{r}
+#| echo: false
+#| results: 'asis'
+modelsummary(list("Wage" = wage_educdoll, "Log Wage" = logwage_educdoll), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+:::
+
+- Nella prima regressione i coefficienti e errori standard sono divisi per 100. 
+
+- Nella regressione "Log Wage" i coefficienti associati a $educ$ e $exper$ rimangono invariati. L'intercetta è uguale a $\beta_0 - log(100)$ cioè $4.666 - log(100) = 4.666 - 4.605 = 0.061$
+
+
+- Questo perché $log(\frac{wage}{100}) = log(wage) - log(100)$
+
+- Se avessi moltiplicato come nel caso dell'**Esercitazione 4** per 140 (traformazione costante da ore a mesi) otterrei $\beta_0 + log(140)$
+
+- Gli errori standard rimangono invariati (nella Regressione "Log Wage")
+ 
+- L'$R^2$ rimane invariato in entrambe le regressioni
+
+
+## Regressione con variabili strumentali
+
+### Validità
+
+- La variabile strumentale (o "strumento") $Z$ deve soddisfare le seguenti condizioni:
+  
+  1. **Rilevanza:**  $cor(Z_i, X_i) \neq 0$
+  2. **Esogeneità:** $cor(Z_i, u_i) = 0$
+
+
+- Nel caso di Card (1995):
+  1. Vicinanza al college deve essere associata a maggiori anni di istruzione
+  2. La vicinanza al college deve essere incorrelata con l'errore. La vicinanza al college deve influenzare il salario (futuro) solo indirettamente attraverso gli anni di istruzione
+
+
+
+## Regressioni con variabili strumentali
+
+### Validità
+
+La prima condizione può essere testata (come vedremo nel primo stadio). La seconda riguarda la covarianza tra $Z$ e l'errore non osservato $u$. Generalmente non possiamo testare questa assunzione e in molti casi assumiamo $Cov(Z, u) = 0$ basandoci sul ragionamento (ad esempio teoria). Testeremo le "restrizioni da sovraidentificazione".
+
+## TSLS
+### Uno strumento e una variabile endogena
+
+```{r}
+iv_card <- feols(log(wage) ~ 1 | educ ~ nearc4, data = card, vcov = "hetero")
+iv_card
+```
+
+- Usiamo `~` 1 perché non abbiamo altre variabili
+
+- Stima un modello IV in cui $educ$ è endogena, strumentata con $nearc4$, e l’unica variabile esplicativa (oltre a $educ$) è una costante.
+
+- Nel primo stadio regredisce l'endogena sullo strumento ($educ$ su $nearc4$)
+
+- Nel secondo stadio regredisce la variabile dipendente sui valori predetti del primo stadio (log(wage) su $\hat{educ}$)
+
+- Gli errori standard tengono conto della stima nel primo stadio
+
+## TSLS (Primo Stadio da `iv_card`)
+```{r}
+summary(iv_card, stage = 1)
+```
+
+## TSLS (Primo Stadio)
+
+```{r}
+fs_card <- feols(educ ~ nearc4, data = card, vcov = "hetero")
+fs_card
+```
+
+## TSLS (Secondo Stadio)
+
+```{r}
+card$educ_hat <- predict(fs_card)
+feols(log(wage) ~ educ_hat, data = card, vcov = "hetero")
+```
+
+- Con questa procedura otteniamo gli stessi risultati di `iv_card`. Ma gli errori standard **non** sono corretti (non tengono conto della stima nel primo stadio)
+
+## Derivazione diretta
+
+Lo stimatore della regressione con variabili strumentali può essere ottenuto in questo modo:
+ 
+$$
+\beta_{1}^{TSLS} = \frac{cov(Z,Y)}{cov(Z,X)}
+$$
+
+- Notate come $cov(Z,X)$ è ciò che stimiamo nel primo stadio. Se fosse uguale a zero non potremmo stimare $\beta_{1}^{TSLS}$
+
+Nel nostro caso utilizzando i dati:
+
+```{r}
+cov(card$nearc4, card$lwage)/cov(card$nearc4, card$educ)
+```
+
+
+## "Forma Ridotta"
+
+### Definizioni
+
+- Il termine "Forma Ridotta" proviene dalla tradizione dei modelli ad equazioni simultanee (SEM): nel modello in forma ridotta le endogene sono espresse come funzione delle esogene.
+
+Il libro definisce la forma ridotta di $X$, che di fatto coincide con il primo stadio: 
+$$
+X_i = \pi_0 + \pi_1 Z_i + v_i
+$$
+
+Sostituendo $X_i$ nella seguente:
+$$
+Y_i = \beta_0 + \beta_1 X_i + u_i
+$$
+
+Oteniamo "forma ridotta" per $Y$:
+$$
+Y_i = \gamma_0 + \gamma_1 Z_i + \omega_i
+$$
+
+
+## Rilevanza dello strumento
+
+- Calcoliamo la statistica $F$ per la verifica dell'ipotesi che i coefficienti degli strumenti siano tutti 0 nel **primo stadio** della regressione TSLS
+
+- Una statistica $F < 10$ indica che gli strumenti sono deboli (Staicker and Stock, 1997; Stock and Yogo, 2005),
+
+- Non è la statistica $F$ complessiva, ma testiamo che congiuntamente i coefficienti degli strumenti siano uguali a zero
+
+- Se la statistica Wald del primo stadio è minore di $m \times 10$, allora l’insieme degli strumenti è debole. **Nota: Wald = $m \times F$**
+  
+- Alcuni studi suggeriscono valori critici più alti o altri test (Montiel Olea and Pfluegger, 2013; Kleibergen-Paap rk statistics)
+
+
+## Rilevanza dello strumento
+
+```{r}
+library(car)
+linearHypothesis(fs_card , "nearc4=0")
+```
+
+## Rilevanza dello strumento
+
+```{r}
+library(car)
+linearHypothesis(fs_card , "nearc4=0", test="F")
+```
+
+## Rilevanza dello strumento (2 strumenti)
+Calcoliamo il primo stadio della regressione:
+
+```{r}
+fs_card_overid <- feols(educ ~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "hetero")
+```
+
+## Rilevanza dello strumento (2 strumenti)
+
+```{r}
+linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
+```
+
+## Restrizioni da Sovraidentificazione
+###  J di Sargan
+
+Quando il numero di strumenti disponibili $m$ è maggiore del numero di variabili endogene $k$, il modello è sovraidentificato.
+
+- $H_0$: tutti gli strumenti sono esogeni
+- $H_1$: almeno uno degli strumenti è endogeno
+
+
+## J di Sargan
+
+### Procedura
+
+1. Stimiano la regressione TSLS
+2. Si ottengono i residui della regressione TSLS:  
+   $\hat{u}_i = Y_i - \hat{Y}_i$
+3. Si esegue una regressione dei residui $\hat{u}_i$ sugli strumenti $Z_1, \dots, Z_m$ e le variabili esogene $W_1, \dots, W_r$
+4. Se gli strumenti fossero esogeni i coefficienti degli strumenti nella regressione di $\hat{u}_i$ dovrebbero essere uguali a zero (statisticamente non significativi)
+5. Si calcola come $J = mF$. Quindi $J = Wald$
+6. In grandi campioni si distribuisce come una chi-quadrato con $m-k$ gradi di libertà ($\chi_{m-k}$)
+
+$m-k$ è il grado di sovraidentificazione ($k$ sono i regressori endogeni)
+
+
+## J di Sargan
+
+```{r}
+iv_card_overid <- feols(log(wage) ~ exper + black +smsa + south + married | educ ~ nearc4 + nearc2, data = card, vcov = "hetero")
+```
+
+```{r}
+library(car)
+library(dplyr)
+card <- card |> mutate(uhat = log(wage) - iv_card_overid$fitted.values)
+Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "iid")
+```
+
+
+## J di Sargan
+
+```{r}
+linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
+```
