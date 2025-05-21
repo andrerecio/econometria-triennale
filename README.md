@@ -47,9 +47,11 @@ Questa repository contiene il materiale relativo alle esercitazioni del corso di
 
 
 
-### 📄 Esercitazione 7
+### 📄 Esercitazione 7-8
 
-👉 [Esercitazione 7](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html)
+👉 [Esercitazione 7-8](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html)
+
+👉 [Esercitazione 7-8 Slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_slide.pdf)
 
 📥 [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_script.R)
 
