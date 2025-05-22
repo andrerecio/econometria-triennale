@@ -40,9 +40,9 @@ head(alcohol)
 
 | Variabile   | Descrizione                                                                               |
 | :---------- | :---------------------------------------------------------------------------------------- |
-| $abuse$     | Variabile dipendente (1=Abuse di Alcol, 0=Non abusa negato).                                  |
-| $employ$    | Variabile dummy (1=Occupato, 0=Non occupato).                              |
-| $married$     | Variabile dummy (1=Sposato, 0=Non sposato).                    |
+| $abuse$     | Variabile dummy (1=Abusa di Alcol, 0=Non abusa).                                  |
+| $employ$    | Variabile dipendente dummy (1=Occupato, 0=Non occupato).                              |
+| $married$   | Variabile dummy (1=Sposato, 0=Non sposato).                    |
 | $educ$     | Anni di istruzione       |
 
 
@@ -193,8 +193,8 @@ print(paste("Effetto marginale medio manuale (Logit):", round(ame_manual_logit, 
 ```
 
 
-- Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.
-- Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.
+- Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.
+- Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.
 
 L’approccio dell’effetto marginale medio è generalmente considerato più robusto, perché tiene conto di come l’effetto di $abuse$ può variare a seconda delle altre caratteristiche dei richiedenti.
 
@@ -228,7 +228,7 @@ Gli effetti sono vicini a quelli stimati con il modello LPM.
 
 - Aver abusato di alcol riduce la probabilità di essere occupati di 1.9 punti percentuali
 
-- Un anno in più di istruzione auementa la probabilità di essere occupati 1.5 punti percenutali
+- Un anno in più di istruzione aumenta la probabilità di essere occupati 1.5 punti percenutali
 
 - Essere sposato aumenta la probabilità di essere occupato di 8.9 punti percentuali
 
