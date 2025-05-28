@@ -61,3 +61,8 @@ Questa repository contiene il materiale relativo alle esercitazioni del corso di
 👉 [Esercitazione 9](https://andrerecio.github.io/econometria-triennale/Esercitazione8.html)
 
 📥 [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione8_script.R)
+
+
+### 📄 Esercitazione 10
+
+👉 [Esercitazione 10 Slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione10_slide.pdf)
