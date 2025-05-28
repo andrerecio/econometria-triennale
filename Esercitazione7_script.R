@@ -1,5 +1,4 @@
 #Esercitazione 7 script
-
 library(tidyverse)
 library(knitr)
 library(kableExtra)
@@ -23,10 +22,8 @@ modelsummary(
 iv_card <- feols(log(wage) ~ 1 | educ ~ nearc4, data = card, vcov = "hetero")
 iv_card
 
-
 fs_card <- feols(educ ~ nearc4, data = card, vcov = "hetero")
 fs_card
-
 
 card$educ_hat <- predict(fs_card)
 
@@ -36,7 +33,6 @@ sstage_card
 
 cov(card$nearc4, card$lwage)/cov(card$nearc4, card$educ)
 
-
 rf_card <- feols(log(wage) ~ nearc4, data = card, vcov = "hetero")
 rf_card
 
@@ -45,7 +41,7 @@ rf_card
 beta_fs_1 <- coef(fs_card)["nearc4"]  # coefficiente del primo stadio
 beta_rf_1 <- coef(rf_card)["nearc4"]  # coefficiente della forma ridotta
 
-beta_rf_1 / beta_fs_1
+beta_rf_1 / beta_fs_1 
 
 
 iv_card_controlli <- feols(log(wage) ~ exper + black + smsa + south + married | educ ~ nearc4, data = card, vcov = "hetero")
@@ -65,15 +61,38 @@ iv_card_overid <- feols(log(wage) ~ exper + black +smsa + south + married | educ
 iv_card_overid
 
 
+library(car)
+card <- card |> mutate(uhat = log(wage) - iv_card_overid$fitted.values)
+Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "iid")
+J <- linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
+J
+
+
+linearHypothesis(fs_card , "nearc4=0")
+
+
+linearHypothesis(fs_card , "nearc4=0", test="F")
+
+
+fs_card_overid <- feols(educ ~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "hetero")
+
+linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
+
+
 data("labsup", package = "wooldridge")
 head(labsup)
 
 
-# Modello IV senza controlli (samesex come strumento per kids)
+
+# Modello IV (samesex come strumento per kids)
 iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ samesex, data = labsup, vcov = "hetero")
 
+
 summary(iv_labsup, stage =1)
+
+
 summary(iv_labsup, stage =2)
+
 
 #OLS ore e numero figli
 ols_labsup <- feols(hours ~ kids + educ + age + black + hispan, data = labsup, vcov = "hetero")
@@ -85,9 +104,15 @@ modelsummary(
   gof_omit = "IC|Adj|RMSE"
 )
 
+
 iv_labsup_twins <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd, data = labsup, vcov = "hetero")
 
+
+summary(iv_labsup_twins, stage =1)
+
+
 summary(iv_labsup_twins, stage =2)
+
 
 modelsummary(
   list("Hours (IV samesex)" = iv_labsup ,
@@ -95,6 +120,7 @@ modelsummary(
   stars = TRUE,
   gof_omit = "IC|Adj|RMSE"
 )
+
 
 iv_labsup_twins_over <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd + samesex, data = labsup, vcov = "hetero")
 iv_labsup_twins_over
