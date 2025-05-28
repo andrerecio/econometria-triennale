@@ -284,9 +284,9 @@ linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
 
 ## Angrist and Evans (1998)
 
-In *Children and Their Parents' Labor Supply: Evidence from Exogenous Variation in Family Size*, pubblicato su *American Economic Review*, Angrist e Evans analizzano l’effetto della presenza di figli sull’offerta di lavoro dei genitori (misurata in termini di ore lavorate settimanali).
+In *Children and Their Parents' Labor Supply: Evidence from Exogenous Variation in Family Size*, pubblicato su *American Economic Review*, Angrist e Evans analizzano l’effetto della presenza di figli sull’offerta di lavoro della madre (misurata in termini di ore lavorate settimanali).
 
-Per superare il problema di endogeneità nella decisione di avere figli — dovuto alla possibile correlazione con altri determinanti dell’offerta di lavoro — Angrist ed Evans si concentrano sui genitori con almeno due figli e utilizzano come variabile strumentale se i primi due figli sono dello stesso sesso ($samesex$) o se il secondo parto è gemellare ($multi2nd$).
+Per superare il problema di endogeneità nella decisione di avere figli — dovuto alla possibile correlazione con altri determinanti dell’offerta di lavoro — Angrist ed Evans si concentrano su madri con almeno due figli e utilizzano come variabile strumentale se i primi due figli sono dello stesso sesso ($samesex$) o se il secondo parto è gemellare ($multi2nd$).
 
 Rilevanza? Le famiglie i cui primi due figli sono entrambi maschi (o entrambe femmine) hanno (avevano) più probabilità di avere un terzo figlio.
 
