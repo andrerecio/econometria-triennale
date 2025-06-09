@@ -263,10 +263,9 @@ Quindi 0.583 < 3.814. Non rigetto $H_0$. Il p-value corretto è:
 pchisq(0.583, df = 1, lower.tail = FALSE)
 ```
 
-quindi non rifiutiamo l’ipotesi nulla di esogeneità degli strumenti
+o in modo equivalente `1 - pchisq(J$Chisq[2], df = 1)` quindi non rifiutiamo l’ipotesi nulla di esogeneità degli strumenti. **Non rigetto $H_0$. Tutti gli strumenti sono esogeni.**
 :::
 
-- Non rigetto $H_0$. Tutti gli strumenti sono esogeni.
 
 ## Regressione IV con due strumenti
 
