@@ -299,8 +299,28 @@ Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data
 ```
 
 
-## J di Sargan
+## J Test
 
 ```{r}
 linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
 ```
+
+## J Test
+
+## J di Sargan
+
+::: {.callout-important title="Attenzione"}
+
+Il test di sovraidentificazione restituisce una statistica 
+$J=9.3421$.
+
+La statistica $J$ si distribuisce come una $\chi^2_{(m - k)}$ Nel nostro caso $m -k = 1$​. Il valore da confrontare **non** è 6 ma **3.84** ($\alpha = 0.05$)
+
+Quindi 9.3421 > 3.84. Rigetto $H_0$. Il p-value corretto è: 
+
+```{r}
+pchisq(9.3421, df = 1, lower.tail = FALSE)
+```
+
+o in modo equivalente `1 - pchisq(J$Chisq[2], df = 1)` quindi rifiutiamo l’ipotesi nulla di esogeneità degli strumenti. **Rigetto $H_0$. Almeno uno degli strumenti è esogeno**
+:::
