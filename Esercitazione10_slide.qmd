@@ -255,9 +255,9 @@ linearHypothesis(Jlm, c("samesex=0", "multi2nd=0"))
 Il test di sovraidentificazione restituisce una statistica 
 $J=0.583$.
 
-La statistica $J$ si distribuisce come una $\chi^2_{(m - k)}$ Nel nostro caso $m -k = 1$​. Il valore da confrontare **non** è 6 ma **3.814** ($\alpha = 0.05$)
+La statistica $J$ si distribuisce come una $\chi^2_{(m - k)}$ Nel nostro caso $m -k = 1$​. Il valore da confrontare **non** è 6 ma **3.84** ($\alpha = 0.05$)
 
-Quindi 0.583 < 3.814. Non rigetto $H_0$. Il p-value corretto è: 
+Quindi 0.583 < 3.84. Non rigetto $H_0$. Il p-value corretto è: 
 
 ```{r}
 pchisq(0.583, df = 1, lower.tail = FALSE)
