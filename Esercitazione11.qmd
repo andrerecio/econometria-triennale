@@ -1,0 +1,457 @@
+---
+title: "Esercitazione N.11"
+author: "Econometria"
+format: 
+  html:
+    toc: true
+    code-fold: false
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+
+# Domanda di Sigarette
+
+In questa Esercitazione replichiamo il capitolo 12.4 di Stock e Watson. Nell'ultima parte utilizziamo un dataset esteso (dal 1985 al 1995).
+
+
+**Pacchetti necessari:**
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(modelsummary)
+library(fixest)
+library(AER)
+```
+
+
+Il dataset è contenuto in `library(AER)`
+
+Il dataset contiene **96 osservazioni** e 7 variabili. Sono 48 stati osservati per 2 anni (1985 e 1995).
+
+
+```{r}
+data("CigarettesSW", package = "AER")
+head(CigarettesSW)
+```
+
+
+- $state$: sono gli stati
+- $year$: sono gli anni
+- $cpi$: indice dei prezzi al consumo 
+- $population$: popolazione residente
+- $packs$: numero di pacchetti di sigarette venduti
+- $income$: reddito medio dello stato (nominale)
+- $price$: prezzo medio per pacchetto di sigarette comprensivo di tutte le tasse
+- $taxs$: imposta generale sulle vendite
+- $tax$: imposta specifica sulle sigarette
+
+
+In `CigaretteSW` abbiamo solo il 1985 e il 1995 come anni. Quindi abbiamo $T=2$.
+```{r}
+summary(CigarettesSW$year)
+```
+
+L'interesse è stimare l'elasticità della domanda di sigaretta nel lungo periodo (10 anni).
+
+Consideriamo variazione decennale nel logaritmo della quantità e la variazione decennale nel logaritmo del prezzo.
+
+
+Come prima cosa "deflazioniamo" (rendiamo reali) e dividiamo per la popolazione $income$ . Mentre $tax$ e $price$ vengono divise solo per l'indice dei prezzi al consumo ($cpi$).
+
+
+**Variabili Reali**
+```{r}
+CigarettesSW <- CigarettesSW %>%
+  mutate(rprice = price/cpi,
+         rincome = income/population/cpi,
+         sales = taxs - tax,
+         rsales = sales/cpi,
+         rcig = tax/cpi,
+  )
+```
+
+**Variabili in log**
+
+```{r}
+CigarettesSW <- CigarettesSW %>%
+  mutate(log_rprice = log(rprice),
+         log_rincome = log(rincome),
+         log_packs = log(packs)
+  )
+```
+
+Per esguire una regressione panel con effetti fissi per stato e tempo e errori standard clusterizzati, procediamo con il comando in `feols`:
+
+```{r}
+reg_fe <- feols(log_packs ~ log_rprice + log_rincome | state + year, data = CigarettesSW, vcov = ~state)
+reg_fe
+```
+
+Come precisato in Esercitazione 6, quando $T=2$ e usiamo una regressione alla differenza prima includendo l'intercetta otteniamo lo stesso risultato (ad esclusione dell'intercetta che viene **assorbita** dagli effetti fissi).
+
+Dobbiamo creare le variabili relative alle differenze. Il seguente comando crea un nuovo dataset:
+
+```{r}
+CigSW_diff <- CigarettesSW %>%
+  filter(year %in% c(1985, 1995)) %>%
+  arrange(state, year) %>%
+  group_by(state) %>%
+  mutate(
+    D_log_packs   = diff(log_packs),
+    D_log_rprice  = diff(log_rprice),
+    D_log_rincome = diff(log_rincome),
+    D_rsales      = diff(rsales),
+    D_rcig        = diff(rcig)
+  ) %>%
+  filter(year == 1995)  # tieni solo l'anno finale per la regressione
+```
+
+Quindi:
+
+```{r}
+reg_fd <- feols(D_log_packs ~ D_log_rprice + D_log_rincome, data = CigSW_diff, vcov = "hetero")
+reg_fd
+```
+
+In questo caso abbiamo utilizzando errori robusti all'eteroschedasticità. La stima dei coefficienti associati a il prezzo e il reddito è uguale. **Attenzione al numero di osservazioni**
+
+Il libro procede alla stima con regressione alle differenze e errori standard `hetero`. Con $T=2$ e avendo fatto la differenza prima abbiamo nel nostro dataset una sola osservazione per stato. Non è possibile stimare una varianza `cluster`.
+
+
+## TSLS
+
+Replichiamo i risultati del libro utilizzando usando il comando in `feols`. Stimiamo quindi 3 regressioni:
+
+- TSLS con imposta generale sulle vendite come strumento
+- TSLS con imposta specifica sulle sigarette come strumento
+- Entrambi gli strumenti
+
+**Strumento: imposta generale sulle vendite:**
+
+```{r}
+tsls_fe_sales <- feols(log_packs ~  log_rincome |state + year | log_rprice ~ rsales, data = CigarettesSW, vcov = ~state)
+tsls_fe_sales
+```
+
+Come vedete otteniamo gli stessi risultati della colonna (1) della tabella di Stock e Watson. L'intercetta non c'è perché è stata **assorbita** dagli effetti fissi.
+
+Gli errori standard sono molto simili, potreste provare a usare `vcov = hetero` al posto di quelli clusterizzati.
+
+
+**Strumento: imposta specifica sulle sigarette:**
+
+
+```{r}
+tsls_fe_tax <- feols(log_packs ~  log_rincome |state + year | log_rprice ~ rcig, data = CigarettesSW, vcov = ~state)
+tsls_fe_tax
+```
+
+**Entrambi gli strumenti:**
+
+```{r}
+tsls_fe_both <- feols(log_packs ~  log_rincome |state + year | log_rprice ~ rsales + rcig, data = CigarettesSW, vcov = ~state)
+tsls_fe_both
+```
+
+
+Tabella:
+```{r}
+modelsummary(
+  list("(1)" = tsls_fe_sales, "(2)" = tsls_fe_tax , "(3)" = tsls_fe_both),
+  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj"
+)
+```
+
+Calcoliamo la forza degli strumenti della regressione (1) e (3) con `linearHypothesis`.
+
+Primo stadio regressione (1):
+
+```{r}
+library(car)
+fs_sales <- feols(log_rprice ~ rsales + log_rincome | state + year, data = CigarettesSW)
+linearHypothesis(fs_sales, c("rsales = 0"))
+```
+
+Primo stadio regressione (3):
+
+```{r}
+fs_both <- feols(log_rprice ~ rcig + rsales + log_rincome | state + year, data = CigarettesSW)
+linearHypothesis(fs_both, c("rsales = 0", "rcig=0"))
+```
+
+La statistica Wald è uguale a 181.35 (nota: $Wald = m \times F$).
+
+
+## First Difference
+
+Abbiamo già stimato:
+
+```{r}
+iv_fd_sales <- feols(D_log_packs ~ D_log_rincome | D_log_rprice ~ D_rsales, data = CigSW_diff, vcov = "hetero")
+iv_fd_sales
+```
+
+I risultati sono identici alla tabella del libro. In questo caso non è possibile utilizzare errori clustered. Con $T=2$ e avendo fatto la differenza prima abbiamo nel nostro dataset una sola osservazione per stato. Non è possibile stimare una varianza `cluster`.
+
+Procediamo nello stesso modo per le regressioni (2) e (3):
+
+
+```{r}
+iv_fd_tax <- feols(D_log_packs ~ D_log_rincome | D_log_rprice ~ D_rcig, data = CigSW_diff, vcov = "hetero")
+
+iv_fd_both <- feols(D_log_packs ~ D_log_rincome | D_log_rprice ~ D_rsales + D_rcig, data = CigSW_diff, vcov = "hetero")
+```
+
+Tabella:
+
+
+```{r}
+modelsummary(
+  list("(1)" = iv_fd_sales, "(2)" = iv_fd_tax , "(3)" = iv_fd_both),
+  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj"
+)
+```
+
+I risultati sono identici al libro (apporssimando a due cifre decimali).
+
+
+### Rilevanza degli strumenti
+
+Calcoliamo la rilevanza degli strumenti per le 3 regressioni:
+
+**Imposta sulle vendite:**
+
+Il libro riporta la seguente regressione del primo stadio:
+
+```{r}
+fs_fd_sales <- feols(D_log_rprice ~  D_rsales + D_log_rincome, data = CigSW_diff, vcov = "hetero")
+fs_fd_sales
+```
+
+Questa intercetta è diversa dal libro. **C'è un refuso nel libro** (probabilmente il coefficiente 0.53 di $income$ nella regressione 1 è stato associato anche all'intercetta del primo stadio). **L'intercetta giusta è 0.18**
+
+Procediamo calcolando la rilevanza dello strumento:
+
+```{r}
+linearHypothesis(fs_fd_sales, c("D_rsales = 0"))
+```
+
+Ricordate $Wald = m \times F$ in questo caso $m = 1$. Cioè $Wald = 1 \times 10$ e quindi 33.67 > 10
+
+Lo stesso per le altre due regressioni:
+
+
+```{r}
+fs_fd_tax <- feols(D_log_rprice ~  D_rcig +   D_log_rincome, data = CigSW_diff, vcov = "hetero")
+linearHypothesis(fs_fd_tax, c("D_rcig = 0"))
+```
+
+**Entrambi gli strumenti:**
+
+```{r}
+fs_fd_both <- feols(D_log_rprice ~  D_rsales + D_rcig  + D_log_rincome, data = CigSW_diff, vcov = "hetero")
+linearHypothesis(fs_fd_both, c("D_rsales = 0", "D_rcig =0"))
+```
+
+Qui 177.23 è 2*88.6 (valore del libro).
+
+### Restrizioni da sovraidenitificazione
+
+Abbiamo già stimato `iv_fd_both` che rappresenta la regressione (3) con variabili strumentali e variabili in differenza prima.
+
+I residui (`uhat`) si possono calcolare anche usando `residuals`
+
+
+```{r}
+CigSW_diff$uhat <- residuals(iv_fd_both) #calcolo dei residui
+
+Jlm <- feols(uhat~ D_rsales + D_rcig + D_log_rincome, data = CigSW_diff)
+J <- linearHypothesis(Jlm, c("D_rsales=0", "D_rcig=0"))
+J
+```
+
+Esattemente come nel libro. In questo caso rifiutiamo l'ipotesi nulla ($H_0$: gli strumenti sono esogeni). 4
+932 > 3.84. Rigettiamo $H_0$
+
+Perché 3.84?
+
+::: {.callout-important title="Attenzione"}
+
+
+La funzione `linearHypothesis()` sta assumendo erroneamente che ci siano 2 gradi di libertà. La statistica $J$ si distribuisce come una $\chi^2_{(m - k)}$
+Nel nostro caso $m -k = 1$ e quindi il p-value corretto è:
+
+```{r}
+pchisq(4.932, df = 1, lower.tail = FALSE)
+```
+
+O in modo equivalente (come in Simulazione Esame)
+
+```{r}
+1 - pchisq(J$Chisq[2], df = 1)
+```
+
+
+E il valore critico da confrontare è $\chi^2_{(1)}$ è **3.84**
+:::
+
+
+## Regressione in un solo anno (1995)
+
+Consideriamo il dataset `CigarettesSW` relativamente solo al 1995. 
+
+```{r}
+Cig95 <- CigarettesSW %>%
+  filter(year == 1995)
+
+head(Cig95)
+```
+
+
+Stimiamo la regressione con variabili strumentali ma considerando solo il 1995
+
+```{r}
+tsls_sales <- feols(log_packs ~  log_rincome | log_rprice ~ rsales, data = Cig95, vcov = "hetero")
+tsls_sales
+```
+
+**Nota: sono 48 osservazioni**
+
+L'elasticità della domanda di sigaretta è uguale a -1.14. Per questo strumento (imposta sulle vendite), Stock e Watson ritengono che sia plausibilmente più esogeno e usando variazioni decennali stimano una elasticità di -0.94 (lungo periodo). Nel breve periodo ritengono plausibili valori inferiori.
+
+Qual è la forza dello strumento in questa regressione solo nel 1995?
+
+```{r}
+fs_sales95 <- feols(log_rprice ~ rsales + log_rincome, data = Cig95)
+linearHypothesis(fs_sales95, c("rsales = 0"))
+```
+
+
+```{r}
+fs_tax95 <- feols(log_rprice ~ rcig + log_rincome, data = Cig95)
+linearHypothesis(fs_tax95, c("rcig = 0"))
+```
+
+
+```{r}
+fs_both95 <- feols(log_rprice ~ rsales + rcig + log_rincome, data = Cig95)
+linearHypothesis(fs_both95, c("rsales = 0", "rcig =0"))
+```
+
+Perché gli strumenti sembrano così forti usando solo i dati del 1995?
+
+La ragione è che stiamo stimando e sfruttiamo la variazione **cross-section** tra stati. C'è tanta variazione **tra** stati nella variabile strumentale.
+
+
+Nel panel, se $rcig$ non cambia molto tra il 1985 e il 1995 all’interno degli stati, lo strumento mostrerà meno "rilevanza" nel primo stadio.
+
+
+```{r}
+tsls_both <- feols(log_packs ~  log_rincome | log_rprice ~ rsales + rcig, data = Cig95, vcov = "hetero")
+```
+
+L'elasticità stimate sono molto alte. Possibile distorsione da variabile omesse.
+
+```{r}
+Cig95$uhat <- residuals(tsls_both) #calcolo dei residui
+
+Jlm95 <- feols(uhat~ rsales + rcig + log_rincome, data = Cig95)
+J95 <- linearHypothesis(Jlm95, c("rsales=0", "rcig=0"))
+J95
+```
+
+```{r}
+1 - pchisq(J95$Chisq[2], df = 1)
+```
+
+Quindi qui non rigettiamo $H_0$. Perché?
+
+Il risultato potrebbe cambiare tra il modello cross-section e quello panel perché stiamo stimando due modelli diversi.
+
+
+
+Nel panel, stiamo guardando alla variazione nel tempo dentro ciascuno stato. E' più probabile che le variazioni delle tasse siano collegate ad altri cambiamenti non osservati che influenzano anche il consumo (ad es., variazione nei gusti). Quindi è più probabile che gli strumenti siano correlati con l’errore.
+
+
+## Regressione panel (dal 1985 al 1995)
+
+Il dataset completo è disponibile in `library(Ecdat)`
+
+```{r}
+#install.packages("Ecdata")
+library(Ecdat)
+data("Cigarette", package = "Ecdat")
+```
+
+```{r}
+Cigarette <- Cigarette |> mutate(rprice = avgprs/cpi, rtax = tax/cpi,
+rtaxs = taxs/cpi, rincome = income/pop/cpi,
+rsaletax = (taxs - tax) / cpi)
+```
+
+**Strumento: imposta generale sulle vendite:**
+
+
+```{r}
+tsls_fe_sales10 <- feols(log(packpc) ~  log(rincome) |state + year | log(rprice) ~ rsaletax, data = Cigarette, vcov = ~state)
+tsls_fe_sales10
+```
+
+### Entrambi gli strumenti (primo stadio e restrizioni da sovraidentificazione)
+
+```{r}
+tsls_fe_both10 <- feols(log(packpc) ~  log(rincome) |state + year | log(rprice) ~ rsaletax + rtaxs, data = Cigarette, vcov = ~state)
+tsls_fe_both10
+```
+
+```{r}
+modelsummary(
+  list("log(pack)" = tsls_fe_sales10, "log(pack) 2 strumenti" = tsls_fe_both10),
+  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj"
+)
+```
+
+
+
+primo stadio:
+
+
+```{r}
+fs_fe_both10 <- feols(log(rprice) ~  rsaletax + rtaxs + log(rincome) |state + year, data = Cigarette, vcov = ~state)
+
+linearHypothesis(fs_fe_both10, c("rsaletax = 0", "rtaxs =0"))
+```
+
+467.21 > 2*10.
+
+
+```{r}
+Cigarette$uhat <- residuals(tsls_fe_both10) #calcolo dei residui
+
+Jlm10 <- feols(uhat ~ rsaletax + rtaxs + log(rincome), data = Cigarette)
+J10 <- linearHypothesis(Jlm10, c("rsaletax=0", "rtaxs=0"))
+J10
+```
+
+0.9707 < 3.84. Non rigetto $H_0$. Non rigetto l'ipotesi che tutti gli strumenti siano esogeni
+
+il p-value corretto è:
+
+```{r}
+pchisq(J10$Chisq[2], df = 1, lower.tail = FALSE)
+```
+
+O in modo equivalente:
+
+```{r}
+1 - pchisq(J10$Chisq[2], df = 1)
+```
+
+Quando usiamo il panel completo e entrambi gli strumenti troviamo strumenti forti e non rigettiamo l'ipotesi di esogeneità. La stima dell'elasticità è inferiore rispetto alla stima con solo la variazione decennale.
