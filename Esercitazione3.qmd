@@ -133,11 +133,11 @@ I logaritmi sono spesso utilizzati quando la variabile è in dollari (ad esempio
 Sono meno usati per variabili misurate in anni o che sono già percentuali o proporzioni (ad esempio tasso di disoccupazione).
 
 
-::: {.callout-note title="Unità di misura e log"}
+::: {.callout-note title="Unità di misura della variabile dipendente"}
 
 Con le variabili espresse in log, il cambiamento di unità di misura è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$.
-Lo stesso vale se la $X$ è in log o entrambi sono in log.
-L'intercetta invece cambierà. Provate.
+Lo stesso vale se la $X$ e $Y$ sono entrambe in log.
+L'intercetta invece cambierà.
 :::
 
 
