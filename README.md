@@ -72,3 +72,8 @@ Questa repository contiene il materiale relativo alle esercitazioni del corso di
 ### 📄 Esercitazione 11
 
 👉 [Esercitazione 11](https://andrerecio.github.io/econometria-triennale/Esercitazione11.html)
+
+
+### 📄 Esercitazione 12
+
+👉 [Esercitazione 12](https://andrerecio.github.io/econometria-triennale/Esercitazione12.html)
