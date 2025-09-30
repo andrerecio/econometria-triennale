@@ -77,3 +77,9 @@ Questa repository contiene il materiale relativo alle esercitazioni del corso di
 ### 📄 Esercitazione 12
 
 👉 [Esercitazione 12](https://andrerecio.github.io/econometria-triennale/Esercitazione12.html)
+
+
+### 📄 Esercitazione Ottobre 2025
+
+👉 [Esercitazione Ottobre 2025](https://andrerecio.github.io/econometria-triennale/simulazione2_ottobre.html)
+
