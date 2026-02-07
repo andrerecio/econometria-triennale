@@ -14,11 +14,11 @@ Materiale relativo alle esercitazioni del corso di **Econometria** – Sapienza 
 
 | # | Argomento | Esercitazione | Script R | Altro |
 |---|-----------|---------------|----------|-------|
-| 1 | Regressione semplice, variabili dummy, intervalli di confidenza | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione1_script.R) | |
+| 1 | Regressione, variabili dummy e intervalli di confidenza | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione1_script.R) | |
 | 2 | Regressione multipla | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione2.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione2_script.r) | |
 | 3 | Nonlinearità: specificazioni in log e polinomi | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione3.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione3_script.R) | |
 | 4 | Interazioni (parte 1) | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione4.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione4_script.R) | |
-| 5 | Nonlinearità e interazioni (parte 2), deviazione dalla media | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione5.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione5_script.R) | |
+| 5 | Nonlinearità e interazioni (parte 2) | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione5.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione5_script.R) | |
 | 6 | Regressione con dati panel | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione6.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione6_script.R) | |
 | 7-8 | Regressione con variabili strumentali | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_script.R) | [📑 Slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_slide.pdf) |
 | 9 | LPM, Probit, Logit | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione8.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione8_script.R) | |
