@@ -1,0 +1,57 @@
+---
+title: "Econometria (Economia e Finanza)"
+subtitle: "Esercitazioni · Sapienza Università di Roma"
+lang: it
+
+format:
+  html:
+    theme: cosmo
+    toc: false
+    embed-resources: true
+    fontsize: 1.1em
+    linestretch: 1.7
+---
+
+Materiale relativo alle esercitazioni del corso di **Econometria** – Facoltà di Economia, Sapienza Università di Roma.
+
+---
+
+## Introduzione a R
+
+| N. | Argomento | HTML | Script R | Altro |
+|----|-----------|------|----------|-------|
+| 1 | Introduzione |  |  | |
+| 2 | Dataframe |  |  | |
+
+
+### Installare R e RStudio
+
+
+
+## Esercitazioni
+
+| N. | Argomento | HTML | Script R | Altro |
+|----|-----------|------|----------|-------|
+| 1 | Regressione, variabili dummy e intervalli di confidenza | [html](esercitazione1/esercitazione1.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione1/esercitazione1_script.R) | |
+| 2 | Regressione multipla | [html](https://andrerecio.github.io/econometria-triennale/esercitazione2/esercitazione2.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) | |
+| 3 | Nonlinearità: specificazioni in log e polinomi | [html](https://andrerecio.github.io/econometria-triennale/esercitazione3/esercitazione3.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione3/esercitazione3_script.R) | |
+| 4 | Interazioni (parte 1) | [html](https://andrerecio.github.io/econometria-triennale/esercitazione4/esercitazione4.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) | |
+| 5 | Nonlinearità e interazioni (parte 2) | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione5.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione5_script.R) | |
+| 6 | Regressione con dati panel | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione6.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione6_script.R) | |
+| 7–8 | Regressione con variabili strumentali | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_script.R) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_slide.pdf) |
+| 9 | LPM, Probit, Logit | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione8_script.R) | |
+| 10 | Variabili strumentali (parte 2) | — | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione10_script.R) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione10_slide.pdf) |
+| 11 | Domanda di sigarette: IV con panel | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione11.html) | | |
+| 12 | Ripasso modelli log | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione12.html) | | |
+
+---
+
+## Homework
+
+| Simulazione | Argomenti | Link |
+|-------------|-----------|------|
+| Ottobre 2025 | LPM/Probit/Logit, IV, Panel, Interazioni, Time Series (9 CFU) | [html](https://andrerecio.github.io/econometria-triennale/simulazione2_ottobre.html) |
+
+---
+
+Per domande o segnalazioni: apri una [issue](https://github.com/andrerecio/econometria-triennale/issues).
