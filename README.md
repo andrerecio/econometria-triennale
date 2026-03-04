@@ -1,8 +1,8 @@
-# Econometria Triennale — Sapienza
+# Econometria — Sapienza
 
 Materiale delle esercitazioni del corso di Econometria, Facoltà di Economia.
 
-📚 **Materiali e link:** [andrerecio.github.io/econometria-triennale](https://andrerecio.github.io/econometria-triennale/)
+📚 **Materiali e link:** [Link](https://andrerecio.github.io/econometria-triennale/)
 
 ---
 
