@@ -1,6 +1,6 @@
 ---
-title: "Econometria (Economia e Finanza)"
-subtitle: "Esercitazioni · Sapienza Università di Roma"
+title: "Esercitazioni di Econometria"
+subtitle: "Economia e Finanza · Sapienza Università di Roma, Facoltà di Economia"
 lang: it
 
 format:
@@ -12,7 +12,7 @@ format:
     linestretch: 1.7
 ---
 
-Materiale relativo alle esercitazioni del corso di **Econometria** – Facoltà di Economia, Sapienza Università di Roma.
+Materiale relativo alle esercitazioni del corso di **Econometria** 
 
 ---
 
@@ -25,6 +25,9 @@ Materiale relativo alle esercitazioni del corso di **Econometria** – Facoltà 
 
 
 ### Installare R e RStudio
+
+1. Scarica e installa **R** da [cran.r-project.org](https://cran.r-project.org)
+2. Scarica e installa **RStudio** da [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
 
 
 
