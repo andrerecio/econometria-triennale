@@ -14,7 +14,7 @@ Materiale relativo alle esercitazioni del corso di **Econometria** – Sapienza 
 
 | # | Argomento | Esercitazione | Script R | Altro |
 |---|-----------|---------------|----------|-------|
-| 1 | Regressione, variabili dummy e intervalli di confidenza | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione1_script.R) | |
+| 1 | Regressione, variabili dummy e intervalli di confidenza | [HTML](https://andrerecio.github.io/econometria-triennale/esercitazione1/esercitazione1.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione1_script.R) | |
 | 2 | Regressione multipla | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione2.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione2_script.r) | |
 | 3 | Nonlinearità: specificazioni in log e polinomi | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione3.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione3_script.R) | |
 | 4 | Interazioni (parte 1) | [HTML](https://andrerecio.github.io/econometria-triennale/Esercitazione4.html) | [📥 Script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione4_script.R) | |
