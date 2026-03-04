@@ -1,6 +1,6 @@
 ---
 title: "Esercitazioni di Econometria"
-subtitle: "Economia e Finanza · Sapienza Università di Roma, Facoltà di Economia"
+subtitle: "Economia e Finanza · Sapienza Università di Roma · Facoltà di Economia"
 lang: it
 
 format:
