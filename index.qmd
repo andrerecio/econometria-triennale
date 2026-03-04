@@ -8,7 +8,7 @@ format:
     theme: cosmo
     toc: false
     embed-resources: true
-    fontsize: 1.1em
+    fontsize: 1.25em
     linestretch: 1.7
 ---
 
