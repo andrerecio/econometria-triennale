@@ -39,13 +39,13 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 | 2 | Regressione multipla | [html](esercitazione2/esercitazione2.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) |
 | 3 | Nonlinearità: specificazioni in log e polinomi | [html](esercitazione3/esercitazione3.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione3/esercitazione3_script.R) |
 | 4 | Interazioni (parte 1) | [html](esercitazione4/esercitazione4.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
-| 5 | Nonlinearità e interazioni (parte 2) | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione5.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione5_script.R) |
-| 6 | Regressione con dati panel | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione6.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione6_script.R) |
-| 7 | Regressione con variabili strumentali | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione7.html) · [slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione7_script.R) |
-| 8 | LPM, Probit, Logit | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione8_script.R) |
-| 9 | Variabili strumentali (parte 2) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione10_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/Esercitazione10_script.R) |
-| 10 | Domanda di sigarette: IV con panel | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione11.html) | |
-| 11 | Ripasso modelli log | [html](https://andrerecio.github.io/econometria-triennale/Esercitazione12.html) | |
+| 5 | Nonlinearità e interazioni (parte 2) | [html](esercitazione5/esercitazione5.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
+| 6 | Regressione con dati panel | [html](esercitazione6/esercitazione6.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione6_script.R) |
+| 7 | Regressione con variabili strumentali | [html](esercitazione7/esercitazione7.html) · [slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_script.R) |
+| 8 | LPM, Probit, Logit | [html](esercitazione8/esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
+| 9 | Variabili strumentali (parte 2) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_script.R) |
+| 10 | Domanda di sigarette: IV con panel | [html](esercitazione10/esercitazione10.html) | |
+| 11 | Ripasso modelli log | [html](esercitazione11/esercitazione11.html) | |
 
 ---
 
