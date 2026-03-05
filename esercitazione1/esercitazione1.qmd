@@ -66,6 +66,9 @@ library(modelsummary)
 
 In alternativa caricate i pacchetti singolarmente: `library(ggplot2)` o `library(dplyr)`
 
+Le altre librerie come `library(knitr)`, `library(kableExtra)` e `library(modelsummary)` sono utili per creare tabelle e visualizzare i risultati delle regressioni in modo più chiaro e formattato.
+
+
 ## Descrizione dei dati
 
 ```{r}
@@ -82,8 +85,8 @@ head(wage1)
 
 Consideriamo le seguenti variabili:
 
--   `wage` retribuzione media oraria in dollari del 1976
--   `educ` anni di istruzione
+-   $wage$ retribuzione media oraria in dollari del 1976
+-   $educ$ anni di istruzione
 
 ```{r}
 # Statistiche descrittive
@@ -112,8 +115,6 @@ stat %>%
 
 Un'altra libreria utile per gestire i dati è `library(data.table)`
 
-### Plotting
-
 `ggplot2` e basato sulla “Grammatica dei Grafici” (gg = grammar of graphics). Consente di generare grafici attraverso un approccio a strati con il simbolo “+”. Più flessibile per grafici complessi e personalizzabile rispetto a grafici base di R.
 
 Se non avete caricato `library(tidyverse)` allora dovete usare `library(ggplot2)`.
@@ -140,7 +141,7 @@ theme_minimal()
 
 L’istogramma mostra una concentrazione elevata intorno ai 12 anni di istruzione, che corrispondono al diploma di scuola superiore (high school) negli USA.
 
-#### Relazione tra salario orario e anni di istruzione:
+### Relazione tra salario orario e anni di istruzione:
 
 ```{r}
 ggplot(wage1, aes(y = wage, x = educ)) + 
@@ -161,7 +162,7 @@ ggplot(wage1, aes(y = wage, x = educ)) +
 
 `lm` sta per linear model
 
-## Regressione lineare semplice: salario e istruzione
+## Regressione lineare semplice
 
 Stimiamo la seguente regressione:
 
@@ -173,7 +174,7 @@ $wage$ è misurato in dollari per ora and $educ$ sono gli anni di istruzione.
 
 <br>
 
-`library(fixest)` è una libreria molto versatile soprattutto per dati panel e permette di correggere facilmente gli standard errors usando `vcov = "hetero"` o `vcov = "hc1"`.
+`library(fixest)` è una libreria molto versatile soprattutto per dati panel e permette di correggere facilmente gli errori standard usando `vcov = "hetero"` o `vcov = "hc1"`.
 
 
 
@@ -186,11 +187,13 @@ reg1 <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 reg1
 ```
 
--   `feols()` stima la regressione lineare
+- `feols()` stima la regressione lineare
 
--   $wage$ è la variabile dipendente, $educ$ la vasriabile indipendente (o regressore)
+- $wage$ è la variabile dipendente, 
 
--   `vcov = "hetero"`seleziona errori standard robusti all'eteroschedasticità
+- $educ$ è la variabile indipendente (o regressore)
+
+- `vcov = "hetero"`seleziona errori standard robusti all'eteroschedasticità
 
 Se non si sceglie `vcov = "hetero"`, gli errori saranno omoschedastici:
 
@@ -201,21 +204,29 @@ reg1_ho
 
 `feols(y ~ x)` sarà equivalente a `lm(y ~ x)`
 
-#### Eteroschedasticità:
+L'output della regressione riporta errori standard *IID* (indipendenti e identicamente distribuiti) che sono omoschedastici.
+
+### Eteroschedasticità
 
 La prima assunzione per avere stima non distorta è che $E(u_i|educ_i)=0$ 
 
+::: {.callout-tip}
+## Domanda
+Quali sono le altre assunzioni di OLS?
+:::
 
-In popolazione implica che $E(wage_i|educ_i)= \beta_0 + \beta_1 educ_i$. Assumendo omoschedasticità $Var(u_i|educ_i)= \sigma^2$  è equivalente, in popolazione, ad assumere $Var(wage_i|educ_i) = \sigma^2$.
+
+
+In popolazione implica che $E(wage_i|educ_i)= \beta_0 + \beta_1 educ_i$. 
+
+
+Assumendo omoschedasticità $Var(u_i|educ_i)= \sigma^2$  è equivalente, in popolazione, ad assumere $Var(wage_i|educ_i) = \sigma^2$.
 
 
 Mentre il valore atteso di $wage$ può aumentare al crescere degli anni di istruzione (ed è ciò a cui siamo interessati), sotto omoschedasticità la varianza di $wage$ non cambia al variare di $educ$. Cioè, stiamo assumendo che la varianza del salario condizionata all’istruzione sia costante.
 
 
-Questo non è realistico. Persone con più istruzione hanno una varietà maggiore di opportunità di lavoro e interessi, che porta maggiore variabilità di $wage$ ai livelli più alti di istruzione.
-
-
-Persone con un basso livello di istruzione hanno minori opportunità e spesso $wage$ vicino al salario minimo. Questo tende a ridurre la variabilità di $wage$ nei livelli più bassi di istruzione.
+Questo non è realistico. Persone con più istruzione hanno una varietà maggiore di opportunità di lavoro e interessi, che porta maggiore variabilità di $wage$ ai livelli più alti di istruzione. Persone con un basso livello di istruzione hanno minori opportunità e spesso $wage$ vicino al salario minimo. Questo tende a ridurre la variabilità di $wage$ nei livelli più bassi di istruzione.
 
 
 Quando $Var(u_i|x_i)$ dipende da $x_i$, il termine d'errore mostra eteroschedasticità (varianza non costante). Poiché $Var(u_i|x)=Var(y|x)$, l'eteroschedasticità è presente ogni volta che $Var(y_i|x_i)$ è una funzione di $x_i$
@@ -264,7 +275,7 @@ ggplot(varianza_educ, aes(x = media_educ, y = varianza)) +
   theme_minimal()
 ```
 
-#### Risultai della regressione:
+#### Risultati della regressione
 
 ```{r}
 #| label: tab1
@@ -281,6 +292,17 @@ Il coefficiente di educ $\beta_1$ rappresenta l'incremento medio del salario ora
 Se $E(u_i|educ_i)=0$ allora $\beta_1 = 0.54$ ha un'interpretazione causale: un anno in più di istruzione aumenta, in media, il salario orario di 0.54\$ per ora. In caso contrario 0.54\$ è una semplice correlazione.
 
 
+Se volessi considerare 10 anni in più di istruzione: 10 x $\beta_1$ = 10 x 0.54\$ = 5.4 dollari per ora.
+
+Esistono variabili che influenzano contemporaneamente sia il salario ($wage$) che gli anni di istruzione ($educ$). Quando queste variabili sono nell'errore, creano correlazione tra $u_i$ e $educ_i$, violando così l'assunzione $E(u_i|educ_i)=0$.
+
+Quali potrebbero essere le variabili che influenzano $wage$ e $educ$? Possono essere osservabili (ad esempio esperienza, background familiare, settore occupazionale) e variabili che invece non possiamo osservare (ad esempio abilità innate, connesioni sociali).
+
+Queste variabili omesse creano un problema di endogeneità che rende difficile interpretare $\beta_1$ come l’effetto causale dell’istruzione sul salario, poiché la correlazione osservata potrebbe essere in parte dovuta a questi fattori confondenti.
+
+$R^2$ indica che circa il 16,5% della variabilità di $wage$ è spiegata da $educ$. Questo valore relativamente basso suggerisce **soltanto** che esistono molti altri fattori oltre all’istruzione che sono correlati con i salari.
+
+
 ::: {.callout-note collapse="true"}
 ## Approfondimento: OLS senza assunzioni ("linear projection")
 
@@ -290,26 +312,16 @@ In altri termini, quando facciamo una proiezione ortogonale di $y$ sullo spazio 
 
 Quindi il coefficente cattura (almeno asintoticamente) in popolazione l'associazione lineare tra $y$ e $x$.
 
-
 :::
 
 
 
 
-
-Se considero 10 anni in più di istruzione: 10 x $\beta_1$ = 10 x 0.54\$ = 5.4 dollari per ora.
-
-Esistono variabili che influenzano contemporaneamente sia il salario ($wage$) che gli anni di istruzione ($educ$). Quando queste variabili sono nell'errore, creano correlazione tra $u$ e $educ$, violando così l'assunzione $E(u_i|educ_i)=0$.
-
-Quali potrebbero essere le variabili che influenzano `wage` e `educ`? Possono essere osservabili (ad esempio esperienza, background familiare, settore occupazionale) e variabili che invece non possiamo osservare (ad esempio abilità innate, connesioni sociali).
-
-Queste variabili omesse creano un problema di endogeneità che rende difficile interpretare $\beta_1$ come l’effetto causale dell’istruzione sul salario, poiché la correlazione osservata potrebbe essere in parte dovuta a questi fattori confondenti.
-
-$R^2$ indica che circa il 16,5% della variabilità di $wage$ è spiegata da $educ$. Questo valore relativamente basso suggerisce **soltanto** che esistono molti altri fattori oltre all’istruzione che sono correlati con i salari.
-
-### Cambio di unità di misura e interpretazione dei coefficienti:
+## Cambio di unità di misura
 
 I coefficienti di regressione, sono nell'unità di misura dei dati. Il valore cambia se cambiamo l'unità di misura. L'adattamento del modello ai dati non cambia.
+
+### Variabile dipendente
 
 -   $wage$ è espresso in dollari. Possiamo esprimerlo in centinaia di dollari:
 
@@ -355,9 +367,11 @@ I coefficienti del secondo modello sono pari a quelli del primo modello x 140. L
 
 In media, un anno aggiuntivo di istruzione è **associato** ad un aumento del salario mensile di 75.79 dollari.
 
-75.79 \$ = 0.541 x 140
+75.79 dollari = 0.541 $\times$ 140
 
--   Supponiamo che $educ$ sia in mesi di istruzione. Cioè $educ$ x 12:
+### Variabile indipendente
+
+Supponiamo che $educ$ sia in mesi di istruzione. Cioè $educ$ $\times$ 12:
 
 ```{r}
 wage1 <- wage1 %>%
@@ -375,7 +389,7 @@ In media, un mese aggiuntivo di istruzione è **associato** ad un aumento del sa
 
 0.045 è uguale a 0.541/12
 
-### Intervalli di confidenza al 95%
+## Intervalli di confidenza e test di ipotesi
 
 Consideriamo la prima regressione:
 
@@ -431,7 +445,7 @@ $$
 
 quindi rifiutiamo l'ipotesi nulla $H_0$ al livello di significatività del 5%. Di conseguenza, possiamo affermare che il coefficiente $\beta_1$ è *statisticamente significativo* al livello del 5% che significa che abbiamo evidenza statistica per concludere che esiste un'associazione tra $educ$ and $wage$.
 
-## Regressione con variabili dummy
+## Variabili dummy
 
 Le *variabili dummy* sono uno strumento necessario per incorporare informazioni categoriche in modelli di regressione.
 
@@ -441,7 +455,8 @@ Consideriamo una variabile categorica `female` (che indica il genere del lavorat
 tabledummy <- table(wage1$female)
 
 kable(tabledummy, 
-      caption = "Numero di Maschi (0) e Femmine (1)") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+      caption = "Numero di Maschi (0) e Femmine (1)") %>% 
+      kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 Statistiche descrittive per categorie:
@@ -474,7 +489,9 @@ $$
 
 dobbiamo pensare bene all'interpretazione di $\beta_0$ e $\beta_1$.
 
-### Interpretazione con $E(u_i|female_i)=0$
+
+### Con esogeneità: interpretazione causale
+
 
 Se assumiamo che $E(u_i|female_i)=0$, possiamo dare un'interpretazione causale ai coefficienti della regressione. In questo caso, $\beta_0$ rappresenta il valore atteso del salario quando $female_i=0$, cioè per i lavoratori maschi: 
 
@@ -496,7 +513,7 @@ $$
 
 L'assunzione $E(u_i|female_i)=0$ implica che tutte le variabili che determinano i salari e sono nell'errore non differiscono sistematicamente tra uomini e donne. In altre parole, stiamo assumendo che l'unica differenza tra i gruppi sia proprio il genere, e quindi la stima di $\beta_1$ cattura l'effetto causale dell'essere donna sulla retribuzione.
 
-### Interpretazione senza $E(u_i|female_i)=0$
+### Senza esogeneità: interpretazione descrittiva
 
 Se non siamo disposti ad assumere che $E(u_i|female_i)=0$, l'interpretazione causale non è più valida. In questo caso, possiamo interpretare $\beta_1$ semplicemente come la differenza osservata nella media salariale, senza attribuire a questa differenza un significato causale.
 
@@ -509,16 +526,12 @@ Stimiamo il modello usando sempre `fixest`:
 
 ```{r}
 reg_female <- feols(wage ~ female, data = wage1, vcov = "hetero")
-```
-
-**Nota:** La variabile dipendente è **`wage`**.
-
-```{r}
-modelsummary(reg_female, gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" =reg_female), gof_omit = "AIC|BIC|RMSE|R2 Adj.",
+            title = "La variabile dipendente è Wage")
 ```
 
 
-I risultati della regressione mostrano che il salario medio degli uomini (rappresentato dall'intercetta) è di circa 7.1 dollari (del 1976) per ora.
+I risultati della regressione mostrano che il salario medio degli uomini (rappresentato dall'intercetta) è di circa 7.1 dollari orari (del 1976).
 
 Il coefficiente della variabile dummy per il genere femminile (female) è -2.51 dollari. Le donne guadagnano in media circa 2.51 dollari in meno rispetto agli uomini. Il salario medio delle donne è di circa 4.58 dollari (7.1 - 2.51).
 
@@ -554,12 +567,12 @@ wage1 <- wage1 %>%
 
 ```{r}
 reg_male <- feols(wage ~ male, data = wage1, vcov = "hetero")
-modelsummary(list("Female = 1" = reg_female, "Male = 1" = reg_male), gof_omit = "AIC|BIC|RMSE|R2 Adj.", title = "Nota: La variabile dipendente è `wage`")
+modelsummary(list("Wage" = reg_female, "Wage" = reg_male), gof_omit = "AIC|BIC|RMSE|R2 Adj.", title = "Female = 1 (prima colonna) vs Male = 1 (seconda colonna)")
 ```
 
-Le proprietà statistiche dell'OLS rimangono le stesse di quando $x$ è continua.
+Le proprietà statistiche dell'OLS rimangono le stesse di quando $x_i$ è continua.
 
-**Nota**: Se includessimo insieme $male$ e $female$ ci sarebbe multicollinearità perfetta. Ne viene rimossa una automaticamente.
+**Nota**: Se includessimo insieme $male$ e $female$ ci sarebbe multicollinearità perfetta e quindi una viene rimossa automaticamente.
 
 ```{r}
 reg2dummy <- feols(wage ~ male + female, data = wage1, vcov = "hetero")
