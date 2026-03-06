@@ -115,7 +115,9 @@ stat %>%
 
 Un'altra libreria utile per gestire i dati è `library(data.table)`
 
-`ggplot2` e basato sulla “Grammatica dei Grafici” (gg = grammar of graphics). Consente di generare grafici attraverso un approccio a strati con il simbolo “+”. Più flessibile per grafici complessi e personalizzabile rispetto a grafici base di R.
+---
+
+`ggplot2` e basato sulla “Grammatica dei Grafici” (gg = _grammar of graphics_). Consente di generare grafici attraverso un approccio a strati con il simbolo “+” e risulta molto più flessibile per grafici complessi e personalizzabile rispetto a grafici base di R.
 
 Se non avete caricato `library(tidyverse)` allora dovete usare `library(ggplot2)`.
 

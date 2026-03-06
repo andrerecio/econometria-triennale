@@ -20,7 +20,7 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 
 | N. | Argomento | Slide | Script R 
 |----|-----------|------|----------|
-| 1 | Introduzione |  |  |
+| 1 | Introduzione a R |  |  |
 | 2 | Dataframe |  |  |
 
 

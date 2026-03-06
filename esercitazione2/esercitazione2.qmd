@@ -1,17 +1,49 @@
 ---
 title: "Esercitazione N.2"
-author: "Econometria"
-format: 
+subtitle: "Regressione Multipla"
+author: ""
+date: today
+lang: it
+
+format:
   html:
+    # Layout
+    theme: flatly
     toc: true
+    toc-depth: 3
+    toc-title: "Contenuti"
+    toc-location: right       
+    number-sections: true
+    
+    # Codice
     code-fold: false
+    code-tools: true
+    code-block-bg: true
+    code-block-border-left: false
+    highlight-style: github
+    
+    # Output
     embed-resources: true
+    
+    # Tipografia
+    fontsize: 1.1em
+    linestretch: 1.6
+
 execute:
   warning: false
   message: false
+  echo: true
+
+knitr:
+  opts_chunk:
+    comment: "#>"
+    fig.align: "center"
+    fig.width: 7
+    fig.height: 4.5
+
 ---
 
-## Pacchetti necessari
+## Introduzione
 
 ```{r}
 #| message: false
@@ -22,7 +54,7 @@ library(kableExtra)
 library(modelsummary)
 ```
 
-### Per i dati
+
 ```{r}
 #| warning: false
 library(wooldridge)
@@ -32,7 +64,6 @@ library(wooldridge)
 data("wage1", package = "wooldridge")
 ```
 
-## Regressione Multipla
 
 La regressione multipla consente esplicitamente di controllare per altre variabili che influenzano la variabile dipendente e sono potenzialmente correlate con il regressore.
 
@@ -97,7 +128,7 @@ Un anno in più di istruzione è associato ad un aumento, in media, del salario 
 
 L'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
 
-#### Aggiungendo una dummy:
+### Aggiungendo una dummy:
 
 ```{r}
 # Regressione
@@ -110,7 +141,7 @@ In questa regressione stiamo “controllando” anche per il genere.
 Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, $tenure$ e genere.
 
 
-#### Cambio unità di misura:
+### Cambio unità di misura:
 
 Se $wage$ fosse espresso su base mensile: lavoratori a tempo pieno, 7 ore al giorno, 5 giorni a settimana, 4 settimane al mese. Cioè 7x5x4 = 140
 
@@ -172,122 +203,6 @@ Siccome controllliamo per $educ$, $exper$, e $tenure$, il differenziale del sala
 
 Il differenziale di 1,81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
 
-
-## College GPA:
-
-`gpa1` contiene la media dei voti durante il college ($colGPA$), scuola superiore GPA ($hsGPA$) e l'achievement test score ($ACT$) di 141 studenti di grandi università. 
-$colGPA$ e $hsGPA$ sono in scala di quattro punti.
-
-$ACT$ (American College Testing) è un test standardizzato diffuso negli USA per l'ammissione al College. Composto da 4 sezioni va da una scala da 1 a 36.
-
-```{r}
-data("gpa1", package = "wooldridge")
-```
-
-```{r}
-head(gpa1)
-```
-
-```{r}
-# Statistiche descrittive
-statgpa <- gpa1 %>%
-       summarise(
-       colgpa_mean = mean(colGPA, na.rm = TRUE),
-       hsgpa_mean = mean(hsGPA, na.rm = TRUE),
-       act_mean = mean(ACT, na.rm = TRUE),
-  )
-
-# Visualizzazione dei risultati
-statgpa %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
-```
-
-```{r}
-summary(gpa1$colGPA)
-summary(gpa1$hsGPA)
-```
-
-**Regressione**:
-
-$$
-colGPA = \beta_0 + \beta_1 hsGPA_i + \beta_2 ACT_i + u_i
-$$
-
-
-```{r}
-reg_gpa1 <- feols(colGPA ~ hsGPA + ACT, data = gpa1, vcov = "hetero")
-modelsummary(list("colGPA" = reg_gpa1), output = "markdown", gof_omit = "AIC|BIC|RMSE")
-```
-
-A parità di $ACT$, un punto in più di high school GPA è associato, in media, a 0.453 punti in più di $colGPA$.
-
-
-**Nota**: il valore massimo di $hsGPA$ è 4.
-
-
-$R^2$: $hsGPA$ e $ACT$ insieme spiegano il 17.6 \% della variazione di $colGPA$.
-
-
-Cambiamo la scala di $hsGPA$
-```{r}
-gpa1 <- gpa1 %>%
-  mutate(hsGPA100 = hsGPA *25)
-```
-
-```{r}
-reg_gpa2 <- feols(colGPA ~ hsGPA100 + ACT, data = gpa1, vcov = "hetero")
-modelsummary(list("colGPA100" = reg_gpa2), output = "markdown", gof_omit = "AIC|BIC|RMSE")
-```
-
-Un aumento di 1 punto (su scala fino a 100) di $hsGPA$ è associato, in media, a un aumento di 0.0181 punti in $colGPA$.
-
-Come prima 0.0181 = 0.453/25
-
-Aggiungiamo come regressore $skipped$ che rappresenta la media di lezioni perse (saltate) a settimana:
-
-$$
-colGPA = \beta_0 + \beta_1 hsGPA_i + \beta_2 ACT_i + \beta_3 skipped_i + u_i
-$$
-
-
-```{r}
-reg_gpa3 <- feols(colGPA ~ hsGPA + ACT + skipped, data = gpa1, vcov = "hetero")
-modelsummary(list("colGPA" = reg_gpa1, "colGPA" = reg_gpa3), output ="markdown", gof_omit = "AIC|BIC|RMSE")
-```
-
-Un aumento di 1 punto di $hsGPA$ è associato, in media, a un aumento di 0.412 punti in $colGPA$ a parità di $ACT$ e $skipped$.
-
-E se fossimo interessati altri due coefficienti?
-
-- Un aumento di 1 punto in $ACT$, a parità di $hsGPA$ e $skipped$, è associato a un aumento, in media, di 0.015 punti in $colGPA$. t-statistic è 1.36, cosa significa? 
-
-- A parità di $hsGPA$ e $ACT$, una lezione persa (saltata) in più a settimana è associata a un calo, in media, di 0.083 punti in $colGPA$.
-
-### Effetti del PC su college GPA
-
-Regrediamo $colGPA$ su una variabile dummy $PC$ che è uguale ad uno se lo studente ha un personal computer.
-
-Stimiamo le seguenti regressioni:
-
-- `reg_gpa` regressione lineare semplice
-- `reg_gpa_pc` regressione con $hsGPA$ e $ACT$
-- `reg_gpa_pc3` regressione di $hsGPA$ su $ACT$, $mothcoll$ (= 1 se la madre ha almeno una laurea triennale, BA) e $fathcoll$ (= 1 se il padre ha almeno una laurea triennale, BA).
-
-```{r}
-reg_gpa_pc1 <- feols(colGPA ~ PC, data = gpa1, vcov = "hetero")
-reg_gpa_pc2 <- feols(colGPA ~ PC + hsGPA + ACT , data = gpa1, vcov = "hetero")
-reg_gpa_pc3 <- feols(colGPA ~ PC + hsGPA + ACT + mothcoll + fathcoll , data = gpa1, vcov = "hetero")
-modelsummary(list("colGPA" = reg_gpa_pc1, "colGPA" = reg_gpa_pc2, "colGPA" = reg_gpa_pc3), output = "markdown", gof_omit = "AIC|BIC|RMSE")
-
-```
-
-- Prima regressione: Uno studente che possiede un PC ha, in media, un $colGPA$ più alto di circa 0.17 punti rispetto a uno studente che non lo possiede
-
-- Seconda regressione: A parità di $hsGPA$ e di punteggio $ACT$, uno studente che possiede un PC ha, in media, $colGPA$ più alto di circa 0.16 punti rispetto a uno studente che non lo possiede.
-
-- Terza regressione:  A parità di $hsGPA$, punteggio $ACT$ e istruzione dei genitori ($mothcoll$ e $fathcoll$), uno studente che possiede un PC ha, in media, $colGPA$ più alto di circa 0.15 punti rispetto a uno studente che non lo possiede.
 
 ## Dummy con categorie multiple:
 
@@ -359,7 +274,7 @@ Sono statisticamente significativi al 5%?
 
 
 
-**Trappola delle variabili dummy:**
+### Trappola delle variabili dummy
 
 Creiamo (come in Esercitazione 1) la variabile $male$.
 ```{r}
@@ -387,7 +302,7 @@ R rimuove automaticamente le due variabili perfettamente collineari.
 :::
 
 
-### Ipotesi Congiunte:
+## Testare ipotesi congiunte:
 
 Consideriamo la regressione `reg_wage_sm2` (seconda colonna).
 Testiamo l'ipotesi nulla che non ci siano differenze nei salari fra le categorie (dopo aver tenuto conto degli anni di istruzione, esperienza e anni con lo stesso datore di lavoro):
