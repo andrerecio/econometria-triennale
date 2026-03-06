@@ -38,14 +38,14 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 | 1 | Regressione, variabili dummy e intervalli di confidenza | [html](esercitazione1/esercitazione1.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione1/esercitazione1_script.R) |
 | 2 | Regressione multipla | [html](esercitazione2/esercitazione2.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) |
 | 3 | Nonlinearità: specificazioni in log e polinomi | [html](esercitazione3/esercitazione3.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione3/esercitazione3_script.R) |
-| 4 | Interazioni (parte 1) | [html](esercitazione4/esercitazione4.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
-| 5 | Nonlinearità e interazioni (parte 2) | [html](esercitazione5/esercitazione5.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
+| 4 | Interazioni (Parte 1) | [html](esercitazione4/esercitazione4.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
+| 5 | Nonlinearità e interazioni (Parte 2) | [html](esercitazione5/esercitazione5.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
 | 6 | Regressione con dati panel | [html](esercitazione6/esercitazione6.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione6_script.R) |
 | 7 | Regressione con variabili strumentali | [html](esercitazione7/esercitazione7.html) · [slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_script.R) |
-| 8 | LPM, Probit, Logit | [html](esercitazione8/esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
-| 9 | Variabili strumentali (parte 2) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_script.R) |
-| 10 | Domanda di sigarette: IV con panel | [html](esercitazione10/esercitazione10.html) | |
-| 11 | Ripasso modelli log | [html](esercitazione11/esercitazione11.html) | |
+| 8 | Linear Probability Model (LPM) | [html](esercitazione8/esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
+| 9 | Probit e Logit | [html](esercitazione8/esercitazione8.html) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
+| 10 | Variabili strumentali (Parte 2) | [slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_slide.pdf) | [script](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_script.R) |
+| 11 | Domanda di sigarette: IV con panel | [html](esercitazione10/esercitazione10.html) | |
 
 ---
 
@@ -53,7 +53,8 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 
 | Simulazione | Argomenti | Link |
 |-------------|-----------|------|
-| Ottobre 2025 | LPM/Probit/Logit, IV, Panel, Interazioni, Time Series (9 CFU) | [html](https://andrerecio.github.io/econometria-triennale/simulazione2_ottobre.html) |
+| Ottobre 2025 | Ripasso modelli log | [html](homework/esercitazione11.html) |
+| Ottobre 2025 | LPM/Probit/Logit, IV, Panel, Interazioni, Time Series (9 CFU) | [html](homework/simulazione2_ottobre.html) |
 
 ---
 
