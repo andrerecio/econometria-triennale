@@ -1,5 +1,5 @@
 ---
-title: "Esercitazione N.12"
+title: "Ripasso modelli log"
 author: "Econometria"
 format: 
   html:
@@ -10,8 +10,6 @@ execute:
   warning: false
   message: false
 ---
-
-# Ripasso modelli log
 
 **Pacchetti necessari:**
 

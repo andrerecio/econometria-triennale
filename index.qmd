@@ -53,7 +53,7 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 
 | Simulazione | Argomenti | Link |
 |-------------|-----------|------|
-| Ottobre 2025 | Ripasso modelli log | [html](homework/esercitazione11.html) |
+| Ottobre 2025 | Ripasso modelli log | [html](homework/homework01_log.html) |
 | Ottobre 2025 | LPM/Probit/Logit, IV, Panel, Interazioni, Time Series (9 CFU) | [html](homework/simulazione2_ottobre.html) |
 
 ---
