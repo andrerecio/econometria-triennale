@@ -133,7 +133,7 @@ Le spiegazioni nei file **HTML** possono aiutarvi a capire meglio i risultati de
 
 ## 📝 Task 1
 
-- Aprite un nuovo script R (`File > New File > R Script`)
+- Aprire un nuovo script: `File > New File > R Script`
 - Eseguite il seguente codice (Ctrl + Invio o Cmd + Invio o Run)
 
 ```{r}
@@ -143,6 +143,8 @@ y <- x^2
 plot(x, y)
 ```
 
+
+- Potete scaricare lo script completo qui: [Script R](intro/intro.R)
 
 ---
 
