@@ -143,8 +143,6 @@ plot(x, y)
 ```
 
 
-- Potete scaricare lo script completo qui: [Script R](https://raw.githubusercontent.com/andrerecio/econometria-triennale/main/intro/intro.R)
-
 ---
 
 
