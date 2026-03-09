@@ -73,11 +73,10 @@ Divertitevi a sperimentare con il codice
 
 ## Programmazione
 
-Imparare a programmare è molto importante, non solo per l'econometria ma anche per il lavoro e la ricerca in generale:
+Linguaggi di programmazione:
 
-- Più diffusi open source: R, Python e Julia
-- Più diffusi commerciali: Stata e Matlab
-
+- più diffusi open source: R, Python e Julia
+- più diffusi commerciali: Stata e Matlab
 
 
 Python è sempre più richiesto nel mercato del lavoro. R ha una comunità molto attiva in ambito accademico (e molti pacchetti per l'econometria)
