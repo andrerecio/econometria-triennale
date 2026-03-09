@@ -180,7 +180,9 @@ $wage$ è misurato in dollari per ora and $educ$ sono gli anni di istruzione.
 
 
 
-In altri corsi potreste aver visto la regressione stimata con `lm(y~x)`. In questo caso, l'output della regressione riporta errori standard omoschedastici e possono essere corretti utilizzando `library(sandwich)` con la funzione `vcovHC()`.
+In altri corsi potreste aver visto la regressione stimata con `lm(y~x)`. In questo caso, l'output della regressione riporta errori standard omoschedastici che possono essere corretti utilizzando `library(sandwich)` con la funzione `vcovHC()`.
+
+Nel resto del corso useremo `library(fixest)` per stimare le regressioni e correggere gli errori standard all'eteroschedasticità.
 
 ```{r}
 # Modello di regressione base
@@ -213,6 +215,7 @@ L'output della regressione riporta errori standard *IID* (indipendenti e identic
 La prima assunzione per avere stima non distorta è che $E(u_i|educ_i)=0$ 
 
 ::: {.callout-tip}
+
 ## Domanda
 Quali sono le altre assunzioni di OLS?
 :::
@@ -222,7 +225,7 @@ Quali sono le altre assunzioni di OLS?
 In popolazione implica che $E(wage_i|educ_i)= \beta_0 + \beta_1 educ_i$. 
 
 
-Assumendo omoschedasticità $Var(u_i|educ_i)= \sigma^2$  è equivalente, in popolazione, ad assumere $Var(wage_i|educ_i) = \sigma^2$.
+Assumendo omoschedasticità, cioè $Var(u_i|educ_i)= \sigma^2$  è equivalente, in popolazione, ad assumere $Var(wage_i|educ_i) = \sigma^2$.
 
 
 Mentre il valore atteso di $wage$ può aumentare al crescere degli anni di istruzione (ed è ciò a cui siamo interessati), sotto omoschedasticità la varianza di $wage$ non cambia al variare di $educ$. Cioè, stiamo assumendo che la varianza del salario condizionata all’istruzione sia costante.
@@ -232,6 +235,15 @@ Questo non è realistico. Persone con più istruzione hanno una varietà maggior
 
 
 Quando $Var(u_i|x_i)$ dipende da $x_i$, il termine d'errore mostra eteroschedasticità (varianza non costante). Poiché $Var(u_i|x)=Var(y|x)$, l'eteroschedasticità è presente ogni volta che $Var(y_i|x_i)$ è una funzione di $x_i$
+
+
+::: {.callout-caution collapse="false"}
+## Implicazioni dell'eteroschedasticità
+
+Le assunzioni OLS non pongono restrizioni sulla varianza condizionata, quindi si applicano sia sotto eteroschedasticità, sia sotto il caso particolare di omoschedasticità. Perciò, gli stimatori OLS rimangono non distorti, conistenti e asintonticamente normali anche in presenza di eteroschedasticità.
+
+I test di ipotesi e gli intervalli di confidenza basati su errori standard robusti all'eteroschedasticità sono validi in entrambi i casi permettedno inferenza statistica valida anche in presenza di eteroschedasticità. Tali formule sono state proposte da Eicker (1967), Huber (1967) e White (1980) e sono comunemente note come errori standard di Eicker-Huber-White (a volte solo White) o errori standard robusti.
+:::
 
 
 ```{r}
@@ -321,9 +333,9 @@ Quindi il coefficente cattura (almeno asintoticamente) in popolazione l'associaz
 
 ## Cambio di unità di misura
 
-I coefficienti di regressione, sono nell'unità di misura dei dati. Il valore cambia se cambiamo l'unità di misura. L'adattamento del modello ai dati non cambia.
+I coefficienti di regressione, sono nell'unità di misura dei dati. Il valore cambia se cambiamo l'unità di misura, mentre l'adattamento del modello ai dati non cambia. Vediamo come cambiano i coefficienti se cambiamo l'unità di misura di $wage$ e $educ$.
 
-### Variabile dipendente
+### Variabile dipendente: wage
 
 -   $wage$ è espresso in dollari. Possiamo esprimerlo in centinaia di dollari:
 
@@ -371,7 +383,7 @@ In media, un anno aggiuntivo di istruzione è **associato** ad un aumento del sa
 
 75.79 dollari = 0.541 $\times$ 140
 
-### Variabile indipendente
+### Variabile indipendente: educ
 
 Supponiamo che $educ$ sia in mesi di istruzione. Cioè $educ$ $\times$ 12:
 
@@ -389,7 +401,7 @@ In questo caso l'intercetta non cambia. Il valore dell'intercetta è -0.90 rappr
 
 In media, un mese aggiuntivo di istruzione è **associato** ad un aumento del salario orario di 0.045 dollari.
 
-0.045 è uguale a 0.541/12
+$0.045 = \frac{0.541}{12}$
 
 ## Intervalli di confidenza e test di ipotesi
 
@@ -521,7 +533,7 @@ Se non siamo disposti ad assumere che $E(u_i|female_i)=0$, l'interpretazione cau
 
 Il coefficiente cattura non solo possibili effetti diretti del genere, ma anche gli effetti di tutte le variabili omesse che sono correlate con il genere e influenzano il salario. Queste potrebbero includere, ad esempio, differenze sistematiche nei livelli di istruzione, nella scelta del campo di studio (con le donne sottorappresentate nelle discipline STEM più remunerative), nel settore occupazionale, nelle ore lavorate, o nella disponibilità alla mobilità geografica.
 
-Il coefficiente $\beta_1$ riflette quindi una differenza "grezza" nelle retribuzioni, che combina molteplici fattori oltre all'effetto del genere (è a tutti gli effetti una differenza tra medie di $wage$ tra i due gruppi).
+Il coefficiente $\beta_1$ riflette quindi una differenza "grezza" nelle retribuzioni, che combina molteplici fattori oltre all'effetto del genere. In effetti è semplicemente una differenza tra medie di $wage$ tra i due gruppi (7.10 - 4.59 $\approx$ 2.51 dollari).
 
 
 Stimiamo il modello usando sempre `fixest`:

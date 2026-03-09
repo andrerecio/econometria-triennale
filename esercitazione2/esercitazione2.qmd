@@ -69,7 +69,7 @@ La regressione multipla consente esplicitamente di controllare per altre variabi
 
 **Idea**: Inserendo le variabili rilevanti nel modello -e quindi togliendole dall’errore- rendiamo più plausibile l’assunzione che le variabile rimaste nel’errore non siano correlate con le variabili del modello.
 
-Nella precedente [Esercitazione](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html), abbiamo stimato il seguente modello di regressione semplice:
+Nella precedente [Esercitazione](esercitazione1/esercitazione1.html), abbiamo stimato il seguente modello di regressione semplice:
 
 $$
 wage_i = \beta_0 + \beta_1 educ_i + u_i
@@ -77,15 +77,14 @@ $$
 
 Dove $wage$ è misurato in dollari per ora (del 1976) and $educ$ sono gli anni di istruzione.
 
-L'assunzione chiave era: se $E(u_i|educ_i)=0$ allora ha un'interpretazione causale.
 
-Ora stimiamo altri due modelli. Nel primo introduciamo, oltre a $educ$:
+Ora stimiamo altri due modelli: 
 
-- $exper$ che rappresenta gli anni di esperienza nel mercato del lavoro.
+1. aggiungiamo $exper$ che rappresenta gli anni di esperienza nel mercato del lavoro
   
-Nel secondo oltre a $educ$ e $exper$ aggiungiamo:
+2. oltre a $educ$ e $exper$ aggiungiamo $tenure$ che rappresenta il numero di anni presso l'attuale datore di lavoro
 
-- $tenure$ che rappresenta il numero di anni presso l'attuale datore di lavoro.
+Quindi:
 
 $$
 wage_i = \beta_0 + \beta_1 educ_i + \beta_2 exper_i + u_i
@@ -107,45 +106,51 @@ reg_wage3 <- feols(wage ~ educ + exper + tenure, data = wage1, vcov = "hetero")
 #| label: tab1
 #| tbl-cap: Risultati stima OLS. Variabile dipendente wage
 #| results: asis
-modelsummary(list("Wage" = reg_wage1, "Wage" = reg_wage2, "Wage" = reg_wage3), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Wage" = reg_wage1, "Wage" = reg_wage2, "Wage" = reg_wage3), gof_omit = "AIC|BIC|RMSE")
 ```
 
-**Interpretazione**:
+**Interpretazione**: Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
 
-Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
 
 Siamo ancora interessati all'effetto di $educ$ su $wage$, tenendo fissi gli altri fattori. Togliamo $exper$ dal termine di errore e lo consideriamo esplicitamente nel modello.
 
-Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64\$ tenendo costante gli anni di esperienza nel mercato del lavoro.
+
+Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64\$ tenendo costante gli anni di esperienza nel mercato del lavoro. Chi ha più anni di istruzione tende ad entrare nel mercato del lavoro più tardi, quindi — a parità di età — ha meno esperienza lavorativa.
+
 
 In alternativa potremmo essere interessati all'effetto dell'esperienza sul salario orario mantenendo costanti gli effetti degli anni di istruzione. E quindi: un anno aggiuntivo di esperienza nel mercato del lavoro ($exper$) è associato ad un aumento, in media, del salario orario di 0.070 \$ tenendo costante gli anni di istruzione.
 
+
 In questo caso l'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i) = 0$
 
-**Il terzo modello**:
+---
 
-Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59\$ mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
+**Il terzo modello**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59\$ mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
 
 L'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
 
-### Aggiungendo una dummy:
+
+### Includendo una dummy:
 
 ```{r}
 # Regressione
 reg_wage4 <- feols(wage ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage3, "Wage" = reg_wage4), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Wage" = reg_wage3, "Wage" = reg_wage4), gof_omit = "AIC|BIC|RMSE")
 ```
 
 In questa regressione stiamo “controllando” anche per il genere.
 
-Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, $tenure$ e genere.
 
+Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, anni con lo stesso datore di lavoro e genere.
+
+
+---
 
 ### Cambio unità di misura:
 
-Se $wage$ fosse espresso su base mensile: lavoratori a tempo pieno, 7 ore al giorno, 5 giorni a settimana, 4 settimane al mese. Cioè 7x5x4 = 140
+Se $wage$ fosse espresso su base mensile: lavoratori a tempo pieno, 7 ore al giorno, 5 giorni a settimana, 4 settimane al mese. Cioè 7 $\times$ 5 $\times$ 4 = 140
 
-Creiamo una nuova variabile wage_monthly = $wage$ x 140
+Creiamo una nuova variabile wage_monthly = $wage$ $ \times $ 140
 
 ```{r}
 wage1 <- wage1 %>%
@@ -153,25 +158,34 @@ wage1 <- wage1 %>%
 
 
 reg_wage_dummy3 <- feols(wage_monthly ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), output = "markdown", gof_omit = "AIC|BIC|RMSE") 
+modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), gof_omit = "AIC|BIC|RMSE") 
 ```
 
-Un anno in più di istruzione è associato, in media, a un aumento del salario orario 0.572$ in più, a parità di genere, esperienza e $tenure$
+
+**Wage orario**: Un anno in più di istruzione è associato, in media, a un aumento del salario orario 0.572 dollari in più, a parità di genere, esperienza e $tenure$
 
 
-Un anno in più di istruzione è associato, in media, a un aumento del salario mensile di 80$ in più, a parità di genere, esperienza e $tenure$
+**Wage mensile**: Un anno in più di istruzione è associato, in media, a un aumento del salario mensile di 80 dollari in più, a parità di genere, esperienza e $tenure$
 
-Vedremo in futuro poi cosa cambia considerando l'interazione $educ$ * $female$.
 
 E se $educ$ fosse misurato in mesi di istruzione? 
 
-In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) abbiamo visto che nel modello di regressione semplice, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non cambiava e il coefficiente associato a $educ$ era diviso 12.
-
-Il coefficente associato ad $educ montlhy$ sarà pari a 0.048 \$ (0.572/12). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048$ in più, a parità di genere, esperienza e $tenure$.
-Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
+In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) abbiamo visto che nel modello di regressione, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non 
+cambiava e il coefficiente associato a $educ$ era diviso 12.
 
 
-## Wage e genere:
+Il coefficente associato ad $educ montlhy$ sarà pari a 0.048 \$ ($\frac{0.572}{12}$). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048$ in più, a parità di genere, esperienza e $tenure$. Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
+
+
+::: {.callout-note collapse="true"}
+## Partialling out (Frisch-Waugh-Lovell Theorem)
+
+Il teorema di Frisch-Waugh-Lovell (FWL) afferma che il coefficiente di una variabile in una regressione multipla è uguale al coefficiente ottenuto regredendo la variabile dipendente e la variabile indipendente di interesse sulle altre variabili indipendenti, e poi regredendo i residui della prima regressione sui residui della seconda.
+:::
+
+---
+
+## Dummy: wage e genere:
 
 In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) avevamo stimato la seguente regressione:
 
@@ -182,7 +196,7 @@ $$
 ```{r}
 reg_wage_dummy <- feols(wage ~ female, data = wage1, vcov = "hetero")
 reg_wage_dummy2 <- feols(wage ~ female + educ + exper + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage (Esercitazione 1)" = reg_wage_dummy, "Wage" = reg_wage_dummy2), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Wage (Esercitazione 1)" = reg_wage_dummy, "Wage" = reg_wage_dummy2), gof_omit = "AIC|BIC|RMSE")
 ```
 
 I risultati della prima regressione mostrano che il salario medio degli uomini (rappresentato dall'intercetta) è di circa 7.1 dollari (del 1976) per ora.
@@ -203,18 +217,18 @@ Siccome controllliamo per $educ$, $exper$, e $tenure$, il differenziale del sala
 
 Il differenziale di 1,81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
 
+---
 
 ## Dummy con categorie multiple:
 
 
 Stimiamo un modello che tiene conto delle differenze salariali tra quattro gruppi: uomini sposati, donne sposate, uomini single e donne single. 
 
-Per interpretare i coefficienti delle variabili dummy, dobbiamo scegliare un gruppo di riferimento.
+Per interpretare i coefficienti delle variabili dummy, dobbiamo scegliere un gruppo di riferimento.
 
 Dobbiamo quindi definire delle dummy per gli altri tre gruppi.
 
-**Variabili dummy**:
-Siamo interessati a uomini single (è la nostra categoria omessa). Creiamo le seguenti variabili:
+**Variabili dummy**: Siamo interessati a uomini single (è la nostra categoria omessa). Creiamo le seguenti variabili:
 
 - $marrmale$ uguale ad 1 se uomo e sposato
 - $marrfemale$ uguale ad 1 se donna e sposata
@@ -257,7 +271,7 @@ il 35\% sono uomini sposati, il 25\% donne sposate, il 22\% donne single. (100-3
 ```{r}
 reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
 reg_wage_sm2 <- feols(wage ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_sm1, "Wage" = reg_wage_sm2), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Wage" = reg_wage_sm1, "Wage" = reg_wage_sm2), gof_omit = "AIC|BIC|RMSE")
 ```
 
 **Interpretazione dei coefficienti (seconda colonna):**
@@ -273,6 +287,7 @@ Sono statisticamente significativi al 5%?
 :::
 
 
+---
 
 ### Trappola delle variabili dummy
 
@@ -301,6 +316,7 @@ Perché:
 R rimuove automaticamente le due variabili perfettamente collineari.
 :::
 
+---
 
 ## Testare ipotesi congiunte:
 
