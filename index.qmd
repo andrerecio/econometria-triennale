@@ -16,19 +16,22 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 
 ---
 
-## Introduzione a R
-
-| N. | Argomento | Slide | Script R 
-|----|-----------|------|----------|
-| 1 | Introduzione a R |  |  |
-| 2 | Dataframe |  |  |
-
-
 ### Installare R e RStudio
 
 1. Scarica e installa **R** da [cran.r-project.org](https://cran.r-project.org)
 2. Scarica e installa **RStudio** da [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
 
+---
+
+## Introduzione a R
+
+| N. | Argomento | Slide | Script R 
+|----|-----------|------|----------|
+| 1 | Introduzione a R | [html](intro/intro.html) | [Script R](intro/intro.R) |
+| 2 | Regressione con `fixest` |  |  |
+
+
+---
 
 
 ## Esercitazioni
