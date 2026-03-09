@@ -328,7 +328,6 @@ ggplot(crime_sub, aes(x = police, y = violent)) +
 
 - In realtà, le città con più crimine assumono più poliziotti — è il crimine a causare più polizia, non il contrario
 
-- Questo è un problema di **endogeneità** 
 
 ## Letture utili
 
