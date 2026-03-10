@@ -1,5 +1,6 @@
 # ==============================================================================
 # Esercitazioni di Econometria — Introduzione a R
+# Sapienza Università di Roma
 # ==============================================================================
 
 # --- Installazione pacchetti (solo la prima volta) ----------------------------
@@ -61,7 +62,29 @@ wage1 |>
   )
 
 # ==============================================================================
-# 5. Grafici con ggplot2
+# 5. Intervallo di confidenza per la media
+# ==============================================================================
+
+# --- Calcolo a mano -----------------------------------------------------------
+
+n    <- length(wage1$wage)
+xbar <- mean(wage1$wage)
+s    <- sd(wage1$wage)
+se   <- s / sqrt(n)
+
+t_crit   <- qt(0.975, df = n - 1)  # uguale a circa 1.96
+
+ci_lower <- xbar - t_crit * se
+ci_upper <- xbar + t_crit * se
+
+c(media = xbar, lower = ci_lower, upper = ci_upper)
+
+# --- Verifica con t.test() ----------------------------------------------------
+
+t.test(wage1$wage)
+
+# ==============================================================================
+# 6. Grafici con ggplot2
 # ==============================================================================
 
 # Distribuzione del salario orario
@@ -72,10 +95,10 @@ ggplot(wage1, aes(x = wage)) +
     x = "Salario orario (dollari)",
     y = "Frequenza"
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 15)
 
 # ==============================================================================
-# 6. Polizia e crimine
+# 7. Polizia e crimine
 # ==============================================================================
 
 # Carichiamo il dataset da GitHub
@@ -88,18 +111,38 @@ glimpse(crime)
 # --- Creiamo variabili per 100.000 abitanti -----------------------------------
 
 crime_sub <- crime |>
-  filter(year %in% c(1985, 1987, 1989, 1991)) |>
+  filter(year == 1991) |>
   mutate(
     violent = (murder + rape + robbery + assault) / citypop * 100000,
     police  = sworn / citypop * 100000
-  )
+  ) |>
+  drop_na(violent, police)
 
 # --- Scatter plot: polizia vs crimine violento --------------------------------
 
 ggplot(crime_sub, aes(x = police, y = violent)) +
-  geom_point(alpha = 0.75) +
+  geom_point(alpha = 0.8) +
   labs(
     x = "Poliziotti per 100.000 abitanti",
     y = "Crimini violenti per 100.000 abitanti"
   ) +
   theme_minimal(base_size = 20)
+
+# ==============================================================================
+# 8. Covarianza e correlazione
+# ==============================================================================
+
+# --- Con le funzioni R --------------------------------------------------------
+
+cov(crime_sub$police, crime_sub$violent)
+cor(crime_sub$police, crime_sub$violent)
+
+# --- Calcolo a mano ----------------------------------------------------------
+
+x <- crime_sub$police
+y <- crime_sub$violent
+
+cov_manual <- sum((x - mean(x)) * (y - mean(y))) / (length(x) - 1)
+cor_manual <- cov_manual / (sd(x) * sd(y))
+
+c(covarianza = round(cov_manual, 2), correlazione = round(cor_manual, 4))
