@@ -145,9 +145,6 @@ plot(x, y)
 
 ---
 
-
-
-
 ## 📦 Pacchetti R
 
 - Installare e caricare i pacchetti necessari:
@@ -247,6 +244,38 @@ wage1 |>
 
 ---
 
+## 📐 Intervallo di confidenza per la media
+
+$$\bar{x} \pm t_{\alpha/2, \, n-1} \cdot \frac{s}{\sqrt{n}}$$
+```{r}
+# calcolo "manuale" per wage 
+n    <- length(wage1$wage) # numero di osservazioni
+xbar <- mean(wage1$wage) # media campionaria di wage
+s    <- sd(wage1$wage) # deviazione standard campionaria di wage
+se   <- s / sqrt(n) # errore standard della media
+
+t_crit   <- qt(0.975, df = n - 1) # uguale a circa 1.96 (ricordatelo!)
+
+ci_lower <- xbar - t_crit * se # limite inferiore
+ci_upper <- xbar + t_crit * se # limite superiore
+
+c(media = xbar, lower = ci_lower, upper = ci_upper)
+
+
+```
+
+
+## 📐 Intervallo di confidenza per la media
+
+```{r}
+# usando il comando t.test()
+t.test(wage1$wage)
+```
+
+
+---
+
+
 ## 📊 Summarising — per gruppi
 
 `group_by()` calcola le statistiche separatamente per ogni gruppo:
@@ -276,7 +305,7 @@ ggplot(wage1, aes(x = wage)) +
   geom_histogram(fill = "lightblue", color = "black", bins = 20) +
   labs(title = "Distribuzione del salario orario",
        x = "Salario orario (dollari)", y = "Frequenza") +
-  theme_minimal()
+  theme_minimal(base_size = 15)
 ```
 
 ---
@@ -304,14 +333,15 @@ glimpse(crime)
 ```{r}
 #| output-location: slide
 crime_sub <- crime |>
-  filter(year %in% c(1985, 1987, 1989, 1991)) |>
+  filter(year == 1991) |> # solo nel 1991
   mutate(
     violent = (murder + rape + robbery + assault) / citypop * 100000,
     police  = sworn / citypop * 100000
-  )
+  ) |>
+  drop_na(violent, police)
 
 ggplot(crime_sub, aes(x = police, y = violent)) +
-  geom_point(alpha = 0.75) +
+  geom_point(alpha = 0.8) +
   labs(
     x = "Poliziotti per 100.000 abitanti",
     y = "Crimini violenti per 100.000 abitanti"
@@ -325,6 +355,38 @@ ggplot(crime_sub, aes(x = police, y = violent)) +
 - La figura mostra una correlazione **positiva** tra polizia e crimine: più polizia, più crimine?
 
 - In realtà, le città con più crimine assumono più poliziotti — è il crimine a causare più polizia, non il contrario
+
+
+
+## 📏 Covarianza e correlazione
+```{r}
+# covarianza
+cov(crime_sub$police, crime_sub$violent)
+
+# correlazione
+cor(crime_sub$police, crime_sub$violent)
+```
+
+- La **covarianza** misura l'associazione lineare tra due variabili
+- La **correlazione** è la covarianza standardizzata, compresa tra -1 e 1
+
+---
+
+## 📏 Covarianza
+
+$$\text{Cov}(X, Y) = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})$$
+```{r}
+x <- crime_sub$police
+y <- crime_sub$violent
+
+cov_manual <- sum((x - mean(x)) * (y - mean(y))) / (length(x) - 1)
+cor_manual <- cov_manual / (sd(x) * sd(y))
+
+c(covarianza = round(cov_manual, 2))
+c(correlazione = round(cor_manual, 6))
+```
+
+
 
 
 ## Letture utili
