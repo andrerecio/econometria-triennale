@@ -40,9 +40,9 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 | N. | Argomento | Materiali |
 |----|-----------|-----------|
 | 1 | Regressione, variabili dummy e intervalli di confidenza | [📄 Note](esercitazione1/esercitazione1.html)  ·  [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione1/esercitazione1_script.R) |
-| 2 | Regressione multipla | [📄 Note](esercitazione2/esercitazione2.html) · [💻 Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) |
+| 2 | Regressione multipla | [📄 Note](esercitazione2/esercitazione2.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) |
 | 3 | Nonlinearità: specificazioni in log e polinomi | [📄 Note](esercitazione3/esercitazione3.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione3/esercitazione3_script.R) |
-| 4 | Interazioni (Parte 1) | [📄 Note](esercitazione4/esercitazione4.html) · [💻 Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
+| 4 | Interazioni (Parte 1) | [📄 Note](esercitazione4/esercitazione4.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
 | 5 | Nonlinearità e interazioni (Parte 2) | [📄 Note](esercitazione5/esercitazione5.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
 | 6 | Regressione con dati panel | [📄 Note](esercitazione6/esercitazione6.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione6_script.R) |
 | 7 | Regressione con variabili strumentali | [📄 Note](esercitazione7/esercitazione7.html) · [📊 Slide](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_slide.pdf) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_script.R) |
