@@ -368,6 +368,7 @@ cor(crime_sub$police, crime_sub$violent)
 ```
 
 - La **covarianza** misura l'associazione lineare tra due variabili
+
 - La **correlazione** è la covarianza standardizzata, compresa tra -1 e 1
 
 ---
