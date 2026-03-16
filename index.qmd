@@ -29,7 +29,7 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 | N. | Argomento | Materiali |
 |----|-----------|-----------|
 | 1 | Introduzione a R | [📊 Slide](intro/intro.html) · [Script R](intro/intro.R) |
-| 2 | Regressione con `fixest` |  |
+| 2 | Regressione con `fixest` | [📊 Slide](intro/intro2_R.html) |
 
 
 ---
