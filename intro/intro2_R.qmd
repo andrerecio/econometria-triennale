@@ -148,6 +148,7 @@ reg1
 - `vcov = "hetero"` o `vcov = "hc1"` — errori standard robusti
 - comando Stata: `regress wage educ, robust`
 
+
 ---
 
 ## 📉 Regressione — comando `lm` di R
@@ -161,14 +162,21 @@ summary(reg_lm)
 
 ---
 
-## 📋 Tabella della regressione 
+## 📋 Tabella della regressione
 
+- variabile dipendente: `wage`
+- errori standard robusti in parentesi
+
+::: {style="font-size: 0.85em"}
 ```{r}
-modelsummary(list("wage" = reg1), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("wage" = reg1),gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
+:::
 
 
 ---
+
+
 
 ## 📋 Tabella della regressione
 
@@ -177,4 +185,4 @@ Il coefficiente di $educ$ rappresenta l’incremento medio del salario orario as
 - Un anno aggiuntivo di istruzione è **associato** a un aumento medio del salario orario di circa 0.54 dollari
 
 
-L'intercetta ($\beta_0$) rappresenta il salario orario medio predetto per un individuo con 0 anni di istruzione
+L'intercetta ($\beta_0$) rappresenta il salario orario medio predetto per un individuo con zero anni di istruzione
