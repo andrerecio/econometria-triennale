@@ -276,22 +276,55 @@ t.test(wage1$wage)
 ---
 
 
+
 ## 📊 Summarising — per gruppi
 
 `group_by()` calcola le statistiche separatamente per ogni gruppo:
 
 ```{r}
-wage1 |>
+wagediff <- wage1 |>
   group_by(female) |>
   summarise(
     wage_mean = mean(wage),
     wage_sd   = sd(wage),
     n         = n()
   )
+wagediff  
 ```
 
 - `female = 0` → uomini, `female = 1` → donne
 - `n()` conta le osservazioni per gruppo
+
+---
+
+
+## 📐 Testare la differenza tra medie
+
+
+$$H_0: \mu_{uomini} - \mu_{donne} = 0 \qquad H_1: \mu_{uomini} - \mu_{donne} \neq 0$$
+
+La statistica test:
+
+$$t = \frac{\bar{Y}_{uomini} - \bar{Y}_{donne}}{SE(\bar{Y}_{uomini} - \bar{Y}_{donne})} \qquad SE = \sqrt{\frac{s^2_{uomini}}{n_{uomini}} + \frac{s^2_{donne}}{n_{donne}}}$$
+
+
+- $|t|$ > 1.96 → rifiutiamo $H_0$ al 5%
+
+
+
+---
+
+## 📐 Testare la differenza tra medie
+
+
+```{r}
+se <- sqrt(wagediff$wage_sd[1]^2 / wagediff$n[1] +
+           wagediff$wage_sd[2]^2 / wagediff$n[2])
+
+t_stat <- (wagediff$wage_mean[1] - wagediff$wage_mean[2]) / se
+t_stat
+```
+
 
 ---
 
