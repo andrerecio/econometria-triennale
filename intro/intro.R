@@ -7,6 +7,8 @@
 
 install.packages("tidyverse")
 install.packages("wooldridge")
+#install.packages("ggplot2")
+#install.packages("dplyr")
 
 # --- Caricare i pacchetti -----------------------------------------------------
 
@@ -82,6 +84,33 @@ c(media = xbar, lower = ci_lower, upper = ci_upper)
 # --- Verifica con t.test() ----------------------------------------------------
 
 t.test(wage1$wage)
+
+
+# --- Verifica della differenza tra medie --------------------------------------
+
+# Statistiche descrittive per gruppo
+# female = 0 → uomini, female = 1 → donne
+wagediff <- wage1 |>
+  group_by(female) |>
+  summarise(
+    wage_mean = mean(wage),  # media salariale per gruppo
+    wage_sd   = sd(wage),    # deviazione standard per gruppo
+    n         = n()          # numerosità per gruppo
+  )
+wagediff
+
+# Errore standard della differenza tra medie
+# SE = sqrt(s1^2/n1 + s2^2/n2)
+se <- sqrt(wagediff$wage_sd[1]^2 / wagediff$n[1] +
+             wagediff$wage_sd[2]^2 / wagediff$n[2])
+
+# Statistica t: (media_uomini - media_donne) / SE
+# H0: mu_uomini - mu_donne = 0
+# H1: mu_uomini - mu_donne ≠ 0
+t_stat <- (wagediff$wage_mean[1] - wagediff$wage_mean[2]) / se
+t_stat
+
+# Rifiutiamo H0 al 5% se |t| > 1.96
 
 # ==============================================================================
 # 6. Grafici con ggplot2
