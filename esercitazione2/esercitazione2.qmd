@@ -18,6 +18,7 @@ format:
     # Codice
     code-fold: false
     code-tools: true
+    code-copy: true
     code-block-bg: true
     code-block-border-left: false
     highlight-style: github
@@ -112,20 +113,20 @@ modelsummary(list("Wage" = reg_wage1, "Wage" = reg_wage2, "Wage" = reg_wage3), g
 **Interpretazione**: Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
 
 
-Siamo ancora interessati all'effetto di $educ$ su $wage$, tenendo fissi gli altri fattori. Togliamo $exper$ dal termine di errore e lo consideriamo esplicitamente nel modello.
+Siamo ancora interessati all'effetto di $educ$ su $wage$, tenendo fissi gli altri fattori.
 
 
-Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64\$ tenendo costante gli anni di esperienza nel mercato del lavoro. Chi ha più anni di istruzione tende ad entrare nel mercato del lavoro più tardi, quindi — a parità di età — ha meno esperienza lavorativa.
+Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64 dollari tenendo costante gli anni di esperienza nel mercato del lavoro. Chi ha più anni di istruzione tende ad entrare nel mercato del lavoro più tardi, quindi — a parità di età — ha meno esperienza lavorativa.
 
 
-In alternativa potremmo essere interessati all'effetto dell'esperienza sul salario orario mantenendo costanti gli effetti degli anni di istruzione. E quindi: un anno aggiuntivo di esperienza nel mercato del lavoro ($exper$) è associato ad un aumento, in media, del salario orario di 0.070 \$ tenendo costante gli anni di istruzione.
+In alternativa potremmo essere interessati all'effetto dell'esperienza sul salario orario mantenendo costanti gli effetti degli anni di istruzione. E quindi: un anno aggiuntivo di esperienza nel mercato del lavoro ($exper$) è associato ad un aumento, in media, del salario orario di 0.070 dollari tenendo costante gli anni di istruzione.
 
 
 In questo caso l'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i) = 0$
 
 ---
 
-**Il terzo modello**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59\$ mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
+**Il terzo modello**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59 dollari mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
 
 L'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
 
@@ -170,17 +171,33 @@ modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), gof_omi
 
 E se $educ$ fosse misurato in mesi di istruzione? 
 
-In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) abbiamo visto che nel modello di regressione, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non 
-cambiava e il coefficiente associato a $educ$ era diviso 12.
+In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) abbiamo visto che nel modello di regressione, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non cambiava e il coefficiente associato a $educ$ era diviso 12.
 
 
-Il coefficente associato ad $educ montlhy$ sarà pari a 0.048 \$ ($\frac{0.572}{12}$). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048$ in più, a parità di genere, esperienza e $tenure$. Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
+Il coefficente associato ad $educ montlhy$ sarà pari a 0.048 \$ ($\frac{0.572}{12}$). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048 dollari in più, a parità di genere, esperienza e $tenure$. Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
+
 
 
 ::: {.callout-note collapse="true"}
-## Partialling out (Frisch-Waugh-Lovell Theorem)
+## Partialling out (Teorema di Frisch-Waugh-Lovell)
 
-Il teorema di Frisch-Waugh-Lovell (FWL) afferma che il coefficiente di una variabile in una regressione multipla è uguale al coefficiente ottenuto regredendo la variabile dipendente e la variabile indipendente di interesse sulle altre variabili indipendenti, e poi regredendo i residui della prima regressione sui residui della seconda.
+Come si ottiene il coefficiente di `educ` in una regressione
+multipla? Il teorema di Frisch-Waugh-Lovell mostra che è
+equivalente a un procedimento in due passi:
+
+1. Si regredisce `wage` sulle altre variabili (`exper`, `tenure`)
+   e si calcolano i residui: la parte di salario *non* spiegata
+   da esperienza e anzianità.
+2. Si regredisce `educ` sulle stesse variabili e si calcolano
+   i residui: la parte di istruzione *non* spiegata da
+   esperienza e anzianità.
+3. Si regredisce i residui del passo 1 sui residui del passo 2:
+   il coefficiente ottenuto è esattamente $\hat{\beta}_{educ}$
+   della regressione multipla.
+
+In altre parole, il coefficiente di `educ` cattura l'associazione
+tra salario e istruzione *al netto* dell'effetto delle
+altre variabili — da qui il termine "partialling out".
 :::
 
 ---
@@ -207,7 +224,7 @@ Il coefficiente della variabile dummy per il genere femminile (female) è -2.51 
 Nella seconda regressione controlliamo per differenze nei livelli istruzione, esperienza, e $tenure$.
 
 
-In questa seconda regressione l'intercetta (negativa) degli uomini non ha molto senso. Anche perhé nessun individuo ha zero di $educ$, $exper$ e $tenure$ nel campione.
+In questa seconda regressione l'intercetta (negativa) degli uomini non ha molto senso. Anche perché nessun individuo ha zero di $educ$, $exper$ e $tenure$ nel campione.
 
 
 Il coefficiente di $female$ rappresenta la differenza media nel salario orario tra un uomo e un donna che hanno lo stesso livello di istruzione, esperienza e $tenure$. Le donne guadagnano in media 1.81$ in meno rispetto agli uomini a parità di $educ$, $exper$ e $tenure$.
@@ -269,12 +286,11 @@ il 35\% sono uomini sposati, il 25\% donne sposate, il 22\% donne single. (100-3
 
 
 ```{r}
-reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
-reg_wage_sm2 <- feols(wage ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_sm1, "Wage" = reg_wage_sm2), gof_omit = "AIC|BIC|RMSE")
+reg_wage_sm <- feols(wage ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_sm), gof_omit = "AIC|BIC|RMSE")
 ```
 
-**Interpretazione dei coefficienti (seconda colonna):**
+**Interpretazione dei coefficienti:**
 
 - In media, un uomo sposato, guadagna 1.822 dollari all'ora in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
 
@@ -300,8 +316,8 @@ wage1 <- wage1 %>%
 Regressione di $wage$ su $marrmale$, $marrfemale$, $singfem$, $female$ e $male$
 
 ```{r}
-reg_wage_sm3 <- feols(wage ~ marrmale + marrfemale + singfem + female + male, data = wage1, vcov = "hetero")
-reg_wage_sm3
+reg_wage_sm_dummy <- feols(wage ~ marrmale + marrfemale + singfem + female + male, data = wage1, vcov = "hetero")
+reg_wage_sm_dummy
 ```
 
 ::: {.callout-important title="Attenzione"}
@@ -320,7 +336,7 @@ R rimuove automaticamente le due variabili perfettamente collineari.
 
 ## Testare ipotesi congiunte:
 
-Consideriamo la regressione `reg_wage_sm2` (seconda colonna).
+Consideriamo la regressione `reg_wage_sm` (seconda colonna).
 Testiamo l'ipotesi nulla che non ci siano differenze nei salari fra le categorie (dopo aver tenuto conto degli anni di istruzione, esperienza e anni con lo stesso datore di lavoro):
 
 Cioè:
@@ -332,24 +348,23 @@ $$
 Usando la  funzione `wald()` inclusa in `library(fixest)`
 
 ```{r}
-wald(reg_wage_sm2, 
+wald(reg_wage_sm, 
      keep = "marrmale|marrfemale|singfem")
 ```
 
-
-In alternativa, possiamo usare `linearHypothesis` dal pacchetto `library(car)`
+Più frequentemente useremo `linearHypothesis` dal pacchetto `library(car)`
 
 ```{r}
 library(car)
 # Test di ipotesi
-linearHypothesis(reg_wage_sm2, 
+linearHypothesis(reg_wage_sm, 
                  c("marrmale = 0", "marrfemale = 0", "singfem = 0"), test = "F")
 ```
 
 Se non selezioniamo `test = F`, allora:
 
 ```{r}
-linearHypothesis(reg_wage_sm2, 
+linearHypothesis(reg_wage_sm, 
                  c("marrmale = 0", "marrfemale = 0", "singfem = 0"))
 ```
 

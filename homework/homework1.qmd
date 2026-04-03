@@ -66,6 +66,8 @@ library(modelsummary)
 ## College GPA:
 
 `gpa1` contiene la media dei voti durante il college ($colGPA$), scuola superiore GPA ($hsGPA$) e l'achievement test score ($ACT$) di 141 studenti di grandi università. 
+
+
 $colGPA$ e $hsGPA$ sono in scala di quattro punti.
 
 $ACT$ (American College Testing) è un test standardizzato diffuso negli USA per l'ammissione al College. Composto da 4 sezioni va da una scala da 1 a 36.
@@ -99,12 +101,14 @@ summary(gpa1$colGPA)
 summary(gpa1$hsGPA)
 ```
 
-**Regressione**:
+### Esercizio 1:
 
+Considerate la seguente regressione:
 $$
 colGPA = \beta_0 + \beta_1 hsGPA_i + \beta_2 ACT_i + u_i
 $$
 
+Stimatela usando `fixest` e interpretate i coefficienti di $hsGPA$ e $ACT$.
 
 ```{r}
 reg_gpa1 <- feols(colGPA ~ hsGPA + ACT, data = gpa1, vcov = "hetero")
