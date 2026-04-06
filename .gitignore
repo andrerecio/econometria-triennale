@@ -1,5 +1,39 @@
-.Rproj.user
+# R
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+.Rapp.history
+*.Rproj
+
+# Quarto
+/.quarto/
+*_cache/
+/_site/
+/_book/
+/_freeze/
+
+# Editor
 .vscode/
+.idea/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# Logs e temporanei
+*.log
+*.tmp
+*.bak
+*.swp
