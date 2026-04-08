@@ -7,8 +7,10 @@ lang: it
 
 format:
   html:
-    # Layout
-    theme: flatly
+    # Layout e Tema
+    theme:
+      light: flatly
+      dark: darkly
     toc: true
     toc-depth: 3
     toc-title: "Contenuti"
@@ -41,7 +43,6 @@ knitr:
     fig.align: "center"
     fig.width: 7
     fig.height: 4.5
-
 ---
 
 ## Introduzione
@@ -51,7 +52,6 @@ knitr:
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
 library(modelsummary)
 ```
 
@@ -106,8 +106,9 @@ reg_wage3 <- feols(wage ~ educ + exper + tenure, data = wage1, vcov = "hetero")
 ```{r}
 #| label: tab1
 #| tbl-cap: Risultati stima OLS. Variabile dipendente wage
-#| results: asis
-modelsummary(list("Wage" = reg_wage1, "Wage" = reg_wage2, "Wage" = reg_wage3), gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Wage 3" = reg_wage2, "Wage 4" = reg_wage3), 
+             gof_omit = "AIC|BIC|RMSE", 
+             output = "tinytable")
 ```
 
 **Interpretazione**: Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
@@ -139,7 +140,7 @@ reg_wage4 <- feols(wage ~ educ + exper + tenure + female, data = wage1, vcov = "
 modelsummary(list("Wage" = reg_wage3, "Wage" = reg_wage4), gof_omit = "AIC|BIC|RMSE")
 ```
 
-In questa regressione stiamo “controllando” anche per il genere.
+In questa regressione stiamo “controllando” anche per il genere (variabile dummy $female$).
 
 
 Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, anni con lo stesso datore di lavoro e genere.
