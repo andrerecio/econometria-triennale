@@ -7,10 +7,8 @@ lang: it
 
 format:
   html:
-    # Layout e Tema
-    theme:
-      light: flatly
-      dark: darkly
+    # Layout
+    theme: flatly
     toc: true
     toc-depth: 3
     toc-title: "Contenuti"
@@ -43,9 +41,10 @@ knitr:
     fig.align: "center"
     fig.width: 7
     fig.height: 4.5
+
 ---
 
-## Introduzione
+## Introduzione alla regressione multipla
 
 ```{r}
 #| message: false
@@ -68,15 +67,15 @@ data("wage1", package = "wooldridge")
 
 La regressione multipla consente esplicitamente di controllare per altre variabili che influenzano la variabile dipendente e sono potenzialmente correlate con il regressore.
 
-**Idea**: Inserendo le variabili rilevanti nel modello -e quindi togliendole dall’errore- rendiamo più plausibile l’assunzione che le variabile rimaste nel’errore non siano correlate con le variabili del modello.
+**Idea**: Inserendo le variabili rilevanti nel modello -e quindi togliendole dall’errore- rendiamo più plausibile l’assunzione che le i rimaste nell’errore non siano correlate con le variabili del modello.
 
-Nella precedente [Esercitazione](esercitazione1/esercitazione1.html), abbiamo stimato il seguente modello di regressione semplice:
+Nella precedente [Esercitazione](https://andrearecine.me/econometria-triennale/esercitazione1/esercitazione1.html), abbiamo stimato il seguente modello di regressione semplice:
 
 $$
 wage_i = \beta_0 + \beta_1 educ_i + u_i
 $$
 
-Dove $wage$ è misurato in dollari per ora (del 1976) and $educ$ sono gli anni di istruzione.
+Dove $wage$ è misurato in dollari per ora (del 1976) e $educ$ sono gli anni di istruzione.
 
 
 Ora stimiamo altri due modelli: 
@@ -105,19 +104,36 @@ reg_wage3 <- feols(wage ~ educ + exper + tenure, data = wage1, vcov = "hetero")
 
 ```{r}
 #| label: tab1
-#| tbl-cap: Risultati stima OLS. Variabile dipendente wage
-modelsummary(list("Wage 3" = reg_wage2, "Wage 4" = reg_wage3), 
-             gof_omit = "AIC|BIC|RMSE", 
-             output = "tinytable")
+#| tbl-cap: "Risultati stima OLS. Variabile dipendente $:$ wage"
+modelsummary(list("Wage" = reg_wage1, "Wage" = reg_wage2, "Wage" = reg_wage3), gof_omit = "AIC|BIC|RMSE")
 ```
 
-**Interpretazione**: Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
+**Interpretazione dei coefficienti**: Nell’interpretazione dei coefficienti consideriamo l’effetto di una variabile tenendo costanti tutte le altre.
 
 
 Siamo ancora interessati all'effetto di $educ$ su $wage$, tenendo fissi gli altri fattori.
 
 
-Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64 dollari tenendo costante gli anni di esperienza nel mercato del lavoro. Chi ha più anni di istruzione tende ad entrare nel mercato del lavoro più tardi, quindi — a parità di età — ha meno esperienza lavorativa.
+**Seconda colonna**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.64 dollari tenendo costante gli anni di esperienza nel mercato del lavoro. Chi ha più anni di istruzione tende ad entrare nel mercato del lavoro più tardi, quindi — a parità di età — ha meno esperienza lavorativa. Questo spiega perché $educ$ ed $exper$ sono negativamente correlate,
+
+
+
+::: {.callout-note collapse="false"}
+## Correlazione tra $educ$ e $exper$
+
+```{r}
+cor(wage1$educ, wage1$exper)
+```
+
+
+La distorsione dipende nel caso del secondo modello dipende da due fattori: l’effetto di $exper$ su $wage$ e la correlazione fra $exper$ e $educ$. Se entrambi sono diversi da zero, la distorsione è diversa da zero.
+
+L’effetto di $exper$ su $wage$ è positivo: più esperienza, salari più alti. La covarianza (e quindi la correlazione) fra $educ$ e $exper$ è negativa (Cov(educ, exper) < 0): persone con più anni di istruzione tendono ad avere meno esperienza. 
+
+La distorsione del coefficiente di $educ$ è quindi **negativa**: il modello semplice **sottostima** l'effetto dell'istruzione sul salario. 
+
+
+:::
 
 
 In alternativa potremmo essere interessati all'effetto dell'esperienza sul salario orario mantenendo costanti gli effetti degli anni di istruzione. E quindi: un anno aggiuntivo di esperienza nel mercato del lavoro ($exper$) è associato ad un aumento, in media, del salario orario di 0.070 dollari tenendo costante gli anni di istruzione.
@@ -127,56 +143,10 @@ In questo caso l'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, e
 
 ---
 
-**Il terzo modello**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59 dollari mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro.
-
-L'assunzione chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
+**Il terzo modello**: Un anno in più di istruzione è associato ad un aumento, in media, del salario orario di 0.59 dollari mantenendo costante gli anni di esperienza nel mercato del lavoro e gli anni con lo stesso datore di lavoro ($tenure$).
 
 
-### Includendo una dummy:
-
-```{r}
-# Regressione
-reg_wage4 <- feols(wage ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage3, "Wage" = reg_wage4), gof_omit = "AIC|BIC|RMSE")
-```
-
-In questa regressione stiamo “controllando” anche per il genere (variabile dummy $female$).
-
-
-Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, anni con lo stesso datore di lavoro e genere.
-
-
----
-
-### Cambio unità di misura:
-
-Se $wage$ fosse espresso su base mensile: lavoratori a tempo pieno, 7 ore al giorno, 5 giorni a settimana, 4 settimane al mese. Cioè 7 $\times$ 5 $\times$ 4 = 140
-
-Creiamo una nuova variabile wage_monthly = $wage$ $ \times $ 140
-
-```{r}
-wage1 <- wage1 %>%
-  mutate(wage_monthly = wage*140)
-
-
-reg_wage_dummy3 <- feols(wage_monthly ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), gof_omit = "AIC|BIC|RMSE") 
-```
-
-
-**Wage orario**: Un anno in più di istruzione è associato, in media, a un aumento del salario orario 0.572 dollari in più, a parità di genere, esperienza e $tenure$
-
-
-**Wage mensile**: Un anno in più di istruzione è associato, in media, a un aumento del salario mensile di 80 dollari in più, a parità di genere, esperienza e $tenure$
-
-
-E se $educ$ fosse misurato in mesi di istruzione? 
-
-In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) abbiamo visto che nel modello di regressione, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non cambiava e il coefficiente associato a $educ$ era diviso 12.
-
-
-Il coefficente associato ad $educ montlhy$ sarà pari a 0.048 \$ ($\frac{0.572}{12}$). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048 dollari in più, a parità di genere, esperienza e $tenure$. Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
-
+L'assunzione  chiave (zero conditional mean) è $E(u_i | educ_i, exper_i, tenure_i) = 0$
 
 
 ::: {.callout-note collapse="true"}
@@ -201,11 +171,62 @@ tra salario e istruzione *al netto* dell'effetto delle
 altre variabili — da qui il termine "partialling out".
 :::
 
+
+### Includendo una dummy:
+
+```{r}
+# Regressione
+reg_wage4 <- feols(wage ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage3, "Wage" = reg_wage4), gof_omit = "AIC|BIC|RMSE")
+```
+
+In questa regressione stiamo “controllando” anche per il genere (variabile dummy $female$).
+
+
+Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, anni con lo stesso datore di lavoro e genere.
+
+
+
+
+
+---
+
+### Cambio unità di misura:
+
+Se $wage$ fosse espresso su base mensile: lavoratori a tempo pieno, 7 ore al giorno, 5 giorni a settimana, 4 settimane al mese. Cioè 7 $\times$ 5 $\times$ 4 = 140
+
+Creiamo una nuova variabile wage_monthly = $wage$ $\times$ 140
+
+```{r}
+wage1 <- wage1 %>%
+  mutate(wage_monthly = wage*140)
+
+
+reg_wage_dummy3 <- feols(wage_monthly ~ educ + exper + tenure + female, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage4, "Wage Monthly" = reg_wage_dummy3), gof_omit = "AIC|BIC|RMSE") 
+```
+
+
+**Wage orario**: Un anno in più di istruzione è associato, in media, a un aumento del salario orario di 0.572 dollari, a parità di genere, esperienza e $tenure$
+
+
+**Wage mensile**: Un anno in più di istruzione è associato, in media, a un aumento del salario mensile di 80 dollari, a parità di genere, esperienza e $tenure$
+
+
+E se $educ$ fosse misurato in mesi di istruzione? 
+
+In [Esercitazione 1](https://andrearecine.me/econometria-triennale/esercitazione1/esercitazione1.html) abbiamo visto che nel modello di regressione, esprimendo $educ$ in mesi moltiplicando per 12, l'intercetta non cambiava e il coefficiente associato a $educ$ era diviso 12.
+
+
+Il coefficiente associato ad $educ monthly$ sarà pari a 0.048 \$ ($\frac{0.572}{12}$). Un mese in più di istruzione è associato, in media, a un aumento del salario orario 0.048 dollari in più, a parità di genere, esperienza e $tenure$. Il resto dei coefficienti, inclusa l'intercetta e la dummy, rimangono invariati. 
+
+
+
 ---
 
 ## Dummy: wage e genere:
 
-In [Esercitazione 1](https://andrerecio.github.io/econometria-triennale/Esercitazione1.html) avevamo stimato la seguente regressione:
+In [Esercitazione 1](https://andrearecine.me/econometria-triennale/esercitazione1/esercitazione1.html) avevamo stimato la seguente regressione:
 
 $$
 wage_i = \beta_0 + \beta_1 female_i + u_i,
@@ -231,9 +252,10 @@ In questa seconda regressione l'intercetta (negativa) degli uomini non ha molto 
 Il coefficiente di $female$ rappresenta la differenza media nel salario orario tra un uomo e un donna che hanno lo stesso livello di istruzione, esperienza e $tenure$. Le donne guadagnano in media 1.81$ in meno rispetto agli uomini a parità di $educ$, $exper$ e $tenure$.
 
 
-Siccome controllliamo per $educ$, $exper$, e $tenure$, il differenziale del salario orario di 1.81$ non può essere spiegato da diversi livelli medi di istruzione, esperienza, e tenure tra uomini e donne. 
+Siccome controlliamo per $educ$, $exper$, e $tenure$, il differenziale del salario orario di 1.81 dollari non può essere spiegato da diversi livelli medi di istruzione, esperienza, e tenure tra uomini e donne. 
 
-Il differenziale di 1,81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
+
+Il differenziale di 1.81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
 
 ---
 
@@ -328,10 +350,18 @@ Perché:
 
 - $female$ = $marrfemale$ + $singfem$
 
-- $male$ = $marrmale$ + $singmale$ (il nostro gruppo di riferimento per come abbiamo costruito le dummy)
+- $male$ = $marrmale$ + $singmale$ (che sono il gruppo di **riferimento** che abbiamo omesso).
+
+
+La variabile $male$ identifica tutti gli uomini, ed è la somma degli uomini  sposati (catturati da $marrmale$) e degli uomini single (la categoria di riferimento, per cui non abbiamo creato una dummy esplicita).
 
 R rimuove automaticamente le due variabili perfettamente collineari.
 :::
+
+
+
+
+
 
 ---
 
@@ -356,6 +386,7 @@ wald(reg_wage_sm,
 Più frequentemente useremo `linearHypothesis` dal pacchetto `library(car)`
 
 ```{r}
+# install.packages("car")
 library(car)
 # Test di ipotesi
 linearHypothesis(reg_wage_sm, 
@@ -389,13 +420,13 @@ Nel nostro caso:
 - 72.04 > 7.80
 
 
-Esiste una formula semplice per la statistica $F$, valida solo in condizini di **omoschedasticità**, che tuttavia può aiutare a comprendere che cosa fa la statistica $F$.
+Esiste una formula semplice per la statistica $F$, valida solo in condizioni di **omoschedasticità**, che tuttavia può aiutare a comprendere che cosa fa la statistica $F$.
 
 La statistica $F$ in condizioni di omoschedasticità pura:
 
 - eseguire due regressioni, una sotto l’ipotesi nulla (regressione “vincolata”) e una sotto l’ipotesi alternativa (regressione senza vincolo).
 
-- confrontare gli adattamenti delle regressioni – gli $R^2$ – se il modello “non vincolato” si datta sufficientemente meglio, rifiutare l’ipotesi nulla
+- confrontare gli adattamenti delle regressioni – gli $R^2$ – se il modello “non vincolato” si adatta sufficientemente meglio, rifiutare l’ipotesi nulla
 
 
 La statistica $F$ classica è storicamente importante e può aiutare l’intuizione, ma non è valida in presenza di eteroschedasticità.
