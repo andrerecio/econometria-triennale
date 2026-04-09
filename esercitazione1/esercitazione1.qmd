@@ -52,6 +52,7 @@ knitr:
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(tinytable)
 library(modelsummary)
 ```
 
@@ -67,7 +68,7 @@ library(modelsummary)
 
 In alternativa caricate i pacchetti singolarmente: `library(ggplot2)` o `library(dplyr)`
 
-Le altre librerie come `library(knitr)`, `library(kableExtra)` e `library(modelsummary)` sono utili per creare tabelle e visualizzare i risultati delle regressioni in modo più chiaro e formattato.
+Le altre librerie come `library(knitr)`, `library(kableExtra)`e `library(modelsummary)` sono utili per creare tabelle e visualizzare i risultati delle regressioni in modo più chiaro e formattato.
 
 
 ## Descrizione dei dati
@@ -100,10 +101,8 @@ stat <- wage1 %>%
        education_years_median = median(educ, na.rm = TRUE)
   )
 # Visualizzazione dei risultati
-stat %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+stat |>
+  kable(caption = "Statistiche descrittive", digits = 2)
 ```
 
 -   `summarise` riassume i dati
@@ -534,9 +533,9 @@ Consideriamo una variabile categorica `female` (che indica il genere del lavorat
 tabledummy <- table(wage1$female)
 names(tabledummy) <- c("Male", "Female")
 
-kable(tabledummy, 
-      caption = "Numero di Maschi e Femmine") %>% 
-      kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+as.data.frame(tabledummy) |>
+  setNames(c("Genere", "Frequenza")) |>
+  tt(caption = "Numero di Maschi e Femmine")
 ```
 
 Statistiche descrittive per categorie:
@@ -552,11 +551,10 @@ stat_genere <- wage1 %>%
        education_years_median = median(educ, na.rm = TRUE)
   )
 
-# Visualizzazione dei risultati
-stat_genere %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+stat_genere |>
+  tt(caption = "Statistiche descrittive") |>
+  format_tt(digits = 2) |>
+  theme_tt("striped")
 ```
 
 -   `group_by` raggruppa i dati per categorie
@@ -626,8 +624,7 @@ Stimiamo il modello usando sempre `fixest`:
 
 ```{r}
 reg_female <- feols(wage ~ female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" =reg_female), gof_omit = "AIC|BIC|RMSE|R2 Adj.",
-            title = "La variabile dipendente è Wage")
+modelsummary(list("Wage" =reg_female), gof_omit = "AIC|BIC|RMSE|R2 Adj.", title = "La variabile dipendente è Wage")
 ```
 
 
@@ -638,10 +635,10 @@ Il coefficiente della variabile dummy per il genere femminile (female) è -2.51 
 Ricordiamo però che questa differenza non può essere interpretata causalmente senza assumere che $E(u_i|female_i)=0$, un'assunzione difficile da sostenere dato che molte variabili (come settore occupazionale e tipologia di istruzione) possono differire sistematicamente tra uomini e donne e influenzare $wage$.
 
 ```{r}
-stat_genere %>%
-  kable(caption = "Statistiche descrittive",
-        digits = 2) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+stat_genere |>
+  tt(caption = "Statistiche descrittive") |>
+  format_tt(digits = 2) |>
+  theme_tt("striped")
 ```
 
 ### Dummy $male = 1?$
@@ -651,7 +648,6 @@ Generiamo una dummy che è uguale a 1 se il lavoratore è maschio e 0 se femmina
 ```{r}
 wage1 <- wage1 %>%
   mutate(male = ifelse(female == 1, 0, 1))
-
 ```
 
 -   Creiamo una nuova variabile `male` che è uguale ad 1 se l'individuo è maschio e 0 se femmina.
