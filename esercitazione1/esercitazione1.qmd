@@ -295,8 +295,7 @@ ggplot(varianza_educ, aes(x = media_educ, y = varianza)) +
 
 ```{r}
 #| label: tab1
-#| tbl-cap: Risultati stima OLS. Variabile dipendente $:$ Wage
-#| results: asis
+#| tbl-cap: "Risultati stima OLS. Variabile dipendente $:$ Wage"
 modelsummary(list("Wage" = reg1, "Wage" = reg1_ho), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
