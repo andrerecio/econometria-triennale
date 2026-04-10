@@ -44,7 +44,7 @@ knitr:
 
 ---
 
-## Introduzione alla regressione multipla
+## Regressione multipla
 
 ```{r}
 #| message: false
@@ -186,9 +186,6 @@ In questa regressione stiamo “controllando” anche per il genere (variabile d
 Se $E(u_i | educ_i, exper_i, tenure_i, female_i) = 0$ allora $\beta_1$ rappresenta l’effetto causale di un anno in più di istruzione sul salario orario, **a parità** di esperienza, anni con lo stesso datore di lavoro e genere.
 
 
-
-
-
 ---
 
 ### Cambio unità di misura:
@@ -246,16 +243,10 @@ Il coefficiente della variabile dummy per il genere femminile (female) è -2.51 
 Nella seconda regressione controlliamo per differenze nei livelli istruzione, esperienza, e $tenure$.
 
 
-In questa seconda regressione l'intercetta (negativa) degli uomini non ha molto senso. Anche perché nessun individuo ha zero di $educ$, $exper$ e $tenure$ nel campione.
+In questa seconda regressione l'intercetta (negativa) degli uomini non ha molto senso. Anche perché nessun individuo ha zero di $educ$, $exper$ e $tenure$ nel campione. Mentre il coefficiente di $female$ rappresenta la differenza media nel salario orario tra un uomo e un donna a parità di $educ$, $exper$ e $tenure$.
 
 
-Il coefficiente di $female$ rappresenta la differenza media nel salario orario tra un uomo e un donna che hanno lo stesso livello di istruzione, esperienza e $tenure$. Le donne guadagnano in media 1.81$ in meno rispetto agli uomini a parità di $educ$, $exper$ e $tenure$.
-
-
-Siccome controlliamo per $educ$, $exper$, e $tenure$, il differenziale del salario orario di 1.81 dollari non può essere spiegato da diversi livelli medi di istruzione, esperienza, e tenure tra uomini e donne. 
-
-
-Il differenziale di 1.81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
+Siccome controlliamo per $educ$, $exper$, e $tenure$, il differenziale del salario orario di 1.81 dollari non può essere spiegato da diversi livelli medi di istruzione, esperienza, e tenure tra uomini e donne. Il differenziale di 1.81 dollari è dovuto al genere o a fattori associati al genere che non abbiamo controllato nella regressione.
 
 ---
 
@@ -357,10 +348,6 @@ La variabile $male$ identifica tutti gli uomini, ed è la somma degli uomini  sp
 
 R rimuove automaticamente le due variabili perfettamente collineari.
 :::
-
-
-
-
 
 
 ---
