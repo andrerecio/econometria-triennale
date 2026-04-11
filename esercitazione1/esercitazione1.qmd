@@ -650,11 +650,11 @@ wage1 <- wage1 %>%
   mutate(male = ifelse(female == 1, 0, 1))
 ```
 
--   Creiamo una nuova variabile `male` che è uguale ad 1 se l'individuo è maschio e 0 se femmina.
+-  Creiamo una nuova variabile `male` che è uguale ad 1 se l'individuo è maschio e 0 se femmina.
 
--   `ifelse(female == 1, 0, 1)` se $female$ = 1 allora $male$ = 0, altrimenti $male$ = 1
+-  `ifelse(female == 1, 0, 1)` se $female$ = 1 allora $male$ = 0, altrimenti $male$ = 1
 
--   in modo equivalente si può creare $male$ in questo modo:
+-  in modo equivalente si può creare $male$ in questo modo:
 
 ```{r}
 #| eval: false

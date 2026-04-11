@@ -263,26 +263,30 @@ Dobbiamo quindi definire delle dummy per gli altri tre gruppi.
 
 - $marrmale$ uguale ad 1 se uomo e sposato
 - $marrfemale$ uguale ad 1 se donna e sposata
-- $singfem$ uguale ad 1 se donna e single
+- $singfem$ uguale ad 1 se donna e single (non sposata)
+- $singmale$ uguale ad 1 se uomo e single (non sposato). La nostra catgoria di riferimento. Creiamo la dummy per gli uomini single, ma non la includiamo nella regressione.
 
 
-Se includessimo anche $female$?
-Collinearità perfetta (trappola delle variabili dummy).
 
 ```{r}
 wage1 <- wage1 %>%
   mutate(
     marrmale = ifelse(female == 0 & married == 1, 1, 0),
     marrfemale = ifelse(female == 1 & married == 1, 1, 0),
-    singfem = ifelse(female == 1 & married == 0, 1, 0)
+    singfem = ifelse(female == 1 & married == 0, 1, 0),
+    singmale = ifelse(female == 0 & married == 0, 1, 0)
   )
 ```
+
+
+Se includessimo anche $female$?
+Collinearità perfetta (trappola delle variabili dummy).
 
 Nel caso in cui è necessario creare diversi dummy per Regione (ad esempio) è utile usare la libreria `library(fastDummies)`
 
 
 ::: {.callout-note title="Ricorda"}
-La media di una dummy è la proporzione nel campione:
+La media di una dummy è la proporzione di 1 nel campione:
 :::
 
 ```{r}
@@ -313,7 +317,7 @@ modelsummary(list("Wage" = reg_wage_sm), gof_omit = "AIC|BIC|RMSE")
 - In media, una donna single, guadagna 0.309 dollari all'ora in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
 
 ::: {.callout-caution title="Attenzione"}
-Sono statisticamente significativi al 5%?
+Sono statisticamente significativi al 5%? Calcolate anche gli intervalli di confidenza.
 :::
 
 
@@ -344,7 +348,7 @@ Perché:
 - $male$ = $marrmale$ + $singmale$ (che sono il gruppo di **riferimento** che abbiamo omesso).
 
 
-La variabile $male$ identifica tutti gli uomini, ed è la somma degli uomini  sposati (catturati da $marrmale$) e degli uomini single (la categoria di riferimento, per cui non abbiamo creato una dummy esplicita).
+La variabile $male$ identifica tutti gli uomini, ed è la somma degli uomini  sposati (catturati da $marrmale$) e degli uomini single (la categoria di riferimento, che non abbiamo incluso nella regressione).
 
 R rimuove automaticamente le due variabili perfettamente collineari.
 :::
