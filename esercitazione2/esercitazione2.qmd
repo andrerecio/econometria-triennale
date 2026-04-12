@@ -51,6 +51,7 @@ knitr:
 #| warning: false
 library(tidyverse)
 library(knitr)
+library(tinytable)
 library(modelsummary)
 ```
 
@@ -126,7 +127,7 @@ cor(wage1$educ, wage1$exper)
 ```
 
 
-La distorsione dipende nel caso del secondo modello dipende da due fattori: l’effetto di $exper$ su $wage$ e la correlazione fra $exper$ e $educ$. Se entrambi sono diversi da zero, la distorsione è diversa da zero.
+La distorsione nel caso del secondo  modello `reg_wage2` dipende da due fattori: l’effetto di $exper$ su $wage$ e la correlazione fra $exper$ e $educ$. Se entrambi sono diversi da zero, la distorsione è diversa da zero.
 
 L’effetto di $exper$ su $wage$ è positivo: più esperienza, salari più alti. La covarianza (e quindi la correlazione) fra $educ$ e $exper$ è negativa (Cov(educ, exper) < 0): persone con più anni di istruzione tendono ad avere meno esperienza. 
 
@@ -294,13 +295,14 @@ statdummy <- wage1 %>%
   summarise(
     marrmale_mean = mean(marrmale, na.rm = TRUE),
     marrfemale_mean = mean(marrfemale, na.rm = TRUE),
-    singfem_mean = mean(singfem, na.rm = TRUE)
+    singfem_mean = mean(singfem, na.rm = TRUE),
+    singmale_mean = mean(singmale, na.rm = TRUE)
   )
 
-statdummy
+tt(statdummy, width = 1, digits = 3, caption = "Media delle variabili dummy")
 ```
 
-il 35\% sono uomini sposati, il 25\% donne sposate, il 22\% donne single. (100-35-25-22 = 18\%  uomini single)
+La somma di 0.357 + 0.251 + 0.228 + 0.163 è pari a 1, come ci aspettiamo dato che abbiamo creato quattro dummy che rappresentano quattro gruppi mutuamente esclusivi e collettivamente esaustivi.
 
 
 ```{r}
@@ -310,11 +312,12 @@ modelsummary(list("Wage" = reg_wage_sm), gof_omit = "AIC|BIC|RMSE")
 
 **Interpretazione dei coefficienti:**
 
-- In media, un uomo sposato, guadagna 1.822 dollari all'ora in più rispetto ad un uomo single a parità di istruzione, esperienza e anni con l'attuale datore di lavoro ($tenure$).
+- In media, un uomo sposato, guadagna 1.822 dollari all'ora in più rispetto ad un uomo single a parità di anni istruzione, anni di esperienza e anni con l'attuale datore di lavoro ($tenure$).
 
-- In media, una donna sposata, guadagna 0.882 dollari all'ora  in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna sposata, guadagna 0.882 dollari all'ora  in meno rispetto ad un uomo single a parità di anni di istruzione, anni di esperienza e $tenure$.
 
-- In media, una donna single, guadagna 0.309 dollari all'ora in meno rispetto ad un uomo single a parità di istruzione, esperienza e $tenure$.
+- In media, una donna single, guadagna 0.309 dollari all'ora in meno rispetto ad un uomo single a parità di anni diistruzione, anni di esperienza e $tenure$.
+
 
 ::: {.callout-caution title="Attenzione"}
 Sono statisticamente significativi al 5%? Calcolate anche gli intervalli di confidenza.
@@ -379,16 +382,19 @@ Più frequentemente useremo `linearHypothesis` dal pacchetto `library(car)`
 ```{r}
 # install.packages("car")
 library(car)
-# Test di ipotesi
+# Test di ipotesi (Wald)
 linearHypothesis(reg_wage_sm, 
-                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"), test = "F")
+                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"))
 ```
 
-Se non selezioniamo `test = F`, allora:
+Questa è la statistica $\chi^2$ (Wald) basata su una distribuzione asintotica. 
+
+
+Se selezioniamo `test = F` nel comando `linearHypothesis` allora:
 
 ```{r}
 linearHypothesis(reg_wage_sm, 
-                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"))
+                 c("marrmale = 0", "marrfemale = 0", "singfem = 0"), test = "F")
 ```
 
 
@@ -410,6 +416,7 @@ Nel nostro caso:
 
 - 72.04 > 7.80
 
+Quindi rifiutiamo l'ipotesi nulla che non ci siano differenze salariali fra le categorie.
 
 Esiste una formula semplice per la statistica $F$, valida solo in condizioni di **omoschedasticità**, che tuttavia può aiutare a comprendere che cosa fa la statistica $F$.
 

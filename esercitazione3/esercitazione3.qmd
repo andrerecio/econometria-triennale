@@ -1,27 +1,60 @@
 ---
 title: "Esercitazione N.3"
-author: "Econometria"
-format: 
+subtitle: "Nonlinearità: logaritmi"
+author: ""
+date: today
+lang: it
+
+format:
   html:
+    # Layout
+    theme: flatly
     toc: true
+    toc-depth: 3
+    toc-title: "Contenuti"
+    toc-location: right       
+    number-sections: true
+    
+    # Codice
     code-fold: false
+    code-tools: true
+    code-copy: true
+    code-block-bg: true
+    code-block-border-left: false
+    highlight-style: github
+    
+    # Output
     embed-resources: true
+    
+    # Tipografia
+    fontsize: 1.1em
+    linestretch: 1.6
+
 execute:
   warning: false
   message: false
+  echo: true
+
+knitr:
+  opts_chunk:
+    comment: "#>"
+    fig.align: "center"
+    fig.width: 7
+    fig.height: 4.5
+
 ---
 
 
-# Nonlinearità
+# Nonlinearità: logaritmi
 
-**Pacchetti necessari:**
+## Introduzione
 
 ```{r}
 #| message: false
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(tinytable)
 library(modelsummary)
 library(fixest)
 ```
@@ -42,7 +75,9 @@ reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 
 Le trasformazioni logaritmiche permettono di modellare le relazioni in termini “percentuali” invece che lineari.
 
-Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una percentuale:
+Ad esempio potremmo essere interessati a modellare l'effetto di un anno in più di istruzione sui salari in termini percentuali.
+
+Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una una certa percentuale:
 
 Consideriamo:
 
@@ -73,19 +108,23 @@ wage1 <- wage1 %>%
 
 # Grafico con curva log-lineare + retta OLS
 ggplot(wage1, aes(x = educ)) +
-  geom_line(aes(y = wage_pred), color = "blue", size = 1.2) +          # curva log-lineare
-  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
+  geom_line(aes(y = wage_pred), color = "#ff7f0e", size = 1.5) +          # curva log-lineare
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "#1f77b4", size = 1.5) + # retta OLS
   labs(
     title = "Confronto: regressione lineare vs log-lineare",
     x = "Anni di istruzione",
-    y = "Salario orario $"
+    y = "Salario orario predetto in dollari"
   ) +
   theme_minimal()
 ```
 
+
+## Wage e educ: specificazione log(wage) vs wage
+
 ```{r}
-modelsummary(list("Wage" = reg_wage, "Log Wage" = reg_logwage), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage, "Log Wage" = reg_logwage), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
+
 
 Il coefficiente $\beta_1$ ha una interpretazione in termini percentuali una volta moltiplicato per 100.
 
@@ -97,7 +136,6 @@ I logaritmi possono essere usati per trasformare la variabile dipendente $Y$, un
 Interpretazione del coefficiente $\beta_1$
 
 
-### Specificazioni in log
 
 
 ::: {.callout-note title="Specificazioni in log"}
@@ -111,12 +149,12 @@ Interpretazione del coefficiente $\beta_1$
 :::
 
 
-**3 casi con wage e educ:**
+### Interpretazione dei coefficienti in log-log, log-level e level-log:
 
 ```{r}
 reg_wagelog <- feols(wage ~ log(educ), data = wage1, vcov = "hetero")
 reg_logwagelog <- feols(lwage ~ log(educ), data = wage1, vcov = "hetero")
-modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -133,15 +171,19 @@ I logaritmi sono spesso utilizzati quando la variabile è in dollari (ad esempio
 Sono meno usati per variabili misurate in anni o che sono già percentuali o proporzioni (ad esempio tasso di disoccupazione).
 
 
-::: {.callout-note title="Unità di misura della variabile dipendente"}
+::: {.callout-important title="Unità di misura della variabile dipendente"}
 
-Con le variabili espresse in log, il cambiamento di unità di misura è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$.
+Con le variabili espresse in log, il cambiamento di unità di misura della variabile dipendente è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$.
 Lo stesso vale se la $X$ e $Y$ sono entrambe in log.
-L'intercetta invece cambierà.
+
+
+**L'intercetta invece cambierà**. Se $Y$ è in log, l'intercetta rappresenta il log del salario orario quando $educ$ è zero. Se $Y$ è in centinaia di dollari, l'intercetta rappresenta il salario orario quando $educ$ è zero.
 :::
 
+### Intercetta e specificazione log-level:
 
-### Interpretazione dummy e log:
+
+## Variabili Dummy e logaritmi:
 
 
 Esempio finale dell'Esercitazione 2 con $wage$ espresso in log e dummy con categorie mutliple.
@@ -160,7 +202,7 @@ wage1 <- wage1 %>%
 
 ```{r}
 reg_logwage_dummy <- feols(log(wage) ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Log Wage" = reg_logwage_dummy), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Log Wage" = reg_logwage_dummy), gof_omit = "AIC|BIC|RMSE")
 ```
 
 
@@ -199,7 +241,7 @@ Potete provare a fare un po' di statistiche descrittive
 ```{r}
 reg_log_crime <- feols(log(crime) ~ log(enroll), data = campus, vcov = "hetero")
 reg_log_crime2 <- feols(log(crime) ~ log(enroll) + log(police), data = campus, vcov = "hetero")
-modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -238,9 +280,9 @@ punto_max <- wage_cut %>%
 
 # 4. Grafico
 ggplot(wage_cut, aes(x = exper)) +  
-  geom_line(aes(y = wageexp_pred), color = "blue", size = 1.2) +              # curva stimata
-  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
-  geom_point(data = punto_max, aes(y = wageexp_pred), color = "red", size = 3) +      
+  geom_line(aes(y = wageexp_pred), color = "#ff7f0e", size = 1.5) +              # curva stimata
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "#1f77b4", size = 1.5) + # retta OLS
+  geom_point(data = punto_max, aes(y = wageexp_pred), color = "#2ca02c", size = 5) +      
   labs(
     title = "Confronto: lineare vs polinomio quadratico",
     x = "Anni di Esperienza",
@@ -252,7 +294,7 @@ ggplot(wage_cut, aes(x = exper)) +
 
 ```{r}
 reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 ### Interpretazione dei coefficienti del primo modello:
@@ -281,7 +323,7 @@ E se $wage$ fosse espresso in log?
 
 ```{r}
 reg_logwage_exper <- feols(log(wage) ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 **Secondo modello (log):** Consideriamo la variazione nel salario predetto nel caso si passi da 10 a 11 anni di esperienza.

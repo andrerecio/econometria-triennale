@@ -51,7 +51,6 @@ knitr:
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
 library(tinytable)
 library(modelsummary)
 ```
@@ -68,7 +67,7 @@ library(modelsummary)
 
 In alternativa caricate i pacchetti singolarmente: `library(ggplot2)` o `library(dplyr)`
 
-Le altre librerie come `library(knitr)`, `library(kableExtra)`e `library(modelsummary)` sono utili per creare tabelle e visualizzare i risultati delle regressioni in modo più chiaro e formattato.
+Le altre librerie come `library(knitr)`, `library(tinytable)`e `library(modelsummary)` sono utili per creare tabelle e visualizzare i risultati delle regressioni in modo più chiaro e formattato.
 
 
 ## Descrizione dei dati
@@ -101,19 +100,16 @@ stat <- wage1 %>%
        education_years_median = median(educ, na.rm = TRUE)
   )
 # Visualizzazione dei risultati
-stat |>
-  kable(caption = "Statistiche descrittive", digits = 2)
+tt(stat, width = 1, digits = 2, caption = "Statistiche descrittive")
 ```
 
 -   `summarise` riassume i dati
 
 -   `%>%` o `>|` (a partire da R 4.1.0) è l'operatore "pipe" per concatenare operazioni multiple.
 
--   `kable()` è una funzione del pacchetto `library(knitr)`serve a creare una tabella semplice e formattata
+-   `tt()` è una funzione del pacchetto `tinytable` per visualizzare tabelle in modo più chiaro e formattato.
 
--   `kable_styling()` aggiunge stili per migliorare l'aspetto della tabella
-
-Un'altra libreria utile per gestire i dati è `library(data.table)`
+Un'altra libreria utile per gestire i dati è `library(data.table)`, e per formattare le tabelle è `library(kableExtra)`.
 
 ---
 
