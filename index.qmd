@@ -15,7 +15,13 @@ format:
 
 Materiale relativo alle esercitazioni del corso di **Econometria** 
 
+### Google Classroom
+
+Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) saranno pubblicate su [Google Classroom](https://classroom.google.com/c/MjIxNDUyNTMyOTha?cjc=5na2ra5n)
+
+
 ---
+
 
 ### Installare R e RStudio
 
@@ -56,10 +62,17 @@ Materiale relativo alle esercitazioni del corso di **Econometria**
 
 ## Homework
 
+1. 📄 Homework 1 (TBA)
+
+---
+
+## Altro materiale
+
 | Simulazione | Argomenti | Link |
 |-------------|-----------|------|
 | Ottobre 2025 | Ripasso modelli log | [html](homework/homework01_log.html) |
 | Ottobre 2025 | LPM/Probit/Logit, IV, Panel, Interazioni, Time Series (9 CFU) | [html](homework/simulazione2_ottobre.html) |
+
 
 ---
 
