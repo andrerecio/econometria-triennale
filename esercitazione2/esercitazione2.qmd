@@ -359,6 +359,111 @@ R rimuove automaticamente le due variabili perfettamente collineari.
 
 ---
 
+
+### Dummy per regione geografica
+
+
+Il dataset `wage1` divide gli Stati Uniti in quattro macro-regioni definite dal _US Census Bureau_: **Northeast** (Nord-Est), **North Central / Midwest** (Centro-Nord), **South** (Sud) e **West** (Ovest). 
+
+
+Nel dataset troviamo tre dummy — `northcen`, `south`, `west` — mentre 
+il Nord-Est è il **gruppo di riferimento omesso**.
+
+::: {.callout-note collapse="true"}
+## Curiosità storica
+
+Il Census Bureau ha rinominato la regione "North Central" in "Midwest" 
+nel 1984. Il dataset `wage1`, essendo del 1976, usa ancora la dicitura 
+vecchia: da qui il nome `northcen` della variabile.
+:::
+
+
+```{r}
+wage1 |>
+  summarise(
+    n_northcen  = sum(northcen),
+    n_south     = sum(south),
+    n_west      = sum(west),
+    n_northeast = sum(1 - northcen - south - west)
+  ) |>
+  tt(caption = "Osservazioni per regione")
+```
+
+
+La somma di queste quattro categorie è pari al numero totale di osservazioni, come ci aspettiamo dato che sono categorie mutuamente esclusive ed esaustive.
+
+Prima di stimare il modello, guardiamo le differenze salariali *grezze* 
+tra regioni:
+
+```{r}
+wage1 |>
+  mutate(
+    regione = case_when(
+      northcen == 1 ~ "North Central",
+      south    == 1 ~ "South",
+      west     == 1 ~ "West",
+      TRUE          ~ "Northeast"
+    )
+  ) |>
+  group_by(regione) |>
+  summarise(
+    n = n(),
+    wage_media   = mean(wage),
+    wage_mediana = median(wage),
+    educ_media   = mean(educ)
+  ) |>
+  arrange(desc(wage_media)) |>
+  tt(caption = "Statistiche descrittive per regione") |>
+  format_tt(digits = 3) |>
+  theme_tt("striped")
+
+```
+
+Queste sono differenze grezze. Nella regressione multipla controlliamo per istruzione, esperienza, e genere, e vediamo se restano differenze salariali tra regioni a parità di queste caratteristiche.
+
+Stimiamo la regressione:
+
+```{r}
+reg_region <- feols(
+  wage ~ educ + exper + tenure + female + northcen + south + west,
+  data = wage1, vcov = "hetero"
+)
+
+modelsummary(
+  list("Wage" = reg_region),
+  gof_omit = "AIC|BIC|RMSE|R2 Adj.",
+  title = "Regressione con dummy regionali (Northeast = gruppo di riferimento)"
+)
+```
+
+
+
+Ciascun coefficiente sulle dummy regionali va letto **rispetto al gruppo 
+di riferimento (Northeast)** :
+
+
+- $northcen$: un lavoratore del Centro-Nord (oggi Midwest) guadagna in media 0.621 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+
+
+- $south$: un lavoratore del Sud guadagna in media 0.572 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+
+- $west$: un lavoratore dell'Ovest guadagna in media 0.571 dollari in **più** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+
+
+
+::: {.callout-important title="Trappola delle dummy regionali"}
+Se includessimo anche una dummy `northeast` (costruita come 
+`1 - northcen - south - west`), otterremmo **collinearità perfetta** — 
+esattamente come il caso `marrmale + marrfemale + singfem + female + male`, 
+visto in precedenza. R rimuoverebbe automaticamente una delle quattro 
+dummy per evitare il problema.
+
+Con $k$ categorie mutuamente esclusive ed esaustive, la somma delle $k$ dummy è sempre pari a 1 per ogni osservazione. Questo crea collinearità perfetta con l'intercetta, quindi si includono solo
+$k−1$ dummy (oppure $k$ dummy senza intercetta)
+:::
+
+
+
 ## Testare ipotesi congiunte:
 
 Consideriamo la regressione `reg_wage_sm` (seconda colonna).

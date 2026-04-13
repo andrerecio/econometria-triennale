@@ -151,6 +151,82 @@ reg_wage_sm_dummy
 
 
 # -----------------------------------------------------------------------------
+# 7.1 Dummy per regione geografica
+# -----------------------------------------------------------------------------
+
+# Il dataset wage1 contiene tre dummy regionali: northcen, south, west.
+# La quarta regione (Northeast) è il gruppo di riferimento omesso,
+# cioè le osservazioni per cui tutte e tre le dummy sono uguali a zero.
+
+# Conteggio delle osservazioni per regione
+# Nota: usiamo nomi nuovi (n_*) per evitare il name masking di dplyr.
+# Se chiamassimo le variabili di output come quelle originali (northcen, 
+# south, west), dplyr le "sostituirebbe" nella riga successiva 
+# producendo risultati sbagliati.
+wage1 |>
+  summarise(
+    n_northcen  = sum(northcen),
+    n_south     = sum(south),
+    n_west      = sum(west),
+    n_northeast = sum(1 - northcen - south - west)
+  ) |>
+  tt(caption = "Osservazioni per regione")
+
+# La somma delle quattro categorie coincide con il numero totale di 
+# osservazioni (526), perché le regioni sono mutuamente esclusive 
+# ed esaustive.
+
+
+# Statistiche descrittive per regione
+# Ricostruiamo una variabile categorica "regione" a partire dalle dummy
+# usando case_when(), poi aggreghiamo per gruppo.
+wage1 |>
+  mutate(
+    regione = case_when(
+      northcen == 1 ~ "North Central",
+      south    == 1 ~ "South",
+      west     == 1 ~ "West",
+      TRUE          ~ "Northeast"   # default: tutte le dummy a zero
+    )
+  ) |>
+  group_by(regione) |>
+  summarise(
+    n            = n(),
+    wage_media   = mean(wage),
+    wage_mediana = median(wage),
+    educ_media   = mean(educ)
+  ) |>
+  arrange(desc(wage_media)) |>    # ordina per salario medio decrescente
+  tt(caption = "Statistiche descrittive per regione") |>
+  format_tt(digits = 3) |>
+  theme_tt("striped")
+
+# Queste sono differenze grezze: non tengono conto delle differenze 
+# nella composizione della forza lavoro (istruzione, esperienza, 
+# genere, tenure) tra le regioni.
+
+
+# Regressione con dummy regionali
+# Includiamo solo 3 dummy su 4 regioni per evitare collinearità 
+# perfetta con l'intercetta (trappola delle dummy). Il Northeast 
+# resta implicito come gruppo di riferimento.
+reg_region <- feols(
+  wage ~ educ + exper + tenure + female + northcen + south + west,
+  data = wage1, vcov = "hetero"
+)
+
+# Ciascun coefficiente sulle dummy regionali va letto come differenza 
+# media rispetto al Northeast, a parità di istruzione, esperienza, 
+# tenure e genere.
+modelsummary(
+  list("Wage" = reg_region),
+  gof_omit = "AIC|BIC|RMSE|R2 Adj.",
+  title = "Regressione con dummy regionali (Northeast = gruppo di riferimento)"
+)
+
+
+
+# -----------------------------------------------------------------------------
 # 8. Test di ipotesi congiunte
 # -----------------------------------------------------------------------------
 
