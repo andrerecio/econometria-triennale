@@ -263,9 +263,12 @@ Dobbiamo quindi definire delle dummy per gli altri tre gruppi.
 **Variabili dummy**: Siamo interessati a uomini single (è la nostra categoria omessa). Creiamo le seguenti variabili:
 
 - $marrmale$ uguale ad 1 se uomo e sposato
+
 - $marrfemale$ uguale ad 1 se donna e sposata
+
 - $singfem$ uguale ad 1 se donna e single (non sposata)
-- $singmale$ uguale ad 1 se uomo e single (non sposato). La nostra catgoria di riferimento. Creiamo la dummy per gli uomini single, ma non la includiamo nella regressione.
+
+- $singmale$ uguale ad 1 se uomo e single (non sposato). Il nostro gruppo di riferimento. Creiamo la dummy per gli uomini single, ma non la includiamo nella regressione.
 
 
 
@@ -442,12 +445,12 @@ Ciascun coefficiente sulle dummy regionali va letto **rispetto al gruppo
 di riferimento (Northeast)** :
 
 
-- $northcen$: un lavoratore del Centro-Nord (oggi Midwest) guadagna in media 0.621 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+- $northcen$: un lavoratore del Centro-Nord (oggi Midwest) guadagna in media 0.621 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza, genere e $tenure$.
 
 
-- $south$: un lavoratore del Sud guadagna in media 0.572 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+- $south$: un lavoratore del Sud guadagna in media 0.572 dollari in **meno** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza, genere e $tenure$.
 
-- $west$: un lavoratore dell'Ovest guadagna in media 0.571 dollari in **più** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere
+- $west$: un lavoratore dell'Ovest guadagna in media 0.571 dollari in **più** all'ora rispetto ad un lavoratore del Nord-Est, a parità di anni di istruzione, esperienza e genere e $tenure$.
 
 
 
