@@ -37,3 +37,7 @@ Desktop.ini
 *.tmp
 *.bak
 *.swp
+
+# all Claude Code files
+*.claude
+CLAUDE.md
