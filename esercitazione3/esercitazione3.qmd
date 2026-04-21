@@ -73,11 +73,7 @@ data("wage1", package = "wooldridge")
 reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 ```
 
-Le trasformazioni logaritmiche permettono di modellare le relazioni in termini “percentuali” invece che lineari.
-
-Ad esempio potremmo essere interessati a modellare l'effetto di un anno in più di istruzione sui salari in termini percentuali.
-
-Una specificazione alternativa potrebbe essere: ogni anno di istruzione aumenta i salari di una una certa percentuale:
+Le trasformazioni logaritmiche permettono di modellare le relazioni in termini “percentuali” invece che lineari. Ad esempio potremmo essere interessati a modellare l'effetto di un anno in più di istruzione sui salari in termini percentuali. Ogni anno di istruzione aumenta i salari di una una certa percentuale:
 
 Consideriamo:
 
@@ -126,9 +122,7 @@ modelsummary(list("Wage" = reg_wage, "Log Wage" = reg_logwage), gof_omit = "AIC|
 ```
 
 
-Il coefficiente $\beta_1$ ha una interpretazione in termini percentuali una volta moltiplicato per 100.
-
-In media, un anno aggiuntivo di istruzione è associato ad un aumento del salario orario ($wage$) del'8.3%
+Il coefficiente $\beta_1$ ha una interpretazione in termini percentuali una volta moltiplicato per 100. In media, un anno aggiuntivo di istruzione è associato ad un aumento del salario orario ($wage$) del'8.3%
 
 $R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in log($wage$) (no $wage$). $R^2$ non può essere usato per confrontare queste due regressioni perché hanno variabile dipendente diversa ($wage$ e log($wage$), vedete Stock e Watson p. 215).
 
@@ -149,41 +143,141 @@ Interpretazione del coefficiente $\beta_1$
 :::
 
 
-### Interpretazione dei coefficienti in log-log, log-level e level-log:
+### Interpretazione dei coefficienti: log-level, log-log e level-log:
+
 
 ```{r}
+reg_logwagelog <- feols(log(wage) ~ log(educ), data = wage1, vcov = "hetero")
 reg_wagelog <- feols(wage ~ log(educ), data = wage1, vcov = "hetero")
-reg_logwagelog <- feols(lwage ~ log(educ), data = wage1, vcov = "hetero")
-modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Log Wage" = reg_logwage, "Log Wage" = reg_logwagelog, "Wage" =reg_wagelog), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
 - **Primo modello:** (log-level): Ad ogni anno in più di istruzione è associato in media un aumento dell'8.3 % del salario orario.
 
-- **Secondo modello:** (level-log): Un aumento del 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario di 0.053 dollari. In modo equivalente un aumento del 10% degli anni di istruzione è associato ad un aumento, in media, il salario orario di 0.53$ (10 $\cdot$ 0.053).
 
-- **Terzo modello:** (log-log): Un aumento dell' 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario dello 0.825 %.
+- **Secondo modello:** (log-log): Un aumento dell' 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario dello 0.825 %. Il coefficiente è quindi una elasticità: misura la variazione percentuale di $Y$ associata ad **una** variazione percentuale di $X$.
 
-La scelta della specificazione (forma funzionale) dev’essere guidata dal ragionamento – quale interpretazione ha più senso?
+- **Terzo modello:** (level-log): Un aumento del 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario di 0.053 dollari. Un aumento del 10% degli anni di istruzione è associato ad un aumento, in media, il salario orario di 0.53$ (10 $\cdot$ 0.053).
 
-I logaritmi sono spesso utilizzati quando la variabile è in dollari (ad esempio wage o income) o variabili come popolazione (in particolare quando c'è abbastanza variazione).
 
-Sono meno usati per variabili misurate in anni o che sono già percentuali o proporzioni (ad esempio tasso di disoccupazione).
+::: {.callout-tip title="Quando usare il log?"}
+La scelta della forma funzionale dev'essere guidata dal ragionamento: 
+quale interpretazione ha più senso?
+
+I logaritmi sono tipicamente utilizzati per variabili monetarie 
+(come $wage$ o reddito) o di livello (come la popolazione), 
+soprattutto quando presentano ampia variazione. Sono invece meno 
+appropriati per variabili misurate in anni (come $educ$ o età) 
+o già espresse in percentuali (come il tasso di disoccupazione).
+:::
+
+
 
 
 ::: {.callout-important title="Unità di misura della variabile dipendente"}
 
-Con le variabili espresse in log, il cambiamento di unità di misura della variabile dipendente è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$.
-Lo stesso vale se la $X$ e $Y$ sono entrambe in log.
+Con le variabili espresse in log, il cambiamento di unità di misura della variabile dipendente è irrilevante. Provate ad esprimere in salario in centinaia di dollari creando $wage$/100 e fate la regressione su $educ$. Lo stesso vale se la $X$ e $Y$ sono entrambe in log.
 
 
 **L'intercetta invece cambierà**. Se $Y$ è in log, l'intercetta rappresenta il log del salario orario quando $educ$ è zero. Se $Y$ è in centinaia di dollari, l'intercetta rappresenta il salario orario quando $educ$ è zero.
 :::
 
-### Intercetta e specificazione log-level:
+## Cambio di unità di misura e specificazione in log
+
+### Variabile dipendente:
 
 
-## Variabili Dummy e logaritmi:
+Esprimiamo $wage$ in decine di dollari e facciamo la regressione di log($wage/10$) su $educ$ e log($educ$) per mostrare che i coefficienti di $educ$ e log($educ$) non cambiano, ma l'intercetta sì.
+
+Nel caso del modello level-log cambia anche l'interpretazione del coefficiente di log($educ$) che ora rappresenta l'effetto di un aumento dell'1% degli anni di istruzione sul salario orario in decine di dollari.
+
+```{r}
+reg_logwage_cent <- feols(log(wage/10) ~ educ, data = wage1, vcov = "hetero")
+reg_logwagelog_cent <- feols(log(wage/10) ~ log(educ), data = wage1, vcov = "hetero")
+reg_wagelog_cent <- feols(wage/10 ~ log(educ), data = wage1, vcov = "hetero")
+
+modelsummary(list("Log Wage" = reg_logwage_cent, "Log Wage" = reg_logwagelog_cent, "Wage" =reg_wagelog_cent), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- **Primo modello:** (log-level): Un anno aggiuntivo di istruzione è associato a un aumento, in media, dell'8.3 % del salario orario. L'intercetta è cambiata perché ora rappresenta il log del salario orario in decine di dollari quando $educ$ è zero. In particolare, l'intercetta è diminuita di $log(10)$. 
+
+
+- **Secondo modello:** (log-log): Un aumento dell' 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario dello 0.825%. L'intercetta è cambiata perché ora rappresenta il log del salario orario in decine di dollari quando $educ$ è zero. In particolare, l'intercetta è diminuita di $log(10)$.
+
+- **Terzo modello:** (level-log): Un aumento del 1% degli anni di istruzione è associato ad un aumento, in media, del salario orario di 0.0053 decine di dollari. L'intercetta e il coefficienti **sono cambiati** perché ora rappresentano il salario orario in decine di dollari quando $educ$ è zero (0.53 dollari invece di 5.3 dollari, quindi 5.3/10)
+
+
+### Variabile indipendente:
+
+Esprimiamo $educ$ in mesi di istruzione invece che in anni (moltiplicando $educ$ per 12).
+
+```{r}
+wage1 <- wage1 %>%
+  mutate(educ_monthly = educ * 12)
+
+reg_logwage_monthly <- feols(log(wage) ~ educ_monthly, data = wage1, vcov = "hetero")
+reg_logwagelog_monthly <- feols(log(wage) ~ log(educ_monthly), data = wage1, vcov = "hetero")
+reg_wagelog_monthly <- feols(wage ~ log(educ_monthly), data = wage1, vcov = "hetero")
+
+modelsummary(list("Log Wage" = reg_logwage_monthly, "Log Wage" = reg_logwagelog_monthly, "Wage" =reg_wagelog_monthly), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+#### **Primo modello** (log-level) {.unnumbered}
+
+Un mese aggiuntivo di istruzione è associato a un aumento, 
+in media, dello 0.7 % del salario orario. 
+
+L'intercetta è rimasta invariata perché rappresenta il log 
+del salario orario quando $educ = 0$ (0 mesi di istruzione 
+è lo stesso di 0 anni di istruzione).
+
+
+#### Secondo modello (log-log) {.unnumbered}
+
+Un aumento dell'1% dei mesi di istruzione è associato ad un 
+aumento, in media, del salario orario dello 0.825%. 
+
+L'intercetta invece cambia. Infatti:
+
+$$\log(educ \times 12) = \log(educ) + \log(12)$$
+
+quindi il modello diventa:
+
+$$\log(wage) = \beta_0 + \beta_1 \log(educ) + \beta_1 \log(12) + u$$
+
+Il termine $\beta_1 \log(12)$ è una costante che viene assorbita 
+dall'intercetta. La nuova intercetta è quindi:
+
+$$\beta_0' = \beta_0 - \beta_1 \log(12) = -0.445 - 0.825 \times 2.485 
+\approx -2.495$$
+
+che coincide con il valore in tabella.
+
+#### Terzo modello (level-log) {.unnumbered}
+
+Un aumento dell'1% dei mesi di istruzione è associato ad un 
+aumento, in media, del salario orario di 0.053 dollari.
+
+Per la stessa ragione del modello log-log, l'intercetta diminuisce di 
+$\beta_1 \times \log(12) = 5.330 \times 2.485 \approx 13.24$:
+
+$$\beta_0' = -7.460 - 13.24 \approx -20.70$$
+
+che coincide con il valore in tabella.
+
+
+
+::: {.callout-important title="Ricordate"}
+
+Il cambio di unità di misura lascia invariata la significatività statistica e la bontà di adattamento del modello $R^2$
+:::
+
+
+
+## Variabili dummy e logaritmi:
 
 
 Esempio finale dell'Esercitazione 2 con $wage$ espresso in log e dummy con categorie mutliple.
