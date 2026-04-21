@@ -1,91 +1,171 @@
-#Esercitazione3_script
+# ==============================================================================
+# Esercitazione N.3 - Nonlinearità: logaritmi
+# Econometria I
+# ==============================================================================
 
-library(tidyverse)
-library(knitr)
-library(kableExtra)
-library(modelsummary)
-library(fixest)
+# --- Pacchetti ----------------------------------------------------------------
 
-library(wooldridge)
+library(tidyverse)    # dplyr, ggplot2
+library(modelsummary) # tabelle di regressione
+library(fixest)       # stima OLS con feols()
+library(wooldridge)   # dataset wage1 e campus
 
+# --- Dati ---------------------------------------------------------------------
+
+# Current Population Survey, 1976
 data("wage1", package = "wooldridge")
 
-reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
+# --- Introduzione: log(wage) ~ educ -------------------------------------------
 
+# Modello log-level:
+# log(wage_i) = beta_0 + beta_1 * educ_i + u_i
 reg_logwage <- feols(log(wage) ~ educ, data = wage1, vcov = "hetero")
 
-# Previsione valori stimati dal modello log-lineare
+# Previsione dal modello log-lineare e ri-trasformazione in scala originale
 wage1 <- wage1 %>%
   mutate(
-    logwage_pred = predict(reg_logwage),    #valori predetti in log
-    wage_pred = exp(logwage_pred)           #salario predetto in scala originale
+    logwage_pred = predict(reg_logwage),   # valori predetti in log
+    wage_pred    = exp(logwage_pred)        # salario predetto in dollari
   )
 
-# Grafico con curva log-lineare + retta OLS
+# Confronto visivo: curva log-lineare vs retta OLS
 ggplot(wage1, aes(x = educ)) +
-  geom_line(aes(y = wage_pred), color = "blue", size = 1.2) +          # curva log-lineare
-  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
+  geom_line(aes(y = wage_pred), color = "#ff7f0e", linewidth = 1.5) +
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE,
+              color = "#1f77b4", linewidth = 1.5) +
   labs(
     title = "Confronto: regressione lineare vs log-lineare",
     x = "Anni di istruzione",
-    y = "Salario orario $"
+    y = "Salario orario predetto in dollari"
   ) +
   theme_minimal()
 
-  modelsummary(list("Wage" = reg_wage, "Log Wage" = reg_logwage), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+# --- Log-level vs livello -----------------------------------------------------
 
+# Regressione in livelli per confronto
+reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 
-  reg_wagelog <- feols(wage ~ log(educ), data = wage1, vcov = "hetero")
-reg_logwagelog <- feols(lwage ~ log(educ), data = wage1, vcov = "hetero")
-modelsummary(list("Log Wage" = reg_logwage, "Wage" = reg_wagelog, "Log Wage" =reg_logwagelog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(
+  list("Livello" = reg_wage, "Log-level" = reg_logwage),
+  title = "Variabile dipendente: wage o log(wage)",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
 
+# Interpretazione:
+# - log-level: beta_1 * 100 = variazione % di wage per 1 anno in più di educ
+#   -> un anno in più di istruzione è associato a +8.3% del salario orario
+# - R^2 non è confrontabile tra le due regressioni: la Y è diversa
+#   (wage vs log(wage))
 
+# --- Log-log e level-log ------------------------------------------------------
+
+reg_logwagelog <- feols(log(wage) ~ log(educ), data = wage1, vcov = "hetero")
+reg_wagelog    <- feols(wage ~ log(educ),      data = wage1, vcov = "hetero")
+
+modelsummary(
+  list("Log-level" = reg_logwage,
+       "Log-log"   = reg_logwagelog,
+       "Level-log" = reg_wagelog),
+  title = "Variabile dipendente: log(wage) o wage",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
+
+# Interpretazione:
+# - log-level:  +1 anno di educ -> +8.3% di wage
+# - log-log:    +1% di educ    -> +0.825% di wage  (elasticità)
+# - level-log:  +1% di educ    -> +0.053 dollari di wage
+
+# --- Cambio di unità di misura: Y in decine di dollari ------------------------
+
+# Con Y in log, il cambio di unità di misura lascia invariati i coefficienti:
+# solo l'intercetta cambia (diminuisce di log(10)).
+# Nel modello level-log anche il coefficiente cambia perché Y è in decine.
+
+reg_logwage_dec    <- feols(log(wage/10) ~ educ,      data = wage1, vcov = "hetero")
+reg_logwagelog_dec <- feols(log(wage/10) ~ log(educ), data = wage1, vcov = "hetero")
+reg_wagelog_dec    <- feols(wage/10 ~ log(educ),      data = wage1, vcov = "hetero")
+
+modelsummary(
+  list("Log-level" = reg_logwage_dec,
+       "Log-log"   = reg_logwagelog_dec,
+       "Level-log" = reg_wagelog_dec),
+  title = "Variabile dipendente: log(wage/10) o wage/10",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
+
+# --- Cambio di unità di misura: X in mesi di istruzione -----------------------
+
+# educ_monthly = educ * 12
+wage1 <- wage1 %>%
+  mutate(educ_monthly = educ * 12)
+
+reg_logwage_monthly    <- feols(log(wage) ~ educ_monthly,      data = wage1, vcov = "hetero")
+reg_logwagelog_monthly <- feols(log(wage) ~ log(educ_monthly), data = wage1, vcov = "hetero")
+reg_wagelog_monthly    <- feols(wage ~ log(educ_monthly),      data = wage1, vcov = "hetero")
+
+modelsummary(
+  list("Log-level" = reg_logwage_monthly,
+       "Log-log"   = reg_logwagelog_monthly,
+       "Level-log" = reg_wagelog_monthly),
+  title = "Variabile dipendente: log(wage) o wage (educ in mesi)",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
+
+# Nota sulle intercette:
+# log(educ * 12) = log(educ) + log(12), quindi il termine log(12)
+# viene assorbito dall'intercetta.
+# - log-log:   beta_0' = -0.445 - 0.825 * log(12) ≈ -2.495
+# - level-log: beta_0' = -7.460 - 5.330 * log(12) ≈ -20.70
+
+# --- Variabili dummy e logaritmi ----------------------------------------------
+
+# Costruiamo tre dummy mutuamente esclusive.
+# Categoria omessa: uomini single (female = 0 & married = 0)
 wage1 <- wage1 %>%
   mutate(
-    marrmale = ifelse(female == 0 & married == 1, 1, 0),
+    marrmale   = ifelse(female == 0 & married == 1, 1, 0),
     marrfemale = ifelse(female == 1 & married == 1, 1, 0),
-    singfem = ifelse(female == 1 & married == 0, 1, 0)
+    singfem    = ifelse(female == 1 & married == 0, 1, 0)
   )
 
+reg_logwage_dummy <- feols(
+  log(wage) ~ marrmale + marrfemale + singfem + educ + exper + tenure,
+  data = wage1, vcov = "hetero"
+)
 
-reg_logwage_dummy <- feols(log(wage) ~ marrmale + marrfemale + singfem + educ + exper + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Log Wage" = reg_logwage_dummy), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(
+  list("Log Wage" = reg_logwage_dummy),
+  title = "Log(wage) con dummy di stato civile e genere",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
 
+# Interpretazione (differenza % rispetto agli uomini single,
+# a parità di educ, exper e tenure):
+# - marrmale:   uomini sposati guadagnano ~29.2% in più
+# - marrfemale: donne sposate guadagnano ~12.0% in meno
+# - singfem:    donne single guadagnano ~9.7% in meno
 
+# --- Esempio: Campus Crime ----------------------------------------------------
+
+# Dataset: 97 college e università
+# crime  = numero annuale di crimini nel campus
+# enroll = numero di iscritti
+# police = numero di agenti di polizia del campus
 data("campus", package = "wooldridge")
 
-
-reg_log_crime <- feols(log(crime) ~ log(enroll), data = campus, vcov = "hetero")
+reg_log_crime  <- feols(log(crime) ~ log(enroll),               data = campus, vcov = "hetero")
 reg_log_crime2 <- feols(log(crime) ~ log(enroll) + log(police), data = campus, vcov = "hetero")
-modelsummary(list("Log Crime" = reg_log_crime, "Log Crime" = reg_log_crime2 ), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
-reg_wage_exper <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-reg_wage_exper
+modelsummary(
+  list("Log Crime" = reg_log_crime,
+       "Log Crime (con police)" = reg_log_crime2),
+  title = "Campus Crime",
+  gof_omit = "AIC|BIC|RMSE|R2 Adj."
+)
 
-
-# 1. Previsione dei valori stimati
-wage1 <- wage1 %>%
-  mutate(wageexp_pred = predict(reg_wage_exper))
-
-# 2. Filtro per esper ≤ 40
-wage_cut <- wage1 %>% filter(exper <= 40)
-
-# 3. Trova il punto massimo della curva wageexp_pred
-punto_max <- wage_cut %>%
-  filter(wageexp_pred == max(wageexp_pred, na.rm = TRUE))
-
-# 4. Grafico
-ggplot(wage_cut, aes(x = exper)) +  
-  geom_line(aes(y = wageexp_pred), color = "blue", size = 1.2) +              # curva stimata
-  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "black", size = 1) + # retta OLS
-  geom_point(data = punto_max, aes(y = wageexp_pred), color = "red", size = 3) +      
-  labs(
-    title = "Confronto: lineare vs polinomio quadratico",
-    x = "Anni di Esperienza",
-    y = "Salario orario in $"
-  ) +
-  theme_minimal()
-
-
-  reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+# Interpretazione:
+# - +1% di iscritti -> +1.27% di crimini (senza controllo per police)
+# - +1% di iscritti -> +0.92% di crimini a parità di police
+#
+# Limite: stiamo ignorando altri fattori (dimensione città, reddito locale, ecc.)
+# che potrebbero essere correlati sia con enroll sia con crime.
