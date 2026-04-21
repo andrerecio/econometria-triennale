@@ -46,7 +46,7 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 | N. | Argomento | Materiali |
 |----|-----------|-----------|
 | 1 | Regressione, variabili dummy e intervalli di confidenza | [📄 Note](esercitazione1/esercitazione1.html)  ·  [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione1/esercitazione1_script.R) |
-| 2 | Regressione multipla | [📄 Note](esercitazione2/esercitazione2.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.r) |
+| 2 | Regressione multipla | [📄 Note](esercitazione2/esercitazione2.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione2/esercitazione2_script.R) |
 | 3 | Nonlinearità: specificazioni in log | [📄 Note](esercitazione3/esercitazione3.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione3/esercitazione3_script.R) |
 | 4 | Nonlinearità: interazioni | [📄 Note](esercitazione4/esercitazione4.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
 | 5 | Nonlinearità: polinomi | [📄 Note](esercitazione5/esercitazione5.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
