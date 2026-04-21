@@ -214,7 +214,7 @@ modelsummary(
 
 - **Secondo modello** (log-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario dello 0.825%. L'intercetta è cambiata perché ora rappresenta il log del salario orario in decine di dollari quando $educ$ è zero. In particolare, l'intercetta è diminuita di $\log(10)$.
 
-- **Terzo modello** (level-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.0053 decine di dollari. L'intercetta e il coefficiente **sono cambiati** perché ora rappresentano il salario orario in decine di dollari quando $educ$ è zero (0.53 dollari invece di 5.3 dollari, quindi 5.3/10).
+- **Terzo modello** (level-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.0053 decine di dollari. Anche l'intercetta è cambiata perché ora rappresenta il salario orario in decine di dollari quando $educ$ è zero (quindi -7.46/10).
 
 
 ### Variabile indipendente:
