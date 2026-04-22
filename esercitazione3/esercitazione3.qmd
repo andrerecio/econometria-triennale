@@ -128,6 +128,28 @@ Il coefficiente $\beta_1$ della specificazione log-lin ha un'interpretazione in 
 
 **Importante:** $R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in $\log(wage)$ (non in $wage$). $R^2$ non può essere usato per confrontare queste due regressioni perché hanno variabile dipendente diversa ($wage$ e $\log(wage)$, vedete Stock e Watson p. 215).
 
+::: {.callout-warning title="R² e confronto tra modelli"}
+L'$R^2$ è confrontabile **solo tra modelli con la stessa variabile 
+dipendente $Y$**. Il motivo emerge dalle sue componenti:
+
+$$R^2 =  \frac{ESS}{TSS}$$
+
+dove:
+
+$$TSS = \sum_i (Y_i - \bar{Y})^2$$
+
+dove $TSS$ dipende **solo** da $Y$ ed è la variazione totale di $Y$. $ESS$ invece è la variazione spiegata dalla regressione:
+
+$$ESS = \sum_i (\hat{Y_i} - \bar{Y})^2$$
+
+e dipende dalle stime del modello.
+
+
+Ricordate invece che il cambiamento di unità di misura, sia della variabile dipendente che di quella indipendente, non cambia la bontà di adattamento del modello ai dati. L’ $R^2$ rimane invariato. 
+
+:::
+
+
 I logaritmi possono essere usati per trasformare la variabile dipendente $Y$, una variabile indipendente $X$ o entrambe (devono essere positive).
 
 
@@ -182,7 +204,7 @@ appropriati per variabili misurate in anni (come $educ$ o età) o già espresse 
 Con le variabili espresse in log, il cambiamento di unità di misura della variabile dipendente è irrilevante. Provate a esprimere il salario in centinaia di dollari creando $wage/100$ e fate la regressione su $educ$. Lo stesso vale se $X$ e $Y$ sono entrambe in log.
 
 
-**L'intercetta invece cambierà**. Se $Y$ è in log, l'intercetta rappresenta il log del salario orario ($\log/wage$) quando $educ$ è zero. Se $Y$ è in centinaia di dollari, l'intercetta rappresenta il salario orario ($wage$) quando $educ$ è zero.
+**L'intercetta invece cambierà**. Se $Y$ è in log, l'intercetta rappresenta il log del salario orario ($\log(wage)$) quando $educ$ è zero. Se $Y$ è in centinaia di dollari, l'intercetta rappresenta il salario orario ($wage$) quando $educ$ è zero.
 :::
 
 ## Cambio di unità di misura e specificazione in log
@@ -270,15 +292,14 @@ modelsummary(
 
 #### **Primo modello (log-lin)** {.unnumbered}
 
-Un mese aggiuntivo di istruzione è associato a un aumento, in media, dello 0.7% del salario orario.
+Un mese aggiuntivo di istruzione è associato a un aumento, in media, dello 0.7% del salario orario (0.007 è pari a 0.083/12).
 
-L'intercetta è rimasta invariata perché rappresenta il log del salario orario quando $educ = 0$ (0 mesi di istruzione  è lo stesso di 0 anni di istruzione).
+L'intercetta è rimasta invariata perché rappresenta il log del salario orario quando $educ = 0$ (0 mesi di istruzione è lo stesso di 0 anni di istruzione).
 
 
 #### **Secondo modello (log-log)** {.unnumbered}
 
-Un aumento dell'1% dei mesi di istruzione è associato a un
-aumento, in media, del salario orario dello 0.825%.
+Un aumento dell'1% dei mesi di istruzione è associato a un aumento, in media, del salario orario dello 0.825%.
 
 L'intercetta invece cambia. Infatti:
 
