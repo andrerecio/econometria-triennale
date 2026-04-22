@@ -105,11 +105,11 @@ ggplot(wage1, aes(x = educ)) +
   theme_minimal()
 ```
 
-Poiché nella specificazione log-level la variazione percentuale di $wage$ è la stessa per ogni anno aggiuntivo di istruzione, la variazione in dollari di $wage$ per un anno aggiuntivo di istruzione **cresce** all'aumentare di $educ$: il modello log-level implica quindi rendimenti crescenti dell'istruzione, come si vede dalla curvatura della linea arancione rispetto alla retta OLS (in blu).
+Poiché nella specificazione log-lin la variazione percentuale di $wage$ è la stessa per ogni anno aggiuntivo di istruzione, la variazione in dollari di $wage$ per un anno aggiuntivo di istruzione **cresce** all'aumentare di $educ$: il modello log-lin implica quindi rendimenti crescenti dell'istruzione, come si vede dalla curvatura della linea arancione rispetto alla retta OLS (in blu).
 
-## Log-level vs livello
+## Log-lin vs livello
 
-Stimiamo anche la regressione in livelli per confrontarla con la specificazione log-level:
+Stimiamo anche la regressione in livelli per confrontarla con la specificazione log-lin:
 
 ```{r}
 reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
@@ -117,14 +117,14 @@ reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 
 ```{r}
 modelsummary(
-  list("Livello" = reg_wage, "Log-level" = reg_logwage),
+  list("Livello" = reg_wage, "Log-lin" = reg_logwage),
   title = "Variabile dipendente: wage o log(wage)",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 ```
 
 
-Il coefficiente $\beta_1$ della specificazione log-level ha un'interpretazione in termini percentuali una volta moltiplicato per 100: in media, un anno aggiuntivo di istruzione è associato a un aumento del salario orario ($wage$) dell'8.3%.
+Il coefficiente $\beta_1$ della specificazione log-lin ha un'interpretazione in termini percentuali una volta moltiplicato per 100: in media, un anno aggiuntivo di istruzione è associato a un aumento del salario orario ($wage$) dell'8.3%.
 
 **Importante:** $R^2$ mostra che $educ$ spiega circa il 18.6% della variazione in $\log(wage)$ (non in $wage$). $R^2$ non può essere usato per confrontare queste due regressioni perché hanno variabile dipendente diversa ($wage$ e $\log(wage)$, vedete Stock e Watson p. 215).
 
@@ -144,26 +144,26 @@ I logaritmi possono essere usati per trasformare la variabile dipendente $Y$, un
 :::
 
 
-### Interpretazione dei coefficienti: log-level, log-log e level-log:
+### Interpretazione dei coefficienti: log-lin, log-log e lin-log:
 
 
 ```{r}
 reg_logwagelog <- feols(log(wage) ~ log(educ), data = wage1, vcov = "hetero")
 reg_wagelog <- feols(wage ~ log(educ), data = wage1, vcov = "hetero")
 modelsummary(
-  list("Log-level" = reg_logwage, "Log-log" = reg_logwagelog, "Level-log" = reg_wagelog),
+  list("Log-lin" = reg_logwage, "Log-log" = reg_logwagelog, "Lin-log" = reg_wagelog),
   title = "Variabile dipendente: log(wage) o wage",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 ```
 
 
-- **Primo modello** (log-level): un anno in più di istruzione è associato in media a un aumento dell'8.3% del salario orario.
+- **Primo modello** (log-lin): un anno in più di istruzione è associato in media a un aumento dell'8.3% del salario orario.
 
 
 - **Secondo modello** (log-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario dello 0.825%. Il coefficiente è quindi un'elasticità: misura la variazione percentuale di $Y$ associata a **una** variazione percentuale di $X$.
 
-- **Terzo modello** (level-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.053 dollari. Un aumento del 10% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.53 dollari (10 $\cdot$ 0.053).
+- **Terzo modello** (lin-log): un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.053 dollari. Un aumento del 10% degli anni di istruzione è associato a un aumento, in media, del salario orario di 0.53 dollari (10 $\cdot$ 0.053).
 
 
 ::: {.callout-tip title="Quando usare il log?"}
@@ -192,7 +192,7 @@ In questa sezione confrontiamo i coefficienti e le intercette delle regressioni 
 ### Variabile dipendente:
 
 
-Esprimiamo $wage$ in decine di dollari e stimiamo la regressione di $\log(wage/10)$ su $educ$ e $\log(educ)$, e di $wage/10$ su $\log(educ)$. Nei modelli con $Y$ in log il coefficiente sulla variabile indipendente non cambia, mentre l'intercetta cambia sempre; nel modello level-log cambiano sia il coefficiente che l'intercetta.
+Esprimiamo $wage$ in decine di dollari e stimiamo la regressione di $\log(wage/10)$ su $educ$ e $\log(educ)$, e di $wage/10$ su $\log(educ)$. Nei modelli con $Y$ in log il coefficiente sulla variabile indipendente non cambia, mentre l'intercetta cambia sempre; nel modello lin-log cambiano sia il coefficiente che l'intercetta.
 
 ```{r}
 reg_logwage_dec <- feols(log(wage/10) ~ educ, data = wage1, vcov = "hetero")
@@ -200,13 +200,13 @@ reg_logwagelog_dec <- feols(log(wage/10) ~ log(educ), data = wage1, vcov = "hete
 reg_wagelog_dec <- feols(wage/10 ~ log(educ), data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Log-level" = reg_logwage_dec, "Log-log" = reg_logwagelog_dec, "Level-log" = reg_wagelog_dec),
+  list("Log-lin" = reg_logwage_dec, "Log-log" = reg_logwagelog_dec, "Lin-log" = reg_wagelog_dec),
   title = "Variabile dipendente: log(wage/10) o wage/10",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 ```
 
-#### **Primo modello (log-level)** {.unnumbered}
+#### **Primo modello (log-lin)** {.unnumbered}
 
 Un anno aggiuntivo di istruzione è associato a un aumento, in media, dell'8.3% del salario orario: il coefficiente su $educ$ non cambia.
 
@@ -228,13 +228,13 @@ che coincide con il valore in tabella.
 
 Un aumento dell'1% degli anni di istruzione è associato a un aumento, in media, del salario orario dello 0.825%: anche qui il coefficiente su $\log(educ)$ non cambia.
 
-Per la stessa ragione del modello log-level, la nuova intercetta diminuisce di $\log(10)$:
+Per la stessa ragione del modello log-lin, la nuova intercetta diminuisce di $\log(10)$:
 
 $$\beta_0' = \beta_0 - \log(10) = -0.445 - 2.303 \approx -2.748$$
 
 che coincide con il valore in tabella.
 
-#### **Terzo modello (level-log)** {.unnumbered}
+#### **Terzo modello (lin-log)** {.unnumbered}
 
 Qui $Y$ non è in log, quindi dividendo entrambi i lati per 10 il modello diventa:
 
@@ -261,14 +261,14 @@ reg_logwagelog_monthly <- feols(log(wage) ~ log(educ_monthly), data = wage1, vco
 reg_wagelog_monthly <- feols(wage ~ log(educ_monthly), data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Log-level" = reg_logwage_monthly, "Log-log" = reg_logwagelog_monthly, "Level-log" = reg_wagelog_monthly),
+  list("Log-lin" = reg_logwage_monthly, "Log-log" = reg_logwagelog_monthly, "Lin-log" = reg_wagelog_monthly),
   title = "Variabile dipendente: log(wage) o wage",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 ```
 
 
-#### **Primo modello (log-level)** {.unnumbered}
+#### **Primo modello (log-lin)** {.unnumbered}
 
 Un mese aggiuntivo di istruzione è associato a un aumento, in media, dello 0.7% del salario orario.
 
@@ -296,7 +296,7 @@ $$\beta_0' = \beta_0 - \beta_1 \log(12) = -0.445 - 0.825 \times 2.485
 
 che coincide con il valore in tabella.
 
-#### **Terzo modello (level-log)** {.unnumbered}
+#### **Terzo modello (lin-log)** {.unnumbered}
 
 Un aumento dell'1% dei mesi di istruzione è associato a un
 aumento, in media, del salario orario di 0.053 dollari.
