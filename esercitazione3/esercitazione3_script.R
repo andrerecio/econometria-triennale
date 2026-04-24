@@ -17,7 +17,7 @@ data("wage1", package = "wooldridge")
 
 # --- Introduzione: log(wage) ~ educ -------------------------------------------
 
-# Modello log-level:
+# Modello log-lineare:
 # log(wage_i) = beta_0 + beta_1 * educ_i + u_i
 reg_logwage <- feols(log(wage) ~ educ, data = wage1, vcov = "hetero")
 
@@ -40,55 +40,55 @@ ggplot(wage1, aes(x = educ)) +
   ) +
   theme_minimal()
 
-# --- Log-level vs livello -----------------------------------------------------
+# --- Log-lineare vs livello -----------------------------------------------------
 
 # Regressione in livelli per confronto
 reg_wage <- feols(wage ~ educ, data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Livello" = reg_wage, "Log-level" = reg_logwage),
+  list("Livello" = reg_wage, "Log-lineare" = reg_logwage),
   title = "Variabile dipendente: wage o log(wage)",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 
 # Interpretazione:
-# - log-level: beta_1 * 100 = variazione % di wage per 1 anno in più di educ
+# - log-lineare: beta_1 * 100 = variazione % di wage per 1 anno in più di educ
 #   -> un anno in più di istruzione è associato a +8.3% del salario orario
 # - R^2 non è confrontabile tra le due regressioni: la Y è diversa
 #   (wage vs log(wage))
 
-# --- Log-log e level-log ------------------------------------------------------
+# --- Log-log e lineare-log ------------------------------------------------------
 
 reg_logwagelog <- feols(log(wage) ~ log(educ), data = wage1, vcov = "hetero")
 reg_wagelog    <- feols(wage ~ log(educ),      data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Log-level" = reg_logwage,
+  list("Log-lineare" = reg_logwage,
        "Log-log"   = reg_logwagelog,
-       "Level-log" = reg_wagelog),
+       "Lineare-log" = reg_wagelog),
   title = "Variabile dipendente: log(wage) o wage",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
 
 # Interpretazione:
-# - log-level:  +1 anno di educ -> +8.3% di wage
+# - log-lineare:  +1 anno di educ -> +8.3% di wage
 # - log-log:    +1% di educ    -> +0.825% di wage  (elasticità)
-# - level-log:  +1% di educ    -> +0.053 dollari di wage
+# - lineare-log:  +1% di educ    -> +0.053 dollari di wage
 
 # --- Cambio di unità di misura: Y in decine di dollari ------------------------
 
 # Con Y in log, il cambio di unità di misura lascia invariati i coefficienti:
 # solo l'intercetta cambia (diminuisce di log(10)).
-# Nel modello level-log anche il coefficiente cambia perché Y è in decine.
+# Nel modello lineare-log anche il coefficiente cambia perché Y è in decine.
 
 reg_logwage_dec    <- feols(log(wage/10) ~ educ,      data = wage1, vcov = "hetero")
 reg_logwagelog_dec <- feols(log(wage/10) ~ log(educ), data = wage1, vcov = "hetero")
 reg_wagelog_dec    <- feols(wage/10 ~ log(educ),      data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Log-level" = reg_logwage_dec,
+  list("Log-lineare" = reg_logwage_dec,
        "Log-log"   = reg_logwagelog_dec,
-       "Level-log" = reg_wagelog_dec),
+       "Lineare-log" = reg_wagelog_dec),
   title = "Variabile dipendente: log(wage/10) o wage/10",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
@@ -104,9 +104,9 @@ reg_logwagelog_monthly <- feols(log(wage) ~ log(educ_monthly), data = wage1, vco
 reg_wagelog_monthly    <- feols(wage ~ log(educ_monthly),      data = wage1, vcov = "hetero")
 
 modelsummary(
-  list("Log-level" = reg_logwage_monthly,
+  list("Log-lineare" = reg_logwage_monthly,
        "Log-log"   = reg_logwagelog_monthly,
-       "Level-log" = reg_wagelog_monthly),
+       "Lineare-log" = reg_wagelog_monthly),
   title = "Variabile dipendente: log(wage) o wage (educ in mesi)",
   gof_omit = "AIC|BIC|RMSE|R2 Adj."
 )
@@ -115,7 +115,7 @@ modelsummary(
 # log(educ * 12) = log(educ) + log(12), quindi il termine log(12)
 # viene assorbito dall'intercetta.
 # - log-log:   beta_0' = -0.445 - 0.825 * log(12) ≈ -2.495
-# - level-log: beta_0' = -7.460 - 5.330 * log(12) ≈ -20.70
+# - lineare-log: beta_0' = -7.460 - 5.330 * log(12) ≈ -20.70
 
 # --- Variabili dummy e logaritmi ----------------------------------------------
 
