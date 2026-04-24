@@ -1,5 +1,4 @@
-#Esercitazione4 script
-
+# Esercitazione 5
 
 library(tidyverse)
 library(knitr)
@@ -7,62 +6,89 @@ library(kableExtra)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
+
+# Load the dataset
+data("wage2", package = "wooldridge")
+
+
+reg_wage1 <- feols(wage ~ educ + exper + tenure, data = wage2, vcov = "hetero")
+reg_logwage1 <- feols(log(wage) ~ educ + exper + tenure, data = wage2, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+reg_wagepol <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
+reg_logwagepol <- feols(log(wage) ~ + exper + I(exper^2), data = wage1, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wagepol, "Log Wage" = reg_logwagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
 data("wage1", package = "wooldridge")
 
-reg_wage_dummy <- feols(wage ~ female, data = wage1, vcov = "hetero")
-reg_wagemonthly_dummy <- feols((wage*140) ~ female, data = wage1, vcov = "hetero")
-reg_logwage_dummy <- feols(log(wage) ~  female, data = wage1, vcov = "hetero")
-reg_logwagemonthly_dummy <- feols(log(wage * 140) ~  female, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_dummy, "Wage Monthly" = reg_wagemonthly_dummy, "Log Wage"= reg_logwage_dummy, "Log (Wage Monthly)" = reg_logwagemonthly_dummy ), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
 wage1 <- wage1 %>%
+  mutate(exper_center = exper - mean(exper, na.rm = TRUE))
+
+reg_experc <- feols(wage ~ exper_center, data = wage1, vcov = "hetero")
+
+reg_exper <- feols(wage ~ exper, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_experc, "Wage" = reg_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+reg_wagepolcenter <- feols(wage ~ educ + exper_center + I(exper_center^2) + tenure, data = wage1, vcov = "hetero")
+reg_wagepol <- feols(wage ~ educ + exper + I(exper^2) + tenure, data = wage1, vcov = "hetero")
+
+modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+wage2 <- wage2 %>%
+  mutate(pareduc = meduc + feduc)
+
+
+
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_intlog <- feols(log(wage) ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+
+wage2 <- wage2 %>%
   mutate(
-    marrmale = ifelse(female == 0 & married == 1, 1, 0),
-    marrfemale = ifelse(female == 1 & married == 1, 1, 0),
-    singfem = ifelse(female == 1 & married == 0, 1, 0)
+    pareduc_center = pareduc - mean(pareduc, na.rm = TRUE),
+    educ_center = educ - mean(educ, na.rm = TRUE)
   )
 
 
-reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_sm1), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_int_mean <- feols(wage ~ educ_center * pareduc_center + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
 
-reg_wage_marrfe <- feols(wage ~ female * married, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_marrfe), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
-
-wage1 <- wage1 %>% 
-  mutate(male = 1 - female)
-
-
-reg_wage_marrmal <- feols(wage ~ male * married, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_marrfe, "Wage" = reg_wage_marrmal), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-##Prima modello regressione di wage su educ, female e la loro interazione
-reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
-
-
-#Risultati
-modelsummary(list("Wage" = reg_wage_educfe), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-##install.packages("marginaleffects")
-library(marginaleffects)
-plot_predictions(reg_wage_educfe, 
-                condition = c("educ", "female"),
-                ) + 
-  labs(title = "Salario predetto per livelli di istruzione e genere",
-       x = "Anni di istruzione",
-       y = "Salario predetto")
-
-
-##Prima modello regressione di wage su edud, female e la loro interazione
 reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
 
-reg_wage_educexper2 <- feols(wage ~ educ * exper + female + tenure, data = wage1, vcov = "hetero")
 #Risultati
-modelsummary(list("Wage" = reg_wage_educexper, "Wage" = reg_wage_educexper2), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
+modelsummary(list("Wage" = reg_wage_educexper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
 
 summary(wage1$exper)
+
+
+wage1 <- wage1 %>%
+  mutate(
+    educ_center= educ - mean(educ, na.rm = TRUE),
+    exper_center = exper - mean(exper, na.rm = TRUE)
+  )
+
+
+reg_wage_educexper_center <- feols(wage ~ educ_center * exper_center, data = wage1, vcov = "hetero")
+#Risultati
+modelsummary(list("Wage" = reg_wage_educexper_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+##Primo modello regressione di wage su educ, female e la loro interazione
+reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
+reg_wage_educfe_center <- feols(wage ~ educ_center * female, data = wage1, vcov = "hetero")
+
+#Risultati
+modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+

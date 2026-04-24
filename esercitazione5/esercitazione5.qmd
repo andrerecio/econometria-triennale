@@ -1,6 +1,6 @@
 ---
 title: "Esercitazione N.5"
-subtitle: "Nonlinearità: polinomi"
+subtitle: "Nonlinearità: interazioni"
 author: ""
 date: today
 lang: it
@@ -45,251 +45,184 @@ knitr:
 ---
 
 
+# Interazioni 
 
-# Nonlinearità e interazioni (parte 2)
-
-In questa esercitazione riprendiamo alcuni concetti della precedente esercitazione e approfondiamo altri aspetti legati all'interpretazione dei coefficienti.
-
-### Pacchetti necessari:
+## Setup
 
 ```{r}
 #| message: false
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(tinytable)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
-```
-
-
-## Esercizio:
-
-Consideriamo i dati in `wage2`
-
-```{r}
-data("wage2", package = "wooldridge")
-```
-
-
-- $wage$ sono le retribuzioni mensili
-- $educ$ sono gli anni di istruzioni
-- $exper$ anni di esperienza
-
-Stimiamo le seguente regressioni:
-
-```{r}
-reg_wage1 <- feols(wage ~ educ + exper + tenure, data = wage2, vcov = "hetero")
-reg_logwage1 <- feols(log(wage) ~ educ + exper + tenure, data = wage2, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-```
-
-
-::: {.callout-note title="Domande"}
-1. Come si interpretano i coefficienti di $educ$ nelle due regressioni?
-2. I coefficienti sono statisticamente significativi al 5%? (Calcolare anche l'intervallo di confidenza al 95%)
-3. Wald test (statistica F robusta all'eteroschedasticità) che tutti i coefficienti della regressione siano uguali a zero
-:::
-
-
-
-
-## Polinomi:
-
-Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). il polinomio quadratico è spesso utilizzaro in applicazioni economiche per catturare effetti marginali crescenti e decrescenti.
-
-```{r}
-reg_wage_exper <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-reg_wage_exper
-```
-
-
-In questo caso $\beta_1$ è positivo e $\beta_2$ negativo.
-
-```{r}
-# 1. Previsione dei valori stimati
-wage1 <- wage1 %>%
-  mutate(wageexp_pred = predict(reg_wage_exper))
-
-# 2. Filtro per esper ≤ 40
-wage_cut <- wage1 %>% filter(exper <= 40)
-
-# 3. Trova il punto massimo della curva wageexp_pred
-punto_max <- wage_cut %>%
-  filter(wageexp_pred == max(wageexp_pred, na.rm = TRUE))
-
-# 4. Grafico
-ggplot(wage_cut, aes(x = exper)) +  
-  geom_line(aes(y = wageexp_pred), color = "#ff7f0e", size = 1.5) +              # curva stimata
-  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "#1f77b4", size = 1.5) + # retta OLS
-  geom_point(data = punto_max, aes(y = wageexp_pred), color = "#2ca02c", size = 5) +      
-  labs(
-    title = "Confronto: lineare vs polinomio quadratico",
-    x = "Anni di Esperienza",
-    y = "Salario orario in $"
-  ) +
-  theme_minimal()
-```
-
-
-```{r}
-reg_wage_exper2 <- feols(wage ~ exper + I(exper^2) + educ + tenure, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-```
-
-### Interpretazione dei coefficienti del primo modello:
-
-Non possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. 
-
-
-**Primo modello:** Consideriamo la variazione nel salario nel caso si passi da 1 a 2 anni di esperienza.
-
-$$
-\Delta \hat{Y} = (\beta_0 + \beta_1 * 1 - \beta_2 * 1^{2}) - (\beta_0 + \beta_1 * 2 - \beta_2 * 2^{2})
-$$
-
-Uguale a $4.297 - 4.017 = 0.28$ dollari
-
-Ora considerando da 10 a 11 anni di esperienza:
-
-- *10 anni*: $3.725 + 2.98 - 0.006 (100)$
-- *11 anni*: $3.725 + 3.278 - 0.006 (121)$
- $\Delta \hat{Y} = 6.277 - 6.105 = 0.172$ dollari
-
-
-### Log e polinomi:
-
-E se $wage$ fosse espresso in log?
-
-```{r}
-reg_logwage_exper <- feols(log(wage) ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-```
-
-**Secondo modello (log):** Consideriamo la variazione nel salario predetto nel caso si passi da 10 a 11 anni di esperienza.
-
-
-- *10 anni*: $1.295 + 0.046(10) - 0.001 (10)^{2}$ = 1.655
-- *11 anni* = $1.295 + 0.046(11) - 0.001 (11)^{2}$ = 1.68
-
-$\Delta \hat{Y} = 1.68 - 1.655 = 0.025$ cioè **2.5%** 
-
-::: {.callout-note title="Esercizio"}
-Calcolate da 2 a 3 anni di esperienza
-:::
-
-
-
-## Polinomi (importante)
-
-Nell'Esercitazione 3 avevamo stimato le seguente regressioni:
-
-```{r}
-reg_wagepol <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-reg_logwagepol <- feols(log(wage) ~ + exper + I(exper^2), data = wage1, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wagepol, "Log Wage" = reg_logwagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-```
-
-
-
-
-### Interpretazione dei coefficienti del primo modello:
-
-**Non** possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. Consideriamo la variazione nel salario nel caso si passi da 1 a 2 anni di esperienza.
-
-$$
-\Delta \hat{Y} = (\beta_0 + \beta_1 * 1 - \beta_2 * 1^{2}) - (\beta_0 + \beta_1 * 2 - \beta_2 * 2^{2})
-$$
-
-Uguale a $4.297 - 4.017 = 0.28$ dollari
-
-Possiamo interpetare i coefficienti derivando la seguente **formula:**
-
-Abbiamo che:
-
-$$
-y = \beta_0 + \beta_1 x + \beta_2  x^2 + u
-$$
-
-
-L'equazione stimata è:
-
-$$
-\hat{y} = \hat{\beta_0} + \hat{\beta_1} x + \hat{\beta_2} x^2
-$$
-
-
-Otteniamo la seguente approssimazione:
-
-$$
-\Delta \hat{y} \approx  (\hat{\beta_1} + 2  \hat{\beta_2} x) \Delta x
-$$
-
-e quindi:
-
-$$
-\Delta \hat{y}/ \Delta x \approx  \hat{\beta_1} + 2  \hat{\beta_2} x
-$$
-
-Nel nostro esempio:
-
-- Passare da un anno a due anni di esperienza: $0.298 - (2* 0.006) * 1 = 0.286$
-
-- Da 10 a 11 anni: $0.298 - 2(0.006) *10 = 0.178$
-
-- Nel secondo modello (Log Wage): passare da un anno a due anni di esperienza: $0.046 - (2* 0.001) * 1 = 0.044$ è associato ad un aumento del salario di circa il 4.4%
-
-
-**Nota:** nel secondo modello, passare da zero a 1 anno di esperienza è associato ad un aumento del salario orario di circa il 4.6% (0.046 * 100)
-
-
-
-### In deviazione dalla media
-
-Creiamo $expercenter = exper - media(exper)$
-
-```{r}
 data("wage1", package = "wooldridge")
+```
 
+
+
+
+
+Nelle scorse esercitazioni abbiamo creato 3 dummy (donne sposate, uomini sposati e donne single) e interpetato i coefficienti rispetto agli uomini single (la categoria omessa):
+
+```{r}
 wage1 <- wage1 %>%
-  mutate(exper_center = exper - mean(exper, na.rm = TRUE))
+  mutate(
+    marrmale = ifelse(female == 0 & married == 1, 1, 0),
+    marrfemale = ifelse(female == 1 & married == 1, 1, 0),
+    singfem = ifelse(female == 1 & married == 0, 1, 0)
+  )
 ```
 
-
-Regressione semplice senza polinomio:
+Per semplicità (senza altri regressori):
 ```{r}
-reg_experc <- feols(wage ~ exper_center, data = wage1, vcov = "hetero")
-
-reg_exper <- feols(wage ~ exper, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_experc, "Wage" = reg_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+reg_wage_sm1 <- feols(wage ~ marrmale + marrfemale + singfem, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_sm1), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
-Cosa cambia?
+Come si interpretano i coefficienti?
 
-- **L'intercetta!** Perché nel primo modello rappresenta il salario predetto per un individuo con **esperienza uguale alla media** 
+1. L'intercetta rappresenta il salario orario medio in dollari della categoria omessa (**uomini single**). Quando $marrmale$, $marrfemale$ e $singfem$ sono uguali a zero
+2. il coefficiente associato a $marrmale$: in media gli uomini sposati gudagnano 2.815 dollari in più rispetto agli uomini single
+3. le donne sposate guadagnano in media 0.60 dollari all'ora in meno rispetto agli uomini single
+4. le donne single guadagnano guadagnano in media 0.55 dollari all'ora in meno rispetto agli uomini single
 
-- Nel secondo modello l'intercetta rappresenta il salario predetto con zero anni di esperienza.
+**Nota:** non stiamo controllando per anni di istruzioni, anni di esperrienza...
 
 
-**Con polinomi:**
+## Interazione tra due variabili dummy:
+
+Ora creiamo l'interazione tra due variabili dummy: $female$ e $married$. Ciò consente di vedere se "ritorno" del matrimonio dipende dal genere.
 
 ```{r}
-reg_wagepolcenter <- feols(wage ~ educ + exper_center + I(exper_center^2) + tenure, data = wage1, vcov = "hetero")
-reg_wagepol <- feols(wage ~ educ + exper + I(exper^2) + tenure, data = wage1, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+reg_wage_marrfe <- feols(wage ~ female * married, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_marrfe), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
-Ora il coefficiente di $expercenter$ rappresenta l'incremento del salario quando $exper$ è uguale alla media.
-
-Nel secondo modello, il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. 
+I risultati della regressione mostrano che l'interazione tra genere e stato coniugale è statisticamente significativa (calcolate il valore critico).
 
 
-## Interazioni
+Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini non sposati. In media le donne non sposate guadagnano 0.556 dollari all'ora in meno rispetto agli uomini non sposati.
+
+
+Coefficiente di $married$ rappresenta l'effetto del matrimonio sul salario orario degli uomini. In media gli uomini sposati guadagnano 2.815 dollari all'ora in più rispetto agli uomini non sposati (single).
+
+
+Coefficiente dell'interazione $female*married$ rappresenta la differenza nell'effetto del matrimonio tra donne e uomini. L'effetto del matrimonio sul salario orario è 2.861 dollari inferiore per le donne rispetto agli uomini.
+
+
+In media le donne sposate guadagnano 0.046 dollari in meno rispetto alle donne non sposate ($2,815 - 2,861 = -0,046$).
+
+
+::: {.callout-note title="Nota"}
+**Possiamo usare la regressione stimata per stimare il salario medio orario per ciascuna delle quattro combinazioni possibili:**
+:::
+
+- L'intercetta uguale a 5.168 rappresenta il salario orario medio per gli uomini single cioè  quando $female$ = 0 e $married$ = 0
+
+- Considerando $female$ = 0 e $married$ = 1 otteniamo 7.983 (5.168 + 2.815) che rappresenta il salario orario medio in dollari degli uomini sposati.
+
+- Quando $female$ = 1 e $married$ = 0 otteniamo 4.612 (5.168 - 0.556), che rappresenta il salario orario medio delle donne single
+
+- Quando $female$ = 1 e $married$ = 1 otteniamo 4.566 (5.168 - 0.556 + 2.815 - 2.861) salario orario medio delle donne sposate
+
+**Nota:** non stiamo controllando per altri fattori come anni di istruzione...
+
+Se l'interazione fosse con $male$?
+
+```{r}
+wage1 <- wage1 %>% 
+  mutate(male = 1 - female)
+```
+
+```{r}
+reg_wage_marrmal <- feols(wage ~ male * married, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_marrfe, "Wage" = reg_wage_marrmal), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+In questo caso il coefficiente di $married$ rappresenta l'effetto del matrimonio sul salario orario delle donne. In media le donne sposate guadagnano 0.046 dollari all'ora in meno rispetto alle donne non sposate.
+
+
+L'intercetta rappresenta il salario medio per le donne single cioè quando $male$ = 0 e $married$ = 0.
+
+
+
+## Interazione tra variabile dummy e continua
+
+In questa esercitazione consideriamo il caso che il libro (Stock e Watson p. 220) definisce pendenza e intercette diverse.
+
+
+```{r}
+##Prima modello regressione di wage su educ, female e la loro interazione
+reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
+
+
+#Risultati
+modelsummary(list("Wage" = reg_wage_educfe), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- Coefficiente di $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario per gli uomini (quando $female$ = 0). L'effetto di un anno aggiuntivo di istruzione per gli uomini è pari a 0.539$
+
+- Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini quando l'istruzione è zero ($educ$ = 0).
+
+- Coefficiente di $educ* female$ rappresenta la differenza nell'effetto dell'istruzione tra donne e uomini. Le donne ricevono un "premio" per l’istruzione inferiore di circa 0.086$ all'ora rispetto agli uomini.
+Ogni anno di istruzione in più è meno remunerativo per le donne rispetto agli uomini di circa 0.086$ all'ora.
+
+- L'effetto di un anno aggiuntivo di istruzione per le donne è pari a $\beta_1 + \beta_3$ cioè $0.539 - 0.086 = 0.453$ dollari
+
+E infatti $0.453 - 0.539 = - 0.086$
+
+```{r}
+##install.packages("marginaleffects")
+library(marginaleffects)
+plot_predictions(reg_wage_educfe, 
+                condition = c("educ", "female"),
+                ) + 
+  labs(title = "Salario predetto per livelli di istruzione e genere",
+       x = "Anni di istruzione",
+       y = "Salario predetto")
+```
+
+
+## Interazione tra due variabili continue
+
+```{r}
+reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
+
+reg_wage_educexper2 <- feols(wage ~ educ * exper + female + tenure, data = wage1, vcov = "hetero")
+#Risultati
+modelsummary(list("Wage" = reg_wage_educexper, "Wage" = reg_wage_educexper2), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+- il coefficiente associato a $educ$ rappresenta l'effetto di un anno aggiuntivo di istruzione sul salario quando l'esperienza ($exper$) è zero.
+
+- il coefficiente di $exper$: rappresenta l'effetto di un anno aggiuntivo di esperienza sul salario quando l'istruzione ($educ$) è zero.
+
+
+Il coefficiente di interazione è positivo, significa che l'effetto dell'istruzione aumenta con l'esperienza (o viceversa). 
+
+Qual è l'effetto parziale di $educ$ su $wage$?
+  
+Per stimare l'effetto parziale consideriamo dei valori rilevanti di $exper$ come la mediana, la media o il terzo quartile:
+
+```{r}
+summary(wage1$exper)
+```
+
+$0.602+0.002*13.5 = 0.632$
+
+- Per un individuo con 13.5 anni di esperienza, un anno in più di istruzione è associato a un aumento medio del salario orario di circa 0.632 dollari
+
+
+- Per un individuo con 26 anni di esperienza (terzo quartile), un anno in più di istruzione è associato a un aumento medio del salario orario di circa $0.602+0.002*26 = 0.654$ dollari 
+
+
+
 
 Usiamo il dataset `wage2` considerando $pareduc$ che rappresenta la somma degli anni di istruzione dei genitori. Ricordiamo $wage$ in `wage2` è il salario espresso in dollari mensili:
 
@@ -301,7 +234,7 @@ wage2 <- wage2 %>%
 ```{r}
 regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
 regeduc_intlog <- feols(log(wage) ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
-modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -336,7 +269,7 @@ Confronto con la precendente regressione:
 ```{r}
 regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
 regeduc_int_mean <- feols(wage ~ educ_center * pareduc_center + exper + tenure, data = wage2, vcov = "hetero")
-modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -369,7 +302,7 @@ Riprendiamo gli stessi passaggi dell'Esercizitazione 4 sull'interazione tra due 
 reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
 
 #Risultati
-modelsummary(list("Wage" = reg_wage_educexper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage_educexper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -414,7 +347,7 @@ wage1 <- wage1 %>%
 ```{r}
 reg_wage_educexper_center <- feols(wage ~ educ_center * exper_center, data = wage1, vcov = "hetero")
 #Risultati
-modelsummary(list("Wage" = reg_wage_educexper_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage_educexper_center), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -431,7 +364,7 @@ reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
 reg_wage_educfe_center <- feols(wage ~ educ_center * female, data = wage1, vcov = "hetero")
 
 #Risultati
-modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
@@ -444,3 +377,10 @@ modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), ou
 **Secondo modello:**
 
 - Coefficiente di $female$ rappresenta la differenza salariale tra donne e uomini quando gli anni di istruzione ($educ$) sono al loro valore medio.
+
+
+
+
+
+
+
