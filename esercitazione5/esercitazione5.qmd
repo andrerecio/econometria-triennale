@@ -57,7 +57,7 @@ In questa esercitazione riprendiamo alcuni concetti della precedente esercitazio
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(tinytable)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
@@ -83,8 +83,9 @@ Stimiamo le seguente regressioni:
 reg_wage1 <- feols(wage ~ educ + exper + tenure, data = wage2, vcov = "hetero")
 reg_logwage1 <- feols(log(wage) ~ educ + exper + tenure, data = wage2, vcov = "hetero")
 
-modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
+
 
 ::: {.callout-note title="Domande"}
 1. Come si interpretano i coefficienti di $educ$ nelle due regressioni?
