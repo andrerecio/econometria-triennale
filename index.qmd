@@ -51,7 +51,7 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 | 4 | Nonlinearità: polinomi | [📄 Note](esercitazione4/esercitazione4.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione4/esercitazione4_script.R) |
 | 5 | Nonlinearità: interazioni | [📄 Note](esercitazione5/esercitazione5.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione5/esercitazione5_script.R) |
 | 6 | Linear Probability Model (LPM) | [📄 Note](esercitazione6/esercitazione6.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione6_script.R) |
-| 6 | Probit e Logit | [📄 Note](esercitazione6/esercitazione7.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione7_script.R) |
+| 7 | Probit e Logit | [📄 Note](esercitazione6/esercitazione7.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione7_script.R) |
 
 
 ----

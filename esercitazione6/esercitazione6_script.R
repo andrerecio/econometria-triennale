@@ -1,5 +1,6 @@
-# Esercitazione 6
+#Esercitazione8_script
 
+#Esercitazione 7
 library(tidyverse)
 library(knitr)
 library(kableExtra)
@@ -7,87 +8,101 @@ library(modelsummary)
 library(fixest)
 library(wooldridge)
 
-
-data("crime2", package = "wooldridge")
-head(crime2)
-
-regcrimcs <- feols(crmrte ~ unem, data = crime2, vcov = "hetero")
-regcrimcs
-
-regcrimcs2 <- feols(crmrte ~ unem + d87, data = crime2, vcov = "hetero")
-regcrimcs2
+data("alcohol", package = "wooldridge")
+head(alcohol)
 
 
-regcrimcs_fe <- feols(crmrte ~ unem | year, data = crime2, vcov = "hetero")
-regcrimcs_fe
+datasummary_skim(alcohol)
 
 
-
-# Calcola media per gruppo (year)
-crime2_dev <- crime2 %>% 
-  group_by(year) %>%
-  mutate(crmrte_bar = mean(crmrte),  # media crmrte per anno
-         unem_bar = mean(unem)) %>%   # media unem per anno
-  ungroup() %>%
-  mutate(Wcrmrte = crmrte - crmrte_bar,  # deviazione crmrte
-         Wunem = unem - unem_bar)        # deviazione unem
-
-# Stima modello sulle deviazioni
-mod_crime_within <- feols(Wcrmrte ~ Wunem -1, data = crime2_dev, vcov = "hetero")
-mod_crime_within
+reg_lpm_alcohol <- feols(employ ~ abuse + educ + age + married, data = alcohol, vcov = "hetero")
+modelsummary(list("Employ" = reg_lpm_alcohol), output = "markdown", gof_omit = "AIC|BIC|RMSE")
 
 
-regcrimcs_fd <- feols(ccrmrte ~ cunem, data = crime2, vcov = "hetero")
-regcrimcs_fd
+probit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'probit')
+
+logit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'logit')
+
+modelsummary(list("Employ (LPM)" = reg_lpm_alcohol, "Employ (Probit)" = probit_alcohol, "Employ (Logit)"=logit_alcohol), output = "markdown", gof_omit = "AIC|BIC|RMSE")
 
 
 
-data("wagepan", package = "wooldridge")
-datasummary_skim(wagepan)
+
+# Creazione di due dataset: uno con abuse=1 per tutti e uno con abuse=0 per tutti
+alcohol_tmp1 <- alcohol
+alcohol_tmp0 <- alcohol
+
+# Impostiamo abuse=1 per tutti nel primo dataset
+alcohol_tmp1$abuse <- 1
+# Impostiamo abuse=0 per tutti nel secondo dataset
+alcohol_tmp0$abuse <- 0
+
+# Calcolo delle probabilità predette per il modello logit
+proba_employ_probit <- predict(probit_alcohol, newdata = alcohol_tmp1)
+proba_nonemploy_probit <- predict(probit_alcohol, newdata = alcohol_tmp0)
+
+# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
+ame_manual_probit <- mean(proba_employ_probit - proba_nonemploy_probit)
+print(paste("Effetto marginale medio manuale (Probit):", round(ame_manual_probit, 4)))
 
 
-reg_logwageunion <- feols(lwage ~ union + exper + expersq + educ + black + hisp + married, data = wagepan, vcov = "hetero")
-reg_logwageunion
+# Calcolo delle probabilità predette per il modello logit
+proba_employ_logit <- predict(logit_alcohol, newdata = alcohol_tmp1)
+proba_nonemploy_logit <- predict(logit_alcohol, newdata = alcohol_tmp0)
+
+# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
+ame_manual_logit <- mean(proba_employ_logit - proba_nonemploy_logit)
+print(paste("Effetto marginale medio manuale (Logit):", round(ame_manual_logit, 4)))
 
 
-feols(lwage ~ union + exper + expersq + educ + black + hisp + married + d81 + d82 + d83 + d84 + d85 + d86 + d87, data = wagepan, vcov = "hetero")
-
-feols(lwage ~ union + exper + expersq + educ + black + hisp + married | year , data = wagepan, vcov = "hetero")
-
-feols(lwage ~ union + exper + expersq + educ + black + hisp + married | nr , data = wagepan, vcov = "hetero")
 
 
-wagepan_demeaned <- wagepan %>%
-  group_by(nr) %>%
+library(marginaleffects)
+all_effects_logit <- avg_slopes(logit_alcohol)
+all_effects_probit <- avg_slopes(probit_alcohol)
+all_effects_probit
+
+# Tabella elegante con modelsummary
+modelsummary(list("Logit (AME)" = all_effects_logit, "Probit (AME)" = all_effects_probit), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj")             
+
+
+
+
+
+library(AER)
+data(HMDA, package = "AER")
+
+# Rimozione osservazioni con NA
+HMDA <- na.omit(HMDA)
+
+# Creazione variabili 'concesso' e 'afroam'
+HMDA <- HMDA |>
   mutate(
-    lwage_dm = lwage - mean(lwage, na.rm = TRUE),
-    union_dm = union - mean(union, na.rm = TRUE),
-    exper_dm = exper - mean(exper, na.rm = TRUE),
-    expersq_dm = expersq - mean(expersq, na.rm = TRUE),
-    educ_dm = educ - mean(educ, na.rm = TRUE),
-    black_dm = black - mean(black, na.rm = TRUE),
-    hisp_dm = hisp - mean(hisp, na.rm = TRUE),
-    married_dm = married - mean(married, na.rm = TRUE)
-  ) %>%
-  ungroup()
+    concesso = ifelse(deny == "no", 1, 0), # 1 = Concesso, 0 = Negato
+    afroam   = ifelse(afam == "yes", 1, 0)  # 1 = Afroamericano, 0 = Non afroamericano
+  ) |>
+  # Selezione per chiarezza (opzionale)
+  select(concesso, afroam, everything()) |>
+  select(-deny, -afam)
+
+head(HMDA)
+
+HMDA <- HMDA %>%
+  mutate(pirat = pirat * 100)
 
 
-  #L'intercetta sarà zero e la rimuovo con -1
-feols(lwage_dm ~ union_dm + exper_dm + expersq_dm + educ_dm + black_dm + hisp_dm + married_dm  -1, data = wagepan_demeaned, vcov = "hetero")
+# Specifica della formula (utilizza le variabili AER::HMDA)
+formula_aer <- concesso ~ afroam + pirat + hirat + lvrat + chist + mhist + phist +
+  unemp + selfemp + insurance + condomin + single + hschool
 
-reg_logwageunion_fe <- feols(lwage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "hetero")
-reg_logwageunion_fe
+# Modello Lineare di Probabilità (LPM) con errori standard robusti
+# Usiamo feols con vcov = "hetero" per gestire l'eteroschedasticità intrinseca nei modelli LPM
+lpm_HMDA <- feols(formula_aer, data = HMDA, vcov = "hetero")
 
+# Modello Logit
+# Usiamo feglm con family = binomial("logit") per stimare un modello logit
+logit_HMDA <- feglm(formula_aer, data = HMDA, family = binomial("logit"))
 
-modelsummary(list("Log Wage" = reg_logwageunion, "Log Wage" = reg_logwageunion_fe), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-wagepan <- wagepan %>%
-  mutate(wage = exp(lwage))
-summary(wagepan$wage)
-
-
-reg_wageunion_fe <- feols(wage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "hetero")
-reg_wageunion_fe
-
-feols(wage ~ union + exper + expersq + educ + black + hisp + married | nr + year , data = wagepan, vcov = "cluster")
+# Modello Probit
+# Usiamo feglm con family = binomial("probit") per stimare un modello probit
+probit_HMDA <- feglm(formula_aer, data = HMDA, family = binomial("probit"))
