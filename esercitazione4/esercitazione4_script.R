@@ -1,94 +1,109 @@
-# Esercitazione 5
+# Esercitazione 4 — Nonlinearità: polinomi
 
+# Setup ----
 library(tidyverse)
 library(knitr)
-library(kableExtra)
+library(tinytable)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
 
-# Load the dataset
-data("wage2", package = "wooldridge")
-
-
-reg_wage1 <- feols(wage ~ educ + exper + tenure, data = wage2, vcov = "hetero")
-reg_logwage1 <- feols(log(wage) ~ educ + exper + tenure, data = wage2, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-reg_wagepol <- feols(wage ~ exper + I(exper^2), data = wage1, vcov = "hetero")
-reg_logwagepol <- feols(log(wage) ~ + exper + I(exper^2), data = wage1, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wagepol, "Log Wage" = reg_logwagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
 data("wage1", package = "wooldridge")
 
+
+# Introduzione: regressione di wage su exper + exper^2 ----
+# Nota: in fixest l'operatore ^ è elevamento a potenza, quindi exper^2 == I(exper^2).
+# In lm/glm/lme4 invece serve I(exper^2): senza I() il termine quadratico
+# verrebbe ignorato silenziosamente.
+reg_wage_exper <- feols(wage ~ exper + exper^2, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+# Grafico: lineare vs polinomio quadratico ----
+# 1. Previsione dei valori stimati
+wage1 <- wage1 %>%
+  mutate(wageexp_pred = predict(reg_wage_exper))
+
+# 2. Filtro per exper ≤ 40
+wage_cut <- wage1 %>% filter(exper <= 40)
+
+# 3. Trova il punto massimo della curva wageexp_pred
+punto_max <- wage_cut %>%
+  filter(wageexp_pred == max(wageexp_pred, na.rm = TRUE))
+
+# 4. Grafico
+ggplot(wage_cut, aes(x = exper)) +
+  geom_line(aes(y = wageexp_pred), color = "#ff7f0e", linewidth = 1.5) +              # curva stimata
+  geom_smooth(aes(y = wage), method = "lm", se = FALSE, color = "#1f77b4", linewidth = 1.5) + # retta OLS
+  geom_point(data = punto_max, aes(y = wageexp_pred), color = "#2ca02c", size = 5) +
+  labs(
+    title = "Confronto: lineare vs polinomio quadratico",
+    x = "Anni di Esperienza",
+    y = "Salario orario in $"
+  ) +
+  theme_minimal()
+
+
+# Polinomio con controlli (educ, tenure) ----
+reg_wage_exper2 <- feols(wage ~ exper + exper^2 + educ + tenure, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+# Trovare il picco: derivata prima ed effetto marginale ----
+# dy/dx = b1 + 2*b2*x   →   picco in x* = -b1 / (2*b2)
+b1 <- coef(reg_wage_exper)["exper"]
+b2 <- coef(reg_wage_exper)["I(exper^2)"]
+xstar <- -b1 / (2 * b2)
+
+deriv_df <- tibble(
+  exper = seq(0, 50, length.out = 200),
+  d = b1 + 2 * b2 * exper
+)
+
+ggplot(deriv_df, aes(x = exper, y = d)) +
+  geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +
+  geom_vline(xintercept = xstar, color = "grey60", linewidth = 0.4, linetype = "dashed") +
+  geom_line(color = "#ff7f0e", linewidth = 1.5) +
+  annotate("point", x = xstar, y = 0, color = "#2ca02c", size = 5) +
+  labs(
+    title = "Derivata prima: effetto marginale di un anno di esperienza",
+    x = "Anni di esperienza",
+    y = "Effetto marginale stimato"
+  ) +
+  theme_minimal()
+
+
+# Log e polinomi ----
+reg_logwage_exper <- feols(log(wage) ~ exper + exper^2 + educ + tenure, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+
+
+# In deviazione dalla media: regressione semplice ----
+# Centrando exper, l'intercetta diventa il salario predetto per un individuo
+# con esperienza pari alla media (invece che con zero anni di esperienza).
 wage1 <- wage1 %>%
   mutate(exper_center = exper - mean(exper, na.rm = TRUE))
 
 reg_experc <- feols(wage ~ exper_center, data = wage1, vcov = "hetero")
-
 reg_exper <- feols(wage ~ exper, data = wage1, vcov = "hetero")
-modelsummary(list("Wage" = reg_experc, "Wage" = reg_exper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-reg_wagepolcenter <- feols(wage ~ educ + exper_center + I(exper_center^2) + tenure, data = wage1, vcov = "hetero")
-reg_wagepol <- feols(wage ~ educ + exper + I(exper^2) + tenure, data = wage1, vcov = "hetero")
-
-modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+modelsummary(list("Wage" = reg_experc, "Wage" = reg_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
 
-wage2 <- wage2 %>%
-  mutate(pareduc = meduc + feduc)
+# Deviazione dalla media e polinomi ----
+# Con il polinomio, il coefficiente di exper_center rappresenta l'effetto marginale
+# quando exper è uguale alla media (invece che quando è uguale a zero).
+reg_wagepolcenter <- feols(wage ~ educ + exper_center + exper_center^2 + tenure, data = wage1, vcov = "hetero")
+reg_wagepol <- feols(wage ~ educ + exper + exper^2 + tenure, data = wage1, vcov = "hetero")
+modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 
 
-
-regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
-regeduc_intlog <- feols(log(wage) ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
-modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-
-wage2 <- wage2 %>%
-  mutate(
-    pareduc_center = pareduc - mean(pareduc, na.rm = TRUE),
-    educ_center = educ - mean(educ, na.rm = TRUE)
+# Statistiche descrittive di exper ----
+desc_exper <- wage1 %>%
+  summarise(
+    Media = mean(exper, na.rm = TRUE),
+    Q1 = quantile(exper, 0.25, na.rm = TRUE),
+    Mediana = median(exper, na.rm = TRUE),
+    Q3 = quantile(exper, 0.75, na.rm = TRUE)
   )
 
-
-regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
-regeduc_int_mean <- feols(wage ~ educ_center * pareduc_center + exper + tenure, data = wage2, vcov = "hetero")
-modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-
-reg_wage_educexper <- feols(wage ~ educ * exper, data = wage1, vcov = "hetero")
-
-#Risultati
-modelsummary(list("Wage" = reg_wage_educexper), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-summary(wage1$exper)
-
-
-wage1 <- wage1 %>%
-  mutate(
-    educ_center= educ - mean(educ, na.rm = TRUE),
-    exper_center = exper - mean(exper, na.rm = TRUE)
-  )
-
-
-reg_wage_educexper_center <- feols(wage ~ educ_center * exper_center, data = wage1, vcov = "hetero")
-#Risultati
-modelsummary(list("Wage" = reg_wage_educexper_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-##Primo modello regressione di wage su educ, female e la loro interazione
-reg_wage_educfe <- feols(wage ~ educ * female, data = wage1, vcov = "hetero")
-reg_wage_educfe_center <- feols(wage ~ educ_center * female, data = wage1, vcov = "hetero")
-
-#Risultati
-modelsummary(list("Wage" = reg_wage_educfe, "Wage" = reg_wage_educfe_center), output = "kableExtra", gof_omit = "AIC|BIC|RMSE|R2 Adj.")
-
-
-
+tt(desc_exper, digits = 3)

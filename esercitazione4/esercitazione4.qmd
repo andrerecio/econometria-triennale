@@ -66,10 +66,11 @@ library(wooldridge)
 ## Introduzione
 
 
-Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). il polinomio quadratico è spesso utilizzaro in applicazioni economiche per catturare effetti marginali crescenti e decrescenti.
+Siamo interessati agli effetti degli anni di esperienza sul salario orario ($wage$). Il polinomio quadratico è spesso utilizzato in applicazioni economiche per catturare effetti marginali crescenti e decrescenti.
 
 
 
+In questo caso $\beta_1$ è positivo e $\beta_2$ negativo.
 
 ```{r}
 reg_wage_exper <- feols(wage ~ exper + exper^2, data = wage1, vcov = "hetero")
@@ -87,11 +88,9 @@ lm(wage ~ exper + I(exper^2), data = wage1)
 
 Se scrivessimo `lm(wage ~ exper + exper^2, ...)` la regressione girerebbe senza errori, ma stimerebbe **silenziosamente solo** $wage$ su $exper$ (senza il termine quadratico)!
 
-`fixest` (la libreria che usiamo con `feols()`) è un'eccezione: riconosce automaticamente `^` come elevamento a potenza, quindi `exper^2` è **equivalente** a `I(exper^2)`. Probabilmente vedrete entrambe le forme nel codice di esercitazioni e libri — sono la stessa cosa quando si usa `feols()`.
+`fixest` (la libreria che usiamo con `feols()`) è un'eccezione: riconosce automaticamente `^` come elevamento a potenza, quindi `exper^2` è **equivalente** a `I(exper^2)`.
 :::
 
-
-In questo caso $\beta_1$ è positivo e $\beta_2$ negativo.
 
 ```{r}
 # 1. Previsione dei valori stimati
@@ -129,8 +128,7 @@ modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), gof_omit =
 Non possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. 
 
 
-
-Possiamo interpetare i coefficienti derivando la seguente **formula:**
+Possiamo interpretare i coefficienti derivando la seguente **formula:**
 
 Abbiamo che:
 
@@ -166,7 +164,7 @@ Nel nostro esempio:
 
 
 
-La formula approssima questo calcolo.
+La formula approssima questo calcolo che si ottiene sostituendo i valori.
 
 $$
 \Delta \hat{Y} = (\hat{\beta_0} + \hat{\beta_1} \cdot 2 + \hat{\beta_2} \cdot 2^{2}) - (\hat{\beta_0} + \hat{\beta_1} \cdot 1 + \hat{\beta_2} \cdot 1^{2})
@@ -180,10 +178,24 @@ Considerando da 10 a 11 anni di esperienza:
 - *11 anni*: $3.725 + 3.278 - 0.006 (121)$
  $\Delta \hat{Y} = 6.277 - 6.105 = 0.172$ dollari
 
+In modo identico possiamo interpretare i coefficienti della seconda colonna a parità di $educ$ e $tenure$.
+
+::: {.callout-caution}
+## La formula è un'approssimazione
+
+La formula $\Delta\hat{y}/\Delta x \approx \hat{\beta}_1 + 2\hat{\beta}_2 x$ è la **derivata** della funzione stimata valutata in $x$: misura la variazione di $\hat{y}$ per una variazione *infinitesima* di $x$.
+
+
+
+Approssimazione e calcolo esatto **(visto sopra)** differiscono di $\hat{\beta}_2$, che qui è piccolo ($-0.006$): infatti l'approssimazione dà $0.286$ contro $0.28$ esatto (per $1 \to 2$) e $0.178$ contro $0.172$ esatto (per $10 \to 11$).
+
+In pratica preferiamo l'approssimazione perché fornisce un **riassunto immediato** dell'effetto di $x$ su $y$: basta sostituire un valore di interesse (la media, la mediana, i quartili) per leggere l'effetto marginale in quel punto.
+:::
+
 
 
 ::: {.callout-note}
-## Trovare il picco della parabola
+## Trovare il picco
 
 Quando $\hat{\beta_1} > 0$ e $\hat{\beta_2} < 0$, la curva stimata è una **parabola con la concavità verso il basso**: prima cresce, raggiunge un massimo, poi decresce. Lo si vede chiaramente nel grafico precedente (punto verde).
 
@@ -213,7 +225,7 @@ ggplot(deriv_df, aes(x = exper, y = d)) +
   geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +
   geom_vline(xintercept = xstar, color = "grey60", linewidth = 0.4, linetype = "dashed") +
   geom_line(color = "#ff7f0e", linewidth = 1.5) +
-  geom_point(aes(x = xstar, y = 0), color = "#2ca02c", size = 5) +
+  annotate("point", x = xstar, y = 0, color = "#2ca02c", size = 5) +
   labs(
     title = "Derivata prima: effetto marginale di un anno di esperienza",
     x = "Anni di esperienza",
@@ -234,71 +246,45 @@ $$
 x^{*} = -\frac{0.298}{2 \cdot (-0.006)} \approx 24.8 \text{ anni di esperienza}
 $$
 
-Oltre i ~25 anni di esperienza, un anno aggiuntivo è dunque **associato** a un *salario predetto in calo*. Statistiche descrittive di $exper$.
-
-```{r}
-#| code-fold: true
-#| code-summary: "Mostra codice"
-wage1 %>%
-  summarise(
-    Q1 = quantile(exper, 0.25),
-    Mediana = median(exper),
-    Media = round(mean(exper), 2),
-    Q3 = quantile(exper, 0.75)
-  ) %>%
-  tt()
-```
-
-**Mediana** e **media** sono entrambe *sotto* i ~25 anni del picco. Guardando i quartili, il **terzo quartile** (Q3) è il valore di esperienza che lascia sotto di sé il 75% delle osservazioni: solo un quarto del campione si colloca quindi nella parte *calante* della parabola, mentre la grande maggioranza degli individui si trova nella parte *crescente*.
 :::
 
 
 
 ## Log e polinomi:
 
-E se $wage$ fosse espresso in log?
+E se $wage$ fosse espresso in log? Consideriamo la seguente regressione:
 
 ```{r}
-reg_logwage_exper <- feols(log(wage) ~ exper + exper^2, data = wage1, vcov = "hetero")
+reg_logwage_exper <- feols(log(wage) ~ exper + exper^2 + educ + tenure, data = wage1, vcov = "hetero")
 modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
-**Secondo modello (log):** Consideriamo la variazione nel salario predetto nel caso si passi da 10 a 11 anni di esperienza.
+
+**Secondo modello:** Passare da zero a 1 anno di esperienza è associato ad un aumento del salario orario di circa il 3.3% (0.033 * 100)
 
 
-- *10 anni*: $1.295 + 0.046(10) - 0.001 (10)^{2}$ = 1.655
-- *11 anni* = $1.295 + 0.046(11) - 0.001 (11)^{2}$ = 1.68
-
-$\Delta \hat{Y} = 1.68 - 1.655 = 0.025$ cioè **2.5%**
-
-
-In alternativa, vale la stessa **formula della derivata** vista per il modello in livelli — cambia solo l'interpretazione del risultato, che ora va letto come variazione **relativa** (semielasticità):
-
-$$
-\frac{d \log \hat{y}}{d x} \approx \hat{\beta_1} + 2 \hat{\beta_2} x
-$$
-
-Per esempio, passando da uno a due anni di esperienza: $0.046 - 2 \cdot 0.001 \cdot 1 = 0.044$, cioè un salario predetto **maggiore di circa il 4.4%**.
-
-
-**Nota:** nel secondo modello, passare da zero a 1 anno di esperienza è associato ad un aumento del salario orario di circa il 4.6% (0.046 * 100)
+Passare da uno a due anni di esperienza: $0.033 - 2 \cdot 0.001 \cdot 1 = 0.031$, cioè un salario predetto **maggiore di circa il 3.1%**. Se invece passiamo da 10 a 11 anni di esperienza: $0.033 - 2 \cdot 0.001 \cdot 10 = 0.013$, cioè un aumento del salario predetto di circa l'1.3%.
 
 
 
 
 ## In deviazione dalla media
 
-Creiamo $expercenter = exper - media(exper)$
+Nella precedente regressione abbiamo visto che il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. In alcuni casi può essere utile considerare la deviazione dalla media. Creiamo una nuova variabile:
+
+$$
+exper\_center = exper - media(exper)
+$$
+
 
 ```{r}
-data("wage1", package = "wooldridge")
-
 wage1 <- wage1 %>%
   mutate(exper_center = exper - mean(exper, na.rm = TRUE))
 ```
 
 
-Regressione semplice senza polinomio:
+Intuizione dell'effetto della deviazione dalla media? Regressione semplice senza polinomio:
+
 ```{r}
 reg_experc <- feols(wage ~ exper_center, data = wage1, vcov = "hetero")
 
@@ -312,8 +298,14 @@ Cosa cambia?
 
 - Nel secondo modello l'intercetta rappresenta il salario predetto con zero anni di esperienza.
 
+Quindi esprimere $exper$ in deviazione dalla media ci permette di interpretare l'intercetta come il salario predetto per un individuo con esperienza media, invece che per un individuo senza esperienza. 
+
 
 ## Deviazione dalla media e polinomi
+
+
+Nel caso di regressioni con polinomi, esprimere $exper$ in deviazione dalla media ci permette di interpretare il coefficiente di $exper\_center$ come l'incremento del salario quando $exper$ è uguale alla media, invece che quando $exper$ è uguale a zero.
+
 
 ```{r}
 reg_wagepolcenter <- feols(wage ~ educ + exper_center + exper_center^2 + tenure, data = wage1, vcov = "hetero")
@@ -323,8 +315,31 @@ modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), gof_omit = 
 ```
 
 
-Ora il coefficiente di $expercenter$ rappresenta l'incremento del salario quando $exper$ è uguale alla media.
+Ora il coefficiente di $exper\_center$ rappresenta l'incremento del salario quando $exper$ è uguale alla media. I coefficienti delle altre variabili (**esclusa l'intercetta**) rimangono invariati.
 
 Nel secondo modello, il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. 
 
+Il coefficiente di $exper\_center$ uguale a 0.062 rappresenta l'incremento del salario quando $exper$ è uguale alla media, cioè quando $exper\_center$ è uguale a zero.
 
+Ricordate che:
+
+$$
+exper\_center = exper - media(exper)
+$$
+
+
+E le statistiche descrittive di $exper$:
+
+```{r}
+desc_exper <- wage1 %>%
+  summarise(
+    Media = mean(exper, na.rm = TRUE),
+    Q1 = quantile(exper, 0.25, na.rm = TRUE),
+    Mediana = median(exper, na.rm = TRUE),
+    Q3 = quantile(exper, 0.75, na.rm = TRUE)
+  )
+
+tt(desc_exper, digits = 3)
+```
+
+La media di $exper$ è il valore che sottraiamo per ottenere $exper\_center$: per costruzione, quest'ultima ha **media zero**.
