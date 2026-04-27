@@ -250,7 +250,7 @@ $$
 - $\beta_5$ mostra come l'effetto di un anno in più di istruzione cambia al crescere di $pareduc$
 
 
-### In deviazione dalla media
+## Deviazione dalla media
 
 Come nel caso dei polinomi anche qui può essere utile ricentrare le variabili (ci sono alcuni missing values):
 
@@ -290,11 +290,10 @@ Quindi nella seconda regressione ($pareduccenter$ e $educcenter$), il coefficien
 
 Ricordate $pareducenter = pareduc - media(pareduc)$
 
-L'interazione è statisticamente significativa al 5%?
 
 
 
-### Esempio Esercitazione 4
+### Esempio wage and educ
 
 Riprendiamo gli stessi passaggi dell'Esercizitazione 4 sull'interazione tra due variabili continue usando i dati in `wage1`.
 

@@ -1,380 +1,208 @@
 ---
-title: "Esercitazione N.7-8"
-author: "Econometria"
-format: 
+title: "Esercitazione N.7"
+subtitle: "Probit e Logit"
+author: ""
+date: today
+lang: it
+
+format:
   html:
+    # Layout
+    theme: flatly
     toc: true
+    toc-depth: 3
+    toc-title: "Contenuti"
+    toc-location: right       
+    number-sections: true
+    
+    # Codice
     code-fold: false
+    code-tools: true
+    code-copy: true
+    code-block-bg: true
+    code-block-border-left: false
+    highlight-style: github
+    
+    # Output
     embed-resources: true
+    
+    # Tipografia
+    fontsize: 1.1em
+    linestretch: 1.6
+
 execute:
   warning: false
   message: false
+  echo: true
+
+knitr:
+  opts_chunk:
+    comment: "#>"
+    fig.align: "center"
+    fig.width: 7
+    fig.height: 4.5
+
 ---
 
-
-# Regressione con variabili strumentali
-
-In questa Esercitazione vedremo le regressioni con variabili strumentali (IV) per risolvere il problema dell'endogeneità di una o più variabili esplanatorie.
-
-
-Tre importanti minacce alla validità interna sono:
-
-1. Distorsione da variabili omesse per una variabile correlata con $X$ ma inosservata (perciò non può essere inclusa nella regressione) e per cui vi sono variabili di controllo inadeguate;
-
-2. Distorsione da causalità simultanea ($X$ causa $Y$ , $Y$ causa $X$);
-
-3. Distorsione da errori nelle variabili ($X$ è misurata con errore)
-
-
-Tutti e tre i problemi comportano $𝐸(u_i | X_i) \neq 0$. La regressione con variabili strumentali può eliminare la distorsione quando $𝐸(u_i | X_i) \neq 0$ -usando una variabile strumentale (IV), $Z$.
-
-**Idea chiave:**
-
-Lo stimatore IV con un singolo regressore e un singolo strumento $Y_i = \beta_0 + \beta_1 X_i + u_i$
-
-- La regressione IV divide $X$ in due parti: una che potrebbe essere correlata con $u$, e una che non lo è.
-Isolando la parte che non è correlata con $u_i$, è possibile stimare $\beta_1$.
-
-- Per fare questo si utilizza una variabile strumentale, $Z_i$, che è correlata con $X_i$ ma non correlata con $u_i$
-
-
-Perché una variabile strumentale (uno “strumento”) $Z$ sia valida, deve soddisfare due condizioni:
-
-1. **Rilevanza:** $cor(Z_i, X_i) \neq 0$
-2. **Esogeneità:** $cor(Z_i, u_i) = 0$
-
-**Pacchetti necessari:**
+## Setup
 
 ```{r}
 #| message: false
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
 ```
 
 
-## Card (1995)
 
-Card (1995) ha utilizzato dati su salari e istruzione relativi ad un campione di uomini nel 1976 per stimare il rendimento dell’istruzione.
+## Modelli Probit e Logit
 
-Egli ha impiegato una variabile dummy che indica se un individuo è cresciuto vicino a un college quadriennale ($nearc4$) come strumento per l’istruzione.
+### Probit
 
-Card ha cercato di risolvere questo problema utilizzando la distanza di ciascuno studente dal college più vicino come variabile strumentale. L'ipotesi alla base di questo è che una minore distanza geografica dal college riduca il "costo" di frequentare l'università e quindi aumenti la probabilità di iscriversi. Allo stesso tempo, la distanza dal college non dovrebbe essere direttamente collegata alla variabile di interesse, ovvero "i salari futuri".
-
-
-
-Pertanto, se $nearc4$ è realmente incorrelato con i fattori non osservabili inclusi nel termine d’errore, può essere utilizzato come strumento per $educ$.
-
-
-```{r}
-data("card", package = "wooldridge")
-head(card)
-```
-
-
-- $wage$: sono le retribuzioni orarie **in centesimi** di dollari
-- $educ$: sono gli anni di istruzione
-- $exper$: anni di esperienza 
-- $smsa$: residenza in area metropolitana (dummy)
-- $black$: se la persona è nera (dummy)
-- $south$: se l'individuo risiede al sud
-- $nearc4$: dummy uguale ad 1 se l'individuo vive vicino a un college di 4 anni
-- $nearc2$: dummy uguale ad 1 se l'individuo vive vicino a un college di 2 anni
-  
-
-**Esercizio:**
-
-```{r}
-wage_educ <- feols(wage ~ educ + exper, data = card, vcov = "hetero")
-logwage_educ <- feols(log(wage) ~ educ + exper, data = card, vcov = "hetero")
-
-
-modelsummary(
-  list("Wage" = wage_educ, "Log Wage" = logwage_educ),
-  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj."
-)
-```
-
-::: {.callout-note title="Domande"}
-1. Come si interpretano i coefficienti di $educ$ nelle due regressioni?
-2. Se $wage$ fosse espresso in dollari (e non centinaia di dollari) cosa cambierebbe nelle due regressioni? 
-:::
-
-
-
-### Minimi quadrati in due stadi (TSLS)
-
-```{r}
-iv_card <- feols(log(wage) ~ 1 | educ ~ nearc4, data = card, vcov = "hetero")
-iv_card
-```
-
-
-La regressione IV usando `feols` si stima `log(wage) ~ 1 | educ ~ nearc4`
-
-
-
-Il metodo del two stage least squares (TSLS), è equivalente ad usare i valori predetti del primo stadio nel secondo stadio (gli errori standard sono sbagliati perché non tengono conto della stima nel primo stadio). Come sempre usiamo errori standard robusti all'eteroschedasticità.
-
-
-```{r}
-fs_card <- feols(educ ~ nearc4, data = card, vcov = "hetero")
-fs_card
-
-card$educ_hat <- predict(fs_card)
-```
-
-
-Regressione "manuale" dei valori predetti di $educ$:
-
-```{r}
-sstage_card <- feols(log(wage) ~ educ_hat, data = card, vcov = "hetero")
-sstage_card
-```
-
-
-### Derivazione algebrica diretta
-
-In questo caso il coefficiente $\beta_1$ è equivalente al rapporto tra la covarianza campionaria di $Z$ e $Y$ e la covarianza campionaria di $Z$ e $X$.
-
-
-```{r}
-cov(card$nearc4, card$lwage)/cov(card$nearc4, card$educ)
-```
-
-
-### Derivazione dalla "Forma Ridotta"
-
+**Modello Logit**: Utilizza la funzione logistica per modellare la probabilità:
 $$
-Y_i = \beta_0 + \beta_1 X_i + u_i
+   \Pr(Y=1|X_1,\dots, X_k) = \frac{e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}} = \Lambda(X\beta)
+$$
+   
+dove $\Lambda(z) = \frac{e^z}{1 + e^z}$ è la funzione logistica.
+
+**Modello Probit**: Utilizza la funzione di distribuzione cumulativa normale:
+$$
+   \Pr(Y=1|X_1,\dots, X_k) = \Phi(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k) = \Phi(X\beta)
 $$
 
+dove $\Phi(z)$ è la funzione di distribuzione cumulativa della normale standard.
+
+
+I modelli Logit e Probit vengono stimati con il metodo della massima verosimiglianza (MLE).
+
+
+Sia per Logit che per Probit, i coefficienti stimati **non rappresentano** direttamente gli effetti marginali, che invece variano a seconda dei valori delle variabili esplicative. L’effetto marginale dipende dai valori di tutte le variabili esplicative, a differenza del linear probability model (LPM) dove è costante.
+
+
+```{r}
+reg_lpm_alcohol <- feols(employ ~ abuse + educ + age + married, data = alcohol, vcov = "hetero")
+
+probit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'probit')
+
+logit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'logit')
+
+modelsummary(list("Employ (LPM)" = reg_lpm_alcohol, "Employ (Probit)" = probit_alcohol, "Employ (Logit)"=logit_alcohol), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+
+```
+
+## Modello Logit
+
+
+
+
+## Interpretazione: Effetti Marginali Medi (AME) e al punto medio (MEM)
+
+
+
+Il calcolo degli effetti marginali è fondamentale per interpretare correttamente i modelli Logit e Probit.
+
+Si calcolano gli effetti marginali per ogni osservazione nel dataset e poi si fa la media.
+
+Matematicamente, l'effetto marginale medio (AME) è calcolato come:
 $$
-X_i = \pi_0 + \pi_1 Z_i + v_i
+  \overline{\text{ME}} = \frac{1}{n} \sum_{i=1}^{n} \text{ME}_i
 $$
+dove $\text{ME}_i$ è l'effetto marginale calcolato per l'osservazione $i$ e $n$ è il numero totale di osservazioni nel dataset.
 
-Sostituendo $X_i$ in $Y_i$ otteniamo:
 
+
+**Per il modello LPM**: L'effetto marginale è semplicemente il coefficiente $\beta_j$:
 $$
-Y_i = \gamma_0 + \gamma_1 Z_i + \omega_i
-$$
+\frac{\partial \Pr(Y=1|X_1,\dots, X_k)}{\partial X_j} = \beta_j
+$$  
 
-La regressione dell'endogena sullo strumento l'abbiamo stimata in precedenza `fs_card`. Ora stimiamo la regressione della variabile dipendente sullo strumento. 
 
-```{r}
-rf_card <- feols(log(wage) ~ nearc4, data = card, vcov = "hetero")
-rf_card
-```
+### Calcolo manuale
 
-E dividiamo i coefficienti:
-$$
-\hat{\beta}^{TSLS} = \frac{\hat{\gamma_1}}{\hat{\pi_1}}
-$$
+Effetto Marginale abuso alcol, modello probit:
 
 ```{r}
-# Estrai i coefficienti
-beta_fs_1 <- coef(fs_card)["nearc4"]  # coefficiente del primo stadio
-beta_rf_1 <- coef(rf_card)["nearc4"]  # coefficiente della forma ridotta
+# Creazione di due dataset: uno con abuse=1 per tutti e uno con abuse=0 per tutti
+alcohol_tmp1 <- alcohol
+alcohol_tmp0 <- alcohol
 
-beta_rf_1 / beta_fs_1  
+# Impostiamo abuse=1 per tutti nel primo dataset
+alcohol_tmp1$abuse <- 1
+# Impostiamo abuse=0 per tutti nel secondo dataset
+alcohol_tmp0$abuse <- 0
 
-```
+# Calcolo delle probabilità predette per il modello logit
+proba_employ_probit <- predict(probit_alcohol, newdata = alcohol_tmp1)
+proba_nonemploy_probit <- predict(probit_alcohol, newdata = alcohol_tmp0)
 
-
-### Modello generale
-
-```{r}
-iv_card_controlli <- feols(log(wage) ~ exper + black + smsa + south + married | educ ~ nearc4, data = card, vcov = "hetero")
-
-summary(iv_card_controlli)
-
+# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
+ame_manual_probit <- mean(proba_employ_probit - proba_nonemploy_probit)
+print(paste("Effetto marginale medio manuale (Probit):", round(ame_manual_probit, 4)))
 ```
 
 
-**Confronto OLS:**
+Per il modello logit:
 
 ```{r}
-ols_card_controlli <- feols(log(wage) ~ exper + black +smsa + south + educ + married, data = card, vcov = "hetero")
+# Calcolo delle probabilità predette per il modello logit
+proba_employ_logit <- predict(logit_alcohol, newdata = alcohol_tmp1)
+proba_nonemploy_logit <- predict(logit_alcohol, newdata = alcohol_tmp0)
 
-modelsummary(
-  list("Log Wage (OLS)" = ols_card_controlli, "Log Wage (IV)" = iv_card_controlli),
-  output = "markdown", gof_omit = "AIC|BIC|RMSE|R2 Adj."
-)
-
+# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
+ame_manual_logit <- mean(proba_employ_logit - proba_nonemploy_logit)
+print(paste("Effetto marginale medio manuale (Logit):", round(ame_manual_logit, 4)))
 ```
 
 
-Nella regressione OLS, un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 7,1%, a parità delle altre variabili.
+- Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.
+- Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.
 
-La regressione TSLS riporta un valore più alto: un anno un anno aggiuntivo di istruzione è associato a un incremento, in media, di $wage$ di circa il 12.4%.
-
-
-### Sovraidentificazione e strumenti deboli
-
-```{r}
-iv_card_overid <- feols(log(wage) ~ exper + black +smsa + south + married | educ ~ nearc4 + nearc2, data = card, vcov = "hetero")
-iv_card_overid
-```
+L’approccio dell’effetto marginale medio è generalmente considerato più robusto, perché tiene conto di come l’effetto di $abuse$ può variare a seconda delle altre caratteristiche dei richiedenti.
 
 
+### Con `marginaleffects`
 
-**Test restrizioni di sovraidentificazione:** Se gli strumenti sono correlati con il termine d’errore, il primo stadio del TSLS non può isolare una componente di $X$ incorrelata con il termine d’errore, perciò ̂$X$ è correlata con $u$ e il TSLS è inconsistente.
+Gli effetti marginali medi calcolati con `marginaleffects` sono identici a quelli calcolati manualmente in precedenza. Il vantaggio di utilizzare `marginaleffects` in questo caso è che otteniamo automaticamente anche gli errori standard permettendo una valutazione della significatività statistica dell'effetto.
 
-
-Se ci sono più strumenti che regressori endogeni, è possibile verificare -**parzialmente** - l’esogeneità dello strumento.
-
-Possiamo eseguire una verifica parziale di esogeneità: se $m > 1$, possiamo verificare l’ipotesi nulla che tutti gli strumenti siano esogeni contro l’alternativa che al massimo $m-1$ siano endogeni (correlati con $u$)
-
-- Si usa il test $J$, realizzato usando i residui TSLS.
-
-- Se il $J$ respinge l’ipotesi, allora almeno alcuni degli strumenti sono endogeni, perciò occorre prendere una decisione difficile e scartare alcuni (o tutti) gli strumenti
-
-
-- $H_0$ :strumenti esogeni, cioè non correlati con il termine d’errore.
-- $H_1$: almeno uno degli strumenti è endogeno.
-
-Se p-value > 0.05 allora **non** rigettiamo $H_0$
-
-Il libro (Stock e Watson pp. 344-345 o pp. 448-449 in inglese) deriva una versione valida sotto omoschedasticità:
-
-1. Stimiano la regressione TSLS
-2. Si ottengono i residui della regressione TSLS:  
-   $\hat{u}_i = Y_i - \hat{Y}_i$
-3. Si esegue una regressione dei residui $\hat{u}_i$ sugli strumenti $Z_1, \dots, Z_m$ e le variabili esogene $W_1, \dots, W_r$
-4. Se gli strumenti fossero esogeni i coefficienti degli strumenti nella regressione di $\hat{u}_i$ dovrebbero essere uguali a zero (statisticamente non significativi)
-5. Si calcola come $J = mF$. Quindi $J = Wald$
-6. In grandi campioni si distribuisce come una chi-quadrato con $m-k$ gradi di libertà ($\chi_{m-k}$)
-
-$m-k$ è il grado di sovraidentificazione ($k$ sono i regressori endogeni)
+La funzione `avg_slopes` senza l’opzione `newdata` calcola gli effetti marginali medi, ovvero calcola l’effetto marginale per ogni osservazione nel dataset e poi ne fa la media. Questo approccio tiene conto della distribuzione reale delle variabili nel campione.
 
 
 ```{r}
-library(car)
-card <- card |> mutate(uhat = log(wage) - iv_card_overid$fitted.values)
-Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "iid")
-J <- linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
-J
+library(marginaleffects)
+all_effects_logit <- avg_slopes(logit_alcohol)
+all_effects_probit <- avg_slopes(probit_alcohol)
+all_effects_probit
 ```
-
-Qui rifiuto l'ipotesi nulla, almeo uno dei due strumenti è endogeno
-
-
-**Weak instrument:** Se la statistica Wald del primo stadio è minore di $m \times 10$, allora l’insieme degli strumenti è debole.
-
-```{r}
-linearHypothesis(fs_card , "nearc4=0")
-```
-
-```{r}
-linearHypothesis(fs_card , "nearc4=0", test="F")
-```
-
-**2 strumenti**:
-
-```{r}
-fs_card_overid <- feols(educ ~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "hetero")
-
-linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
-```
-
-
-## Angrist and Evans (1998)
-
-In *Children and Their Parents' Labor Supply: Evidence from Exogenous Variation in Family Size*, pubblicato su *American Economic Review*, Angrist e Evans analizzano l’effetto della presenza di figli sull’offerta di lavoro della madre (misurata in termini di ore lavorate settimanali).
-
-Per superare il problema di endogeneità nella decisione di avere figli — dovuto alla possibile correlazione con altri determinanti dell’offerta di lavoro — Angrist ed Evans si concentrano su madri con almeno due figli e utilizzano come variabile strumentale se i primi due figli sono dello stesso sesso ($samesex$) o se il secondo parto è gemellare ($multi2nd$).
-
-Rilevanza? Le famiglie i cui primi due figli sono entrambi maschi (o entrambe femmine) hanno (avevano) più probabilità di avere un terzo figlio.
-
-Esogeneità? La composizione di genere dei figli NON dovrebbe influenzare direttamente l’offerta di lavoro della madre.
-
-Nel dataset `labsup` è contenuta una parte dei dati utilizzati da Angrist ed Evans (1998).
 
 
 ```{r}
-data("labsup", package = "wooldridge")
-head(labsup)
-```
-
-```{r}
-# Modello IV (samesex come strumento per kids)
-iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ samesex, data = labsup, vcov = "hetero")
+# Tabella elegante con modelsummary
+modelsummary(list("Logit (AME)" = all_effects_logit, "Probit (AME)" = all_effects_probit), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj")             
 ```
 
 
-Primo stadio:
-```{r}
-summary(iv_labsup, stage =1)
-```
-
-Secondo stadio:
-```{r}
-summary(iv_labsup, stage =2)
-```
-
-Confronto con stima OLS.
-
-```{r}
-#OLS ore e numero figli
-ols_labsup <- feols(hours ~ kids + educ + age + black + hispan, data = labsup, vcov = "hetero")
-
-modelsummary(
-  list("OLS" = ols_labsup,
-       "IV" = iv_labsup),
-  stars = TRUE,
-  gof_omit = "IC|Adj|RMSE"
-)
-```
+Gli effetti sono vicini a quelli stimati con il modello LPM.
 
 
-::: {.callout-note title="Domanda"}
-1. Come si interpretano i coefficienti di $educ$ e $kids$ nella regressione OLS? 
-:::
+**Interpretazione** degli effetti marginali medi (AME) del modello Probit:
 
 
-Un altro possibile strumento è $multi2nd$ che assume valore 1 se il secondo parto è gemellare:
+- Aver abusato di alcol riduce la probabilità di essere occupati di 1.9 punti percentuali
 
-- Avere un parto gemellare aumenta la dimensione familiare (Rilevanza)
+- Un anno in più di istruzione aumenta la probabilità di essere occupati 1.5 punti percenutali
 
-- Esogeneità? Avere gemelli al secondo parto non dovrebbe influenzare direttamente l’offerta di lavoro della madre
-
-```{r}
-iv_labsup_twins <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd, data = labsup, vcov = "hetero")
-```
-
-Primo stadio:
-```{r}
-summary(iv_labsup_twins, stage =1)
-```
-
-Secondo stadio:
-```{r}
-summary(iv_labsup_twins, stage =2)
-```
+- Essere sposato aumenta la probabilità di essere occupato di 8.9 punti percentuali
 
 
-**Confronto:**
 
-```{r}
-modelsummary(
-  list("Hours (IV samesex)" = iv_labsup ,
-       "Hours (IV multi2nd)" = iv_labsup_twins),
-  stars = TRUE,
-  gof_omit = "IC|Adj|RMSE"
-)
-```
 
-### Sovraidentificazione
 
-```{r}
-iv_labsup_twins_over <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd + samesex, data = labsup, vcov = "hetero")
-iv_labsup_twins_over
-```
+## Confronto LPM, Probit e Logit
 
-::: {.callout-note title="Domande"}
-1. Provate a calcolare Wald del primo stadio sugli strumenti e fate il test delle restrizioni da sovraidentificazione
-:::
+
+
+
