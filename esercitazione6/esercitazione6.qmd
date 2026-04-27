@@ -1,6 +1,6 @@
 ---
 title: "Esercitazione N.6"
-subtitle: "Linear Probability Model"
+subtitle: "Linear Probability Model (LPM)"
 author: ""
 date: today
 lang: it
@@ -44,22 +44,54 @@ knitr:
 
 ---
 
-
-# Regressione con variabile dipendente binaria
-
-
-**Pacchetti necessari:**
+## Setup
 
 ```{r}
 #| message: false
 #| warning: false
 library(tidyverse)
 library(knitr)
-library(kableExtra)
 library(modelsummary)
 library(fixest)
 library(wooldridge)
 ```
+
+
+## Linear Probability Model (LPM)
+
+
+Stimiamo il seguente modello di probabilità lineare (LPM) che asssume una relazione lineare tra le variabili esplicative e la probabilità dell'evento:
+$$
+\Pr(Y=1|X_1,\dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k
+$$  
+
+Implicazione, sotto assunzione $E(u_i | X_i) = 0$:
+$$
+\mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)
+$$
+
+cioè il valore atteso condizionato coincide con la probabilità che $Y = 1$ dato $X = x$.
+
+$\beta_1$ rappresenta la variazione della probabilità che $Y = 1$ per una variazione unitaria in $X$, o più generalmente:
+
+$$
+\beta_1 = \frac{\Pr(Y = 1 \mid X = x + \Delta x) - \Pr(Y = 1 \mid X = x)}{\Delta x}
+$$
+
+La procedura di stima tramite OLS resta invariata.
+
+Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.
+
+Per i modelli LPM vengono riportati errori standard robusti `vcoc= hetero`.
+
+::: {.callout-important title="Attenzione"}
+
+**L'eteroschedasticità** è intrinseca nel LPM.
+
+:::
+
+
+## Dataset `alcohol`
 
 
 Carichiamo i dati `alcohol` che contengono 9822 osservazioni e 33 variabili.
@@ -88,37 +120,7 @@ datasummary_skim(alcohol)
 ```
 
 
-## Linear Probability Model (LPM)
 
-Stimiamo il seguente modello di probabilità lineare (LPM) che asssume una relazione lineare tra le variabili esplicative e la probabilità dell'evento:
-$$
-\Pr(Y=1|X_1,\dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k
-$$  
-
-Implicazione, sotto assunzione $E(u_i | X_i) = 0$:
-$$
-\mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)
-$$
-
-cioè il valore atteso condizionato coincide con la probabilità che $Y = 1$ dato $X = x$.
-
-$\beta_1$ rappresenta la variazione della probabilità che $Y = 1$ per una variazione unitaria in $X$, o più generalmente:
-
-$$
-\beta_1 = \frac{\Pr(Y = 1 \mid X = x + \Delta x) - \Pr(Y = 1 \mid X = x)}{\Delta x}
-$$
-
-La procedura di stima tramite OLS resta invariata.
-
-Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.
-
-Per i modelli LPM vengono riportati errori standard robusti `vcoc= hetero`.
-
-::: {.callout-important title="Attenzione"}
-
-**Importante:** **L'eteroschedasticità** è intrinseca nel LPM.
-
-:::
 
 ```{r}
 reg_lpm_alcohol <- feols(employ ~ abuse + educ + age + married, data = alcohol, vcov = "hetero")
