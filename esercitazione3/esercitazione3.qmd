@@ -1,7 +1,7 @@
 ---
 title: "Esercitazione N.3"
 subtitle: "Nonlinearità: logaritmi"
-author: ""
+author: "Andrea Recine"
 date: today
 lang: it
 

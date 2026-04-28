@@ -1,7 +1,7 @@
 ---
 title: "Homework N.1"
 subtitle: "College GPA"
-author: ""
+author: "Andrea Recine"
 date: today
 lang: it
 

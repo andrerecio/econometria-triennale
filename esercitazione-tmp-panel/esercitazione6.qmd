@@ -1,6 +1,6 @@
 ---
 title: "Esercitazione N.6"
-author: "Econometria"
+author: "Andrea Recine"
 format: 
   html:
     toc: true

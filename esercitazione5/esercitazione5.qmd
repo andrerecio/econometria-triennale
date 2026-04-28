@@ -1,7 +1,7 @@
 ---
 title: "Esercitazione N.5"
 subtitle: "Nonlinearità: interazioni"
-author: ""
+author: "Andrea Recine"
 date: today
 lang: it
 

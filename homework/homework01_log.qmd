@@ -1,6 +1,6 @@
 ---
 title: "Ripasso modelli log"
-author: "Econometria"
+author: "Andrea Recine"
 format: 
   html:
     toc: true

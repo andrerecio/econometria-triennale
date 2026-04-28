@@ -1,6 +1,6 @@
 ---
 title: "Esercitazione N.7-8"
-author: "Econometria"
+author: "Andrea Recine"
 format: 
   html:
     toc: true
