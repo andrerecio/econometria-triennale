@@ -125,10 +125,10 @@ modelsummary(list("Wage" = reg_wage_exper, "Wage" = reg_wage_exper2), gof_omit =
 
 ### Interpretazione dei coefficienti:
 
-Non possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. 
+**Consideriamo la prima regressione (prima colonna):** non possiamo interpretare il coefficiente associato a $\beta_1$ tenendo costante quello associato a $\beta_2$. 
 
 
-Possiamo interpretare i coefficienti derivando la seguente **formula:**
+Per piccole variazioni di $x$, l’effetto _ceteris paribus_ è descritto dall’effetto marginale, quindi:
 
 Abbiamo che:
 
@@ -150,7 +150,7 @@ $$
 \Delta \hat{y} \approx  (\hat{\beta_1} + 2  \hat{\beta_2} x) \Delta x
 $$
 
-e quindi:
+e quindi l'effetto marginale è:
 
 $$
 \Delta \hat{y}/ \Delta x \approx  \hat{\beta_1} + 2  \hat{\beta_2} x
@@ -158,13 +158,13 @@ $$
 
 Nel nostro esempio:
 
-- Passare da un anno a due anni di esperienza: $0.298 - (2* 0.006) * 1 = 0.286$
+- L'effetto marginale per un lavoratore con un anno di esperienza è: $0.298 - (2* 0.006) * 1 = 0.286$
 
-- Da 10 a 11 anni: $0.298 - 2(0.006) *10 = 0.178$
+- L'effetto marginale a 10 anni di esperienza: $0.298 - 2(0.006) *10 = 0.178$
 
 
 
-La formula approssima questo calcolo che si ottiene sostituendo i valori.
+Una variazione discreta di $\Delta x$ (da 1 a 2 anni di esperienza):
 
 $$
 \Delta \hat{Y} = (\hat{\beta_0} + \hat{\beta_1} \cdot 2 + \hat{\beta_2} \cdot 2^{2}) - (\hat{\beta_0} + \hat{\beta_1} \cdot 1 + \hat{\beta_2} \cdot 1^{2})
@@ -172,24 +172,27 @@ $$
 
 Uguale a $4.297 - 4.017 = 0.28$ dollari
 
-Considerando da 10 a 11 anni di esperienza:
+Considerando da una variazione discreta da 10 a 11 anni di esperienza:
 
 - *10 anni*: $3.725 + 2.98 - 0.006 (100)$
 - *11 anni*: $3.725 + 3.278 - 0.006 (121)$
  $\Delta \hat{Y} = 6.277 - 6.105 = 0.172$ dollari
 
-In modo identico possiamo interpretare i coefficienti della seconda colonna a parità di $educ$ e $tenure$.
+
 
 ::: {.callout-caution}
-## La formula è un'approssimazione
+## Effetto marginale e variazione discreta
 
 La formula $\Delta\hat{y}/\Delta x \approx \hat{\beta}_1 + 2\hat{\beta}_2 x$ è la **derivata** della funzione stimata valutata in $x$: misura la variazione di $\hat{y}$ per una variazione *infinitesima* di $x$.
 
 
+Nel nostro esempio l'effetto marginale e la variazione discreta pari a $\Delta x = 1$ differiscono di $\hat{\beta}_2$, che in questo caso è piccolo ($-0.006$): infatti l'effetto marginale per un lavoratore con un anno di esperienza è $0.286$. La variazione discreta su $wage$ di passare da 1 a 2 anni è pari a $0.28$.
 
-Approssimazione e calcolo esatto **(visto sopra)** differiscono di $\hat{\beta}_2$, che qui è piccolo ($-0.006$): infatti l'approssimazione dà $0.286$ contro $0.28$ esatto (per $1 \to 2$) e $0.178$ contro $0.172$ esatto (per $10 \to 11$).
 
-In pratica preferiamo l'approssimazione perché fornisce un **riassunto immediato** dell'effetto di $x$ su $y$: basta sostituire un valore di interesse (la media, la mediana, i quartili) per leggere l'effetto marginale in quel punto.
+Quando la variazione di $x$ non è infinitesima, l’effetto dipende non solo dal punto di partenza $x$, ma anche dall’ampiezza della variazione stessa. La differenza è pari a $\hat{\beta}_2 \cdot (\Delta x)^2$ e diventa più grande al crescere di $\Delta x$. Nel nostro caso abbiamo considerato variazioni discrete di un anno, quindi $\Delta x = 1$ e la differenza è pari a $-0.006$, esattamente il coefficiente di $exper^2$.
+
+
+In alcuni casi preferiamo l'approssimazione perché fornisce un **riassunto immediato** dell'effetto di $x$ su $y$: basta sostituire un valore di interesse per leggere l'effetto marginale in quel punto. Ma quando la variazione di $x$ discreta è molto ampia, è più corretto calcolare la variazione esatta, perché l'approssimazione potrebbe essere fuorviante.
 :::
 
 
@@ -260,17 +263,19 @@ modelsummary(list("Wage" = reg_wage_exper, "Log Wage" = reg_logwage_exper), gof_
 ```
 
 
-**Secondo modello:** Passare da zero a 1 anno di esperienza è associato ad un aumento del salario orario di circa il 3.3% (0.033 * 100)
+**Secondo modello:** L'effetto marginale quando $exper = 0$ è pari a $0.033$, cioè un aumento del salario predetto di circa il 3.3%. Quindi il rendimento stimato di un anno aggiuntivo di esperienza su $wage$ per una persona con nessuna esperienza è di circa il 3.3%.
 
 
-Passare da uno a due anni di esperienza: $0.033 - 2 \cdot 0.001 \cdot 1 = 0.031$, cioè un salario predetto **maggiore di circa il 3.1%**. Se invece passiamo da 10 a 11 anni di esperienza: $0.033 - 2 \cdot 0.001 \cdot 10 = 0.013$, cioè un aumento del salario predetto di circa l'1.3%.
+L'effetto marginale a 1 anno di esperienza (per un lavoratore con 1 anno di esperienza) è $0.033 - 2 \cdot 0.001 \cdot 1 = 0.031$, cioè un salario predetto **maggiore di circa il 3.1%**. 
+
+L'effetto marginale a 10 anni di esperienza è: $0.033 - 2 \cdot 0.001 \cdot 10 = 0.013$, cioè un aumento del salario predetto di circa l'1.3%.
 
 
 
 
 ## In deviazione dalla media
 
-Nella precedente regressione abbiamo visto che il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. In alcuni casi può essere utile considerare la deviazione dalla media. Creiamo una nuova variabile:
+Nella precedente regressione abbiamo visto che il coefficiente di $exper$ rappresenta l'effetto marginale per un lavoratore con zero anni di esperienza. In alcuni casi può essere utile considerare la deviazione dalla media. Creiamo una nuova variabile:
 
 $$
 exper\_center = exper - media(exper)
@@ -304,7 +309,7 @@ Quindi esprimere $exper$ in deviazione dalla media ci permette di interpretare l
 ## Deviazione dalla media e polinomi
 
 
-Nel caso di regressioni con polinomi, esprimere $exper$ in deviazione dalla media ci permette di interpretare il coefficiente di $exper\_center$ come l'incremento del salario quando $exper$ è uguale alla media, invece che quando $exper$ è uguale a zero.
+Nel caso di regressioni con polinomi, esprimere $exper$ in deviazione dalla media ci permette di interpretare il coefficiente di $exper\_center$ come l'incremento marginale del salario quando $exper$ è uguale alla media, invece che quando $exper$ è uguale a zero.
 
 
 ```{r}
@@ -315,11 +320,14 @@ modelsummary(list("Wage" = reg_wagepolcenter, "Wage" = reg_wagepol), gof_omit = 
 ```
 
 
-Ora il coefficiente di $exper\_center$ rappresenta l'incremento del salario quando $exper$ è uguale alla media. I coefficienti delle altre variabili (**esclusa l'intercetta**) rimangono invariati.
+Ora il coefficiente di $exper\_center$ rappresenta l'incremento marginale del salario quando $exper$ è uguale alla media. I coefficienti delle altre variabili (**esclusa l'intercetta**) rimangono invariati.
 
-Nel secondo modello, il coefficiente di $exper$ rappresenta l'incremento del salario quando si passa da 0 a 1 anno di esperienza. 
 
 Il coefficiente di $exper\_center$ uguale a 0.062 rappresenta l'incremento del salario quando $exper$ è uguale alla media, cioè quando $exper\_center$ è uguale a zero.
+
+Invece, nel secondo modello (senza $exper\_center$), il coefficiente di $exper$ rappresenta l'incremento marginale del salario per un lavoratore con zero anni di esperienza.
+
+
 
 Ricordate che:
 
