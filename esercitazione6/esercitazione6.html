@@ -2351,14 +2351,9 @@ window.Quarto = {
   <li><a href="#linear-probability-model-lpm" id="toc-linear-probability-model-lpm" class="nav-link" data-scroll-target="#linear-probability-model-lpm"><span class="header-section-number">2</span> Linear Probability Model (LPM)</a></li>
   <li><a href="#dataset-alcohol" id="toc-dataset-alcohol" class="nav-link" data-scroll-target="#dataset-alcohol"><span class="header-section-number">3</span> Dataset <code>alcohol</code></a>
   <ul class="collapse">
-  <li><a href="#descrizione-della-variabili" id="toc-descrizione-della-variabili" class="nav-link" data-scroll-target="#descrizione-della-variabili"><span class="header-section-number">3.1</span> Descrizione della variabili</a></li>
+  <li><a href="#descrizione-delle-variabili" id="toc-descrizione-delle-variabili" class="nav-link" data-scroll-target="#descrizione-delle-variabili"><span class="header-section-number">3.1</span> Descrizione delle variabili</a></li>
   </ul></li>
-  <li><a href="#probit-e-logit" id="toc-probit-e-logit" class="nav-link" data-scroll-target="#probit-e-logit"><span class="header-section-number">4</span> Probit e Logit</a></li>
-  <li><a href="#effetti-marginali-medi-ame" id="toc-effetti-marginali-medi-ame" class="nav-link" data-scroll-target="#effetti-marginali-medi-ame"><span class="header-section-number">5</span> Effetti Marginali Medi (AME)</a>
-  <ul class="collapse">
-  <li><a href="#calcolo-manuale" id="toc-calcolo-manuale" class="nav-link" data-scroll-target="#calcolo-manuale"><span class="header-section-number">5.1</span> Calcolo manuale</a></li>
-  <li><a href="#con-marginaleffects" id="toc-con-marginaleffects" class="nav-link" data-scroll-target="#con-marginaleffects"><span class="header-section-number">5.2</span> Con <code>marginaleffects</code></a></li>
-  </ul></li>
+  <li><a href="#probabilità-di-essere-arrestato-crime1" id="toc-probabilità-di-essere-arrestato-crime1" class="nav-link" data-scroll-target="#probabilità-di-essere-arrestato-crime1"><span class="header-section-number">4</span> Probabilità di essere arrestato <code>crime1</code></a></li>
   </ul>
 </nav>
 </div>
@@ -2384,7 +2379,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">28 aprile 2026</p>
+      <p class="date">5 maggio 2026</p>
     </div>
   </div>
   
@@ -2408,10 +2403,10 @@ window.Quarto = {
 </section>
 <section id="linear-probability-model-lpm" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="linear-probability-model-lpm"><span class="header-section-number">2</span> Linear Probability Model (LPM)</h2>
-<p>Stimiamo il seguente modello di probabilità lineare (LPM) che asssume una relazione lineare tra le variabili esplicative e la probabilità dell’evento: <span class="math display">\[
-\Pr(Y=1|X_1,\dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k
+<p>Stimiamo il seguente modello di probabilità lineare (LPM) che assume una relazione lineare tra le variabili esplicative e la probabilità dell’evento: <span class="math display">\[
+\Pr(Y=1 \mid X_1, \dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_k X_k
 \]</span></p>
-<p>Implicazione, sotto assunzione <span class="math inline">\(E(u_i | X_i) = 0\)</span>: <span class="math display">\[
+<p>Implicazione, sotto assunzione <span class="math inline">\(\mathbb{E}(u_i \mid X_i) = 0\)</span>: <span class="math display">\[
 \mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)
 \]</span></p>
 <p>cioè il valore atteso condizionato coincide con la probabilità che <span class="math inline">\(Y = 1\)</span> dato <span class="math inline">\(X = x\)</span>.</p>
@@ -2421,7 +2416,7 @@ window.Quarto = {
 \]</span></p>
 <p>La procedura di stima tramite OLS resta invariata.</p>
 <p>Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.</p>
-<p>Per i modelli LPM vengono riportati errori standard robusti <code>vcoc= hetero</code>.</p>
+<p>Per i modelli LPM vengono riportati errori standard robusti (<code>vcov = &quot;hetero&quot;</code>).</p>
 <div class="callout callout-style-default callout-important callout-titled" title="Attenzione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2473,8 +2468,8 @@ window.Quarto = {
 #&gt; 6  0.057600      676  6.002402    100</code></pre>
 </div>
 </div>
-<section id="descrizione-della-variabili" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="descrizione-della-variabili"><span class="header-section-number">3.1</span> Descrizione della variabili</h3>
+<section id="descrizione-delle-variabili" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="descrizione-delle-variabili"><span class="header-section-number">3.1</span> Descrizione delle variabili</h3>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
@@ -2501,11 +2496,15 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td style="text-align: left;"><span class="math inline">\(educ\)</span></td>
-<td style="text-align: left;">Anni di istruzione</td>
+<td style="text-align: left;">Anni di istruzione.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(age\)</span></td>
+<td style="text-align: left;">Età in anni.</td>
 </tr>
 </tbody>
 </table>
-<p>In altre parole, la nostra variabile dipendente, <span class="math inline">\(Y\)</span>, assume solo due valori: zero e uno (0 - 1).</p>
+<p>In altre parole, la nostra variabile dipendente, <span class="math inline">\(Y\)</span>, è una variabile dummy che assume solo due valori (0-1).</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_skim</span>(alcohol)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -2749,20 +2748,20 @@ function tinytable_rank_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_fizfo4y9yy1vtavp4ein = TinyTable.createTableFunctions("tinytable_fizfo4y9yy1vtavp4ein");
+      const tableFns_f29v5qifbk5q1sv9v2bf = TinyTable.createTableFunctions("tinytable_f29v5qifbk5q1sv9v2bf");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '33', j: 1 }, { i: '33', j: 2 }, { i: '33', j: 3 }, { i: '33', j: 4 }, { i: '33', j: 5 }, { i: '33', j: 6 }, { i: '33', j: 7 }, { i: '33', j: 8 }, { i: '33', j: 9 } ], css_id: 'tinytable_css_dixcwdbqpakes9s022x6',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 }, { i: '23', j: 1 }, { i: '24', j: 1 }, { i: '25', j: 1 }, { i: '26', j: 1 }, { i: '27', j: 1 }, { i: '28', j: 1 }, { i: '29', j: 1 }, { i: '30', j: 1 }, { i: '31', j: 1 }, { i: '32', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '23', j: 2 }, { i: '24', j: 2 }, { i: '25', j: 2 }, { i: '26', j: 2 }, { i: '27', j: 2 }, { i: '28', j: 2 }, { i: '29', j: 2 }, { i: '30', j: 2 }, { i: '31', j: 2 }, { i: '32', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '18', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '23', j: 3 }, { i: '24', j: 3 }, { i: '25', j: 3 }, { i: '26', j: 3 }, { i: '27', j: 3 }, { i: '28', j: 3 }, { i: '29', j: 3 }, { i: '30', j: 3 }, { i: '31', j: 3 }, { i: '32', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '18', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '23', j: 4 }, { i: '24', j: 4 }, { i: '25', j: 4 }, { i: '26', j: 4 }, { i: '27', j: 4 }, { i: '28', j: 4 }, { i: '29', j: 4 }, { i: '30', j: 4 }, { i: '31', j: 4 }, { i: '32', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 }, { i: '23', j: 5 }, { i: '24', j: 5 }, { i: '25', j: 5 }, { i: '26', j: 5 }, { i: '27', j: 5 }, { i: '28', j: 5 }, { i: '29', j: 5 }, { i: '30', j: 5 }, { i: '31', j: 5 }, { i: '32', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '10', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 }, { i: '15', j: 6 }, { i: '16', j: 6 }, { i: '17', j: 6 }, { i: '18', j: 6 }, { i: '19', j: 6 }, { i: '20', j: 6 }, { i: '21', j: 6 }, { i: '22', j: 6 }, { i: '23', j: 6 }, { i: '24', j: 6 }, { i: '25', j: 6 }, { i: '26', j: 6 }, { i: '27', j: 6 }, { i: '28', j: 6 }, { i: '29', j: 6 }, { i: '30', j: 6 }, { i: '31', j: 6 }, { i: '32', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '4', j: 7 }, { i: '5', j: 7 }, { i: '6', j: 7 }, { i: '7', j: 7 }, { i: '8', j: 7 }, { i: '9', j: 7 }, { i: '10', j: 7 }, { i: '11', j: 7 }, { i: '12', j: 7 }, { i: '13', j: 7 }, { i: '14', j: 7 }, { i: '15', j: 7 }, { i: '16', j: 7 }, { i: '17', j: 7 }, { i: '18', j: 7 }, { i: '19', j: 7 }, { i: '20', j: 7 }, { i: '21', j: 7 }, { i: '22', j: 7 }, { i: '23', j: 7 }, { i: '24', j: 7 }, { i: '25', j: 7 }, { i: '26', j: 7 }, { i: '27', j: 7 }, { i: '28', j: 7 }, { i: '29', j: 7 }, { i: '30', j: 7 }, { i: '31', j: 7 }, { i: '32', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '3', j: 8 }, { i: '4', j: 8 }, { i: '5', j: 8 }, { i: '6', j: 8 }, { i: '7', j: 8 }, { i: '8', j: 8 }, { i: '9', j: 8 }, { i: '10', j: 8 }, { i: '11', j: 8 }, { i: '12', j: 8 }, { i: '13', j: 8 }, { i: '14', j: 8 }, { i: '15', j: 8 }, { i: '16', j: 8 }, { i: '17', j: 8 }, { i: '18', j: 8 }, { i: '19', j: 8 }, { i: '20', j: 8 }, { i: '21', j: 8 }, { i: '22', j: 8 }, { i: '23', j: 8 }, { i: '24', j: 8 }, { i: '25', j: 8 }, { i: '26', j: 8 }, { i: '27', j: 8 }, { i: '28', j: 8 }, { i: '29', j: 8 }, { i: '30', j: 8 }, { i: '31', j: 8 }, { i: '32', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 }, { i: '3', j: 9 }, { i: '4', j: 9 }, { i: '5', j: 9 }, { i: '6', j: 9 }, { i: '7', j: 9 }, { i: '8', j: 9 }, { i: '9', j: 9 }, { i: '10', j: 9 }, { i: '11', j: 9 }, { i: '12', j: 9 }, { i: '13', j: 9 }, { i: '14', j: 9 }, { i: '15', j: 9 }, { i: '16', j: 9 }, { i: '17', j: 9 }, { i: '18', j: 9 }, { i: '19', j: 9 }, { i: '20', j: 9 }, { i: '21', j: 9 }, { i: '22', j: 9 }, { i: '23', j: 9 }, { i: '24', j: 9 }, { i: '25', j: 9 }, { i: '26', j: 9 }, { i: '27', j: 9 }, { i: '28', j: 9 }, { i: '29', j: 9 }, { i: '30', j: 9 }, { i: '31', j: 9 }, { i: '32', j: 9 } ], css_id: 'tinytable_css_gv56o7vg3b2qplpe74ms',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_2fu2oat1h35tzxkj28e8',}, 
+          { positions: [ { i: '33', j: 1 }, { i: '33', j: 2 }, { i: '33', j: 3 }, { i: '33', j: 4 }, { i: '33', j: 5 }, { i: '33', j: 6 }, { i: '33', j: 7 }, { i: '33', j: 8 }, { i: '33', j: 9 } ], css_id: 'tinytable_css_e71vbqcwm8iww22bkeqk',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 }, { i: '23', j: 1 }, { i: '24', j: 1 }, { i: '25', j: 1 }, { i: '26', j: 1 }, { i: '27', j: 1 }, { i: '28', j: 1 }, { i: '29', j: 1 }, { i: '30', j: 1 }, { i: '31', j: 1 }, { i: '32', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '23', j: 2 }, { i: '24', j: 2 }, { i: '25', j: 2 }, { i: '26', j: 2 }, { i: '27', j: 2 }, { i: '28', j: 2 }, { i: '29', j: 2 }, { i: '30', j: 2 }, { i: '31', j: 2 }, { i: '32', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '18', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '23', j: 3 }, { i: '24', j: 3 }, { i: '25', j: 3 }, { i: '26', j: 3 }, { i: '27', j: 3 }, { i: '28', j: 3 }, { i: '29', j: 3 }, { i: '30', j: 3 }, { i: '31', j: 3 }, { i: '32', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '18', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '23', j: 4 }, { i: '24', j: 4 }, { i: '25', j: 4 }, { i: '26', j: 4 }, { i: '27', j: 4 }, { i: '28', j: 4 }, { i: '29', j: 4 }, { i: '30', j: 4 }, { i: '31', j: 4 }, { i: '32', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 }, { i: '23', j: 5 }, { i: '24', j: 5 }, { i: '25', j: 5 }, { i: '26', j: 5 }, { i: '27', j: 5 }, { i: '28', j: 5 }, { i: '29', j: 5 }, { i: '30', j: 5 }, { i: '31', j: 5 }, { i: '32', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '10', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 }, { i: '15', j: 6 }, { i: '16', j: 6 }, { i: '17', j: 6 }, { i: '18', j: 6 }, { i: '19', j: 6 }, { i: '20', j: 6 }, { i: '21', j: 6 }, { i: '22', j: 6 }, { i: '23', j: 6 }, { i: '24', j: 6 }, { i: '25', j: 6 }, { i: '26', j: 6 }, { i: '27', j: 6 }, { i: '28', j: 6 }, { i: '29', j: 6 }, { i: '30', j: 6 }, { i: '31', j: 6 }, { i: '32', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '4', j: 7 }, { i: '5', j: 7 }, { i: '6', j: 7 }, { i: '7', j: 7 }, { i: '8', j: 7 }, { i: '9', j: 7 }, { i: '10', j: 7 }, { i: '11', j: 7 }, { i: '12', j: 7 }, { i: '13', j: 7 }, { i: '14', j: 7 }, { i: '15', j: 7 }, { i: '16', j: 7 }, { i: '17', j: 7 }, { i: '18', j: 7 }, { i: '19', j: 7 }, { i: '20', j: 7 }, { i: '21', j: 7 }, { i: '22', j: 7 }, { i: '23', j: 7 }, { i: '24', j: 7 }, { i: '25', j: 7 }, { i: '26', j: 7 }, { i: '27', j: 7 }, { i: '28', j: 7 }, { i: '29', j: 7 }, { i: '30', j: 7 }, { i: '31', j: 7 }, { i: '32', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '3', j: 8 }, { i: '4', j: 8 }, { i: '5', j: 8 }, { i: '6', j: 8 }, { i: '7', j: 8 }, { i: '8', j: 8 }, { i: '9', j: 8 }, { i: '10', j: 8 }, { i: '11', j: 8 }, { i: '12', j: 8 }, { i: '13', j: 8 }, { i: '14', j: 8 }, { i: '15', j: 8 }, { i: '16', j: 8 }, { i: '17', j: 8 }, { i: '18', j: 8 }, { i: '19', j: 8 }, { i: '20', j: 8 }, { i: '21', j: 8 }, { i: '22', j: 8 }, { i: '23', j: 8 }, { i: '24', j: 8 }, { i: '25', j: 8 }, { i: '26', j: 8 }, { i: '27', j: 8 }, { i: '28', j: 8 }, { i: '29', j: 8 }, { i: '30', j: 8 }, { i: '31', j: 8 }, { i: '32', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 }, { i: '3', j: 9 }, { i: '4', j: 9 }, { i: '5', j: 9 }, { i: '6', j: 9 }, { i: '7', j: 9 }, { i: '8', j: 9 }, { i: '9', j: 9 }, { i: '10', j: 9 }, { i: '11', j: 9 }, { i: '12', j: 9 }, { i: '13', j: 9 }, { i: '14', j: 9 }, { i: '15', j: 9 }, { i: '16', j: 9 }, { i: '17', j: 9 }, { i: '18', j: 9 }, { i: '19', j: 9 }, { i: '20', j: 9 }, { i: '21', j: 9 }, { i: '22', j: 9 }, { i: '23', j: 9 }, { i: '24', j: 9 }, { i: '25', j: 9 }, { i: '26', j: 9 }, { i: '27', j: 9 }, { i: '28', j: 9 }, { i: '29', j: 9 }, { i: '30', j: 9 }, { i: '31', j: 9 }, { i: '32', j: 9 } ], css_id: 'tinytable_css_hxti6teiweh2xnu2m0hp',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_re2rnxipgvyftgkjw1z3',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_fizfo4y9yy1vtavp4ein.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_f29v5qifbk5q1sv9v2bf.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2965,12 +2964,12 @@ line-height: var(--tt-line-height-footnote-tight);
 </style>
     <style>
 
-#tinytable_fizfo4y9yy1vtavp4ein td.tinytable_css_dixcwdbqpakes9s022x6, #tinytable_fizfo4y9yy1vtavp4ein th.tinytable_css_dixcwdbqpakes9s022x6 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-#tinytable_fizfo4y9yy1vtavp4ein td.tinytable_css_gv56o7vg3b2qplpe74ms, #tinytable_fizfo4y9yy1vtavp4ein th.tinytable_css_gv56o7vg3b2qplpe74ms { text-align: left }
-#tinytable_fizfo4y9yy1vtavp4ein td.tinytable_css_2fu2oat1h35tzxkj28e8, #tinytable_fizfo4y9yy1vtavp4ein th.tinytable_css_2fu2oat1h35tzxkj28e8 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_f29v5qifbk5q1sv9v2bf td.tinytable_css_e71vbqcwm8iww22bkeqk, #tinytable_f29v5qifbk5q1sv9v2bf th.tinytable_css_e71vbqcwm8iww22bkeqk { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_f29v5qifbk5q1sv9v2bf td.tinytable_css_hxti6teiweh2xnu2m0hp, #tinytable_f29v5qifbk5q1sv9v2bf th.tinytable_css_hxti6teiweh2xnu2m0hp { text-align: left }
+#tinytable_f29v5qifbk5q1sv9v2bf td.tinytable_css_re2rnxipgvyftgkjw1z3, #tinytable_f29v5qifbk5q1sv9v2bf th.tinytable_css_re2rnxipgvyftgkjw1z3 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
 </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_fizfo4y9yy1vtavp4ein" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_f29v5qifbk5q1sv9v2bf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -3358,352 +3357,1210 @@ line-height: var(--tt-line-height-footnote-tight);
 </div>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>reg_lpm_alcohol <span class="ot">&lt;-</span> <span class="fu">feols</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">vcov =</span> <span class="st">&quot;hetero&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ&quot;</span> <span class="ot">=</span> reg_lpm_alcohol), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE&quot;</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ&quot;</span> <span class="ot">=</span> reg_lpm_alcohol), <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2 Adj.&quot;</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Employ</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>(Intercept)</td>
-<td>0.741</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.022)</td>
-</tr>
-<tr class="odd">
-<td>abuse</td>
-<td>-0.018</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.011)</td>
-</tr>
-<tr class="odd">
-<td>educ</td>
-<td>0.017</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.001)</td>
-</tr>
-<tr class="odd">
-<td>age</td>
-<td>-0.003</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.000)</td>
-</tr>
-<tr class="odd">
-<td>married</td>
-<td>0.084</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.009)</td>
-</tr>
-<tr class="odd">
-<td>Num.Obs.</td>
-<td>9822</td>
-</tr>
-<tr class="even">
-<td>R2</td>
-<td>0.045</td>
-</tr>
-<tr class="odd">
-<td>R2 Adj.</td>
-<td>0.045</td>
-</tr>
-</tbody>
-</table>
+<!-- preamble start -->
+
+    <script>// TinyTable JavaScript Framework
+// Function factory for creating table-specific operations
+window.TinyTable = {
+  // Helper to create Tabulator instance with Luxon dependency
+  createTabulator: function(elementId, config) {
+    const { DateTime } = window.luxon || {};
+    return new Tabulator(elementId, {
+      dependencies: { DateTime },
+      ...config
+    });
+  },
+
+  createTableFunctions: function (tableId) {
+    const spans = []; // {top, left, rowspan, colspan}
+
+    function resolveToAnchor(i, j) {
+      // find if (i,j) is inside any span; return that span's anchor if so
+      for (const s of spans) {
+        if (
+          i >= s.top && i < s.top + s.rowspan &&
+          j >= s.left && j < s.left + s.colspan
+        ) {
+          return { i: s.top, j: s.left };
+        }
+      }
+      return { i, j };
+    }
+
+    return {
+      styleCell: function (i, j, css_id) {
+        // normalize possible string indices
+        i = +i; j = +j;
+
+        const table = document.getElementById(tableId);
+        const { i: ai, j: aj } = resolveToAnchor(i, j);
+        const cell = table.querySelector(`[data-row="${ai}"][data-col="${aj}"]`);
+        if (!cell) return; // silently skip if not found (e.g., removed)
+        cell.classList.add(css_id);
+      },
+
+      spanCell: function (i, j, rowspan, colspan) {
+        i = +i; j = +j;
+
+        const table = document.getElementById(tableId);
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+          return;
+        }
+
+        // record span so future styleCell calls map to the anchor
+        spans.push({ top: i, left: j, rowspan, colspan });
+
+        // remove covered cells (except anchor)
+        const cellsToRemove = [];
+        for (let r = 0; r < rowspan; r++) {
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue;
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) cellsToRemove.push(cell);
+          }
+        }
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // set HTML attributes for clarity/serialization
+        targetCell.setAttribute('rowspan', rowspan);
+        targetCell.setAttribute('colspan', colspan);
+      }
+    };
+  }
+};
+
+// =============================================================================
+// TABULATOR CUSTOM FORMATTERS (revised)
+// =============================================================================
+
+// SVG sparkline
+function tinytable_sparkline(cell, p = {}) {
+  let values = cell.getValue() ?? [];
+  if (!Array.isArray(values)) values = [values];
+  // coerce to finite numbers & strip NaNs
+  values = values.map(Number).filter(Number.isFinite);
+  const n = values.length;
+  if (n === 0) return "";
+
+  const w = p.width ?? 120, h = p.height ?? 30, pad = p.pad ?? 2;
+  const color = p.color ?? "currentColor", sw = p.strokeWidth ?? 1.5;
+  const fill = p.fillArea ?? false;
+  const showDots = p.showDots ?? false;
+  const dotR = p.dotRadius ?? 1.75;
+  const ariaLabel = p.ariaLabel ?? `sparkline with ${n} points`;
+
+  // single pass for min/max
+  let min = Infinity, max = -Infinity;
+  for (let v of values) { if (v < min) min = v; if (v > max) max = v; }
+  const span = (max - min) || 1;
+
+  const x = i => pad + (i * (w - 2 * pad)) / Math.max(n - 1, 1);
+  const y = v => h - pad - ((v - min) * (h - 2 * pad)) / span;
+
+  let d = `M ${x(0)},${y(values[0])}`;
+  for (let i = 1; i < n; i++) d += ` L ${x(i)},${y(values[i])}`;
+
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("width", w);
+  svg.setAttribute("height", h);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", ariaLabel);
+
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("stroke", color);
+  path.setAttribute("stroke-width", sw);
+  path.setAttribute("vector-effect", "non-scaling-stroke");
+
+  if (fill) {
+    const area = document.createElementNS(NS, "path");
+    area.setAttribute("d", d + ` L ${x(n - 1)},${h - pad} L ${x(0)},${h - pad} Z`);
+    area.setAttribute("fill", color);
+    area.setAttribute("fill-opacity", p.fillOpacity ?? 0.25);
+    svg.appendChild(area);
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+  } else {
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+  }
+  svg.appendChild(path);
+
+  if (showDots) {
+    const dot = (i) => {
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("cx", x(i));
+      c.setAttribute("cy", y(values[i]));
+      c.setAttribute("r", dotR);
+      c.setAttribute("fill", color);
+      return c;
+    };
+    if (p.dots === "end") svg.appendChild(dot(n - 1));
+    else if (p.dots === "minmax") {
+      const iMin = values.indexOf(min), iMax = values.indexOf(max);
+      svg.appendChild(dot(iMin)); svg.appendChild(dot(iMax));
+    } else if (p.dots === true) {
+      for (let i = 0; i < n; i++) svg.appendChild(dot(i));
+    }
+  }
+
+  if (p.title) {
+    const title = document.createElementNS(NS, "title");
+    title.textContent = p.title;
+    svg.appendChild(title);
+  }
+
+  return svg;
+}
+
+// Canvas histogram
+function tinytable_histogram(cell, p = {}) {
+  let data = cell.getValue() ?? [];
+  if (!Array.isArray(data)) data = [data];
+  data = data.map(Number).filter(Number.isFinite);
+  const n = data.length;
+  if (n === 0) return "";
+
+  const cssWidth = p.width ?? 120;
+  const cssHeight = p.height ?? 30;
+  const color = p.color ?? "currentColor";
+  const gap = p.gap ?? 1;         // px gap between bars
+  const pad = p.pad ?? 0;         // inner padding
+  const ariaLabel = p.ariaLabel ?? `histogram with ${n} observations`;
+
+  // robust bins: Sturges as default; allow override
+  const k = Math.max(1, Math.min(64, p.bins ?? Math.ceil(Math.log2(n) + 1)));
+
+  // stats
+  let min = Infinity, max = -Infinity;
+  for (let v of data) { if (v < min) min = v; if (v > max) max = v; }
+
+  // zero-range safeguard -> single centered bar
+  const range = max - min;
+  const binWidth = range > 0 ? range / k : 1;
+
+  const bins = new Array(k).fill(0);
+  if (range === 0) {
+    // put all mass in the middle bin
+    bins[Math.floor(k / 2)] = n;
+  } else {
+    for (let v of data) {
+      let idx = Math.floor((v - min) / binWidth);
+      if (idx >= k) idx = k - 1; // clamp max edge
+      bins[idx]++;
+    }
+  }
+  const maxCount = Math.max(...bins, 1);
+
+  // HiDPI / Retina crispness
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(cssWidth * dpr);
+  canvas.height = Math.round(cssHeight * dpr);
+  canvas.style.width = cssWidth + "px";
+  canvas.style.height = cssHeight + "px";
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute("aria-label", ariaLabel);
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+  ctx.fillStyle = color;
+
+  const innerW = cssWidth - pad * 2;
+  const innerH = cssHeight - pad * 2;
+  const barW = innerW / k;
+
+  for (let i = 0; i < k; i++) {
+    const h = (bins[i] / maxCount) * innerH;
+    const x = pad + i * barW;
+    const y = cssHeight - pad - h;
+    // 0.5 translate helps crisp vertical edges on some displays
+    ctx.fillRect(Math.round(x) + 0.5, Math.floor(y), Math.max(0, barW - gap), Math.ceil(h));
+  }
+
+  if (p.title) canvas.title = p.title;
+  return canvas;
+}
+
+// Unified sorter that uses hidden rank field
+function tinytable_rank_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
+  const rankField = sorterParams.rankField;
+  const aVal = aRow.getData()[rankField] || 0;
+  const bVal = bRow.getData()[rankField] || 0;
+  return aVal - bVal;
+}
+</script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_9136eo7y6jhiedeosvsu = TinyTable.createTableFunctions("tinytable_9136eo7y6jhiedeosvsu");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '12', j: 2 } ], css_id: 'tinytable_css_hzvz77k91lk3xh9kpceo',}, 
+          { positions: [ { i: '10', j: 2 } ], css_id: 'tinytable_css_sprpwgj274yvx8cxlo0q',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 } ], css_id: 'tinytable_css_jrtty33s31gitckm151a',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_u2jh0tfn6ot361z0w6a2',}, 
+          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_ys43xr8e4paka5fj2w8o',}, 
+          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_k1mqlelgwruwv0gua19g',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 } ], css_id: 'tinytable_css_5uoqemh2v6o2755aql83',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_w9dpkhcfuc9gt3vut6ru',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_9136eo7y6jhiedeosvsu.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style type="text/css">
+
+
+.tinytable {
+
+--tt-text-color: inherit;
+--tt-line-color: black;
+--tt-border-color: var(--tt-line-color);
+--tt-striped-bg: rgba(0, 0, 0, .05);
+--tt-hover-bg: rgba(0, 0, 0, .075);
+--tt-background-color: transparent;
+--tt-footnote-bg: var(--tt-background-color);
+
+--tt-cell-padding: .5rem;
+--tt-cell-padding-sm: calc(var(--tt-cell-padding) / 2);
+--tt-table-margin: .5rem 0;
+--tt-caption-padding: .5rem 0;
+--tt-footnote-padding: .2rem .5rem;
+--tt-footnote-first-padding-top: .5rem;
+--tt-footnote-gap: .1rem;
+--tt-container-padding: 10px;
+
+--tt-font-size-footnote: 0.875rem;
+--tt-font-size-caption: 1rem;
+--tt-font-size-sup: 0.75em;
+--tt-line-height-footnote: 1.25;
+--tt-line-height-footnote-tight: 1.2;
+--tt-font-weight-header: normal;
+
+--tt-cell-valign: top;
+--tt-header-align: left;
+--tt-header-valign: bottom;
+--tt-caption-align: var(--tt-header-align);
+--tt-caption-side: top;
+
+--tt-table-width: 100%;
+
+--tt-border-width: 1px;
+--tt-border-width-tbody: 2px;
+}
+
+.tinytable {
+width: var(--tt-table-width);
+margin: var(--tt-table-margin);
+border-collapse: collapse;
+background-color: var(--tt-background-color);
+color: var(--tt-text-color);
+font-family: inherit;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+.tinytable *:not(mjx-container):not(mjx-container *) {
+font-family: inherit;
+}
+
+.tinytable th,
+.tinytable td {
+position: relative;
+padding: var(--tt-cell-padding);
+vertical-align: var(--tt-cell-valign);
+}
+.tinytable thead th {
+text-align: var(--tt-header-align);
+vertical-align: var(--tt-header-valign);
+font-weight: var(--tt-font-weight-header);
+border-bottom: none;
+}
+.tinytable thead th[align="center"] {
+text-align: center;
+}
+.tinytable tbody + tbody {
+border-top: var(--tt-border-width-tbody) solid var(--tt-border-color);
+}
+
+
+.tinytable-sm th,
+.tinytable-sm td {
+padding: var(--tt-cell-padding-sm);
+}
+
+.tinytable-bordered {
+border: var(--tt-border-width) solid var(--tt-border-color);
+}
+.tinytable-bordered th,
+.tinytable-bordered td {
+border: var(--tt-border-width) solid var(--tt-border-color);
+}
+
+.tinytable-striped tbody tr:nth-of-type(odd) {
+background-color: var(--tt-striped-bg);
+}
+
+.tinytable-hover tbody tr:hover {
+background-color: var(--tt-hover-bg);
+}
+
+.tinytable-responsive {
+width: var(--tt-table-width);
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"] {
+position: relative;
+
+--border-top: 0;
+--border-right: 0;
+--border-bottom: 0;
+--border-left: 0;
+
+--line-color-top: currentColor;
+--line-color-right: currentColor;
+--line-color-bottom: currentColor;
+--line-color-left: currentColor;
+
+--line-width-top: 0.1em;
+--line-width-right: 0.1em;
+--line-width-bottom: 0.1em;
+--line-width-left: 0.1em;
+
+--trim-top-left: 0%;
+--trim-top-right: 0%;
+--trim-right-top: 0%;
+--trim-right-bottom: 0%;
+--trim-bottom-left: 0%;
+--trim-bottom-right: 0%;
+--trim-left-top: 0%;
+--trim-left-bottom: 0%;
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"]::before {
+content: "";
+position: absolute;
+top: var(--trim-top-left, var(--trim-top-right, 0));
+left: var(--trim-left-top, 0);
+right: var(--trim-right-top, 0);
+bottom: 0;
+pointer-events: none;
+z-index: 1;
+border-top: calc(var(--border-top) * var(--line-width-top)) solid var(--line-color-top);
+border-right: calc(var(--border-right) * var(--line-width-right)) solid var(--line-color-right);
+border-left: calc(var(--border-left) * var(--line-width-left)) solid var(--line-color-left);
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"]::after {
+content: "";
+position: absolute;
+left: var(--trim-bottom-left, 0);
+right: var(--trim-bottom-right, 0);
+bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
+height: calc(var(--border-bottom) * var(--line-width-bottom));
+background: var(--line-color-bottom);
+pointer-events: none;
+z-index: 2;
+}
+
+.tinytable-container {
+padding: var(--tt-container-padding);
+overflow-x: auto;
+overflow-y: auto;
+width: auto;
+height: auto;
+}
+
+.tinytable caption {
+padding: var(--tt-caption-padding);
+caption-side: var(--tt-caption-side);
+font-size: var(--tt-font-size-caption);
+text-align: var(--tt-caption-align);
+}
+
+.tinytable tfoot tr:first-child td {
+padding-top: var(--tt-footnote-first-padding-top);
+}
+.tinytable tfoot td {
+padding: var(--tt-footnote-padding);
+font-size: var(--tt-font-size-footnote);
+line-height: var(--tt-line-height-footnote);
+background-color: var(--tt-footnote-bg);
+}
+
+.tinytable tfoot tr + tr td {
+padding-top: var(--tt-footnote-gap);
+}
+
+.tinytable tfoot sup {
+font-size: var(--tt-font-size-sup);
+line-height: 0;
+vertical-align: text-top;
+}
+
+.tinytable tfoot tr:nth-child(n+2) td {
+line-height: var(--tt-line-height-footnote-tight);
+}
+</style>
+    <style>
+
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_hzvz77k91lk3xh9kpceo, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_hzvz77k91lk3xh9kpceo { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_sprpwgj274yvx8cxlo0q, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_sprpwgj274yvx8cxlo0q { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_jrtty33s31gitckm151a, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_jrtty33s31gitckm151a { text-align: center }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_u2jh0tfn6ot361z0w6a2, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_u2jh0tfn6ot361z0w6a2 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_ys43xr8e4paka5fj2w8o, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_ys43xr8e4paka5fj2w8o { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_k1mqlelgwruwv0gua19g, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_k1mqlelgwruwv0gua19g { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_5uoqemh2v6o2755aql83, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_5uoqemh2v6o2755aql83 { text-align: left }
+#tinytable_9136eo7y6jhiedeosvsu td.tinytable_css_w9dpkhcfuc9gt3vut6ru, #tinytable_9136eo7y6jhiedeosvsu th.tinytable_css_w9dpkhcfuc9gt3vut6ru { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+</style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_9136eo7y6jhiedeosvsu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Employ</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">0.741</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.022)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">abuse</td>
+                  <td data-row="3" data-col="2">-0.018</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.011)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">educ</td>
+                  <td data-row="5" data-col="2">0.017</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.001)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">age</td>
+                  <td data-row="7" data-col="2">-0.003</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.000)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">married</td>
+                  <td data-row="9" data-col="2">0.084</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2">(0.009)</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Num.Obs.</td>
+                  <td data-row="11" data-col="2">9822</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">R2</td>
+                  <td data-row="12" data-col="2">0.045</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <p><strong>Interpretazione dei coefficienti:</strong></p>
 <ul>
-<li><p>il coefficiente − 0.018 di <span class="math inline">\(abuse\)</span>. Aver abusato di alcol è associato ad una probabilità di essere occupato <strong>inferiore</strong> di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol. A parità di età, anni di istruzione e stato coniugale.</p></li>
-<li><p>il coefficiente 0.017. Ogni anno in più di istruzione è associato ad un <strong>aumento</strong> della probabilità di essere occupato di 1.7 punti percentuali. A parità di età, abuso di alcol e stato coniugale.</p></li>
+<li><p>Coefficiente di <span class="math inline">\(abuse\)</span> pari a -0.018: aver abusato di alcol è associato a una probabilità di essere occupato <strong>inferiore</strong> di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol, a parità di età, anni di istruzione e stato coniugale.</p></li>
+<li><p>Coefficiente di <span class="math inline">\(educ\)</span> pari a 0.017: ogni anno aggiuntivo di istruzione è associato a un <strong>aumento</strong> della probabilità di essere occupato di 1.7 punti percentuali, a parità di età, abuso di alcol e stato coniugale.</p></li>
+<li><p>Coefficiente di <span class="math inline">\(married\)</span> pari a 0.084: essere sposato è associato a una probabilità di essere occupato superiore di 8.4 punti percentuali rispetto a un uomo non sposato, a parità di età, abuso di alcol e anni di istruzione.</p></li>
 </ul>
-<p><strong>Nota:</strong> Attenzioni alle variabili percentuali espresse in forma decimale (0.26). Ad esempio <code>pirat</code> (Rapporto tra pagamenti e reddito) nella Lezione <em>Analisi della Concessione di Mutui su dati HMDA</em>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Nota">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Attenzione alle variabili percentuali espresse in forma decimale (ad esempio 0.26 che rappresenta il 26%). <code>pirat</code> (rapporto tra pagamenti e reddito) nella Lezione <em>Analisi della Concessione di Mutui su dati HMDA</em>.</p>
+<p>Se il coefficiente stimato associato a <code>pirat</code> fosse 0.5, allora un aumento di 1 punto percentuale in <code>pirat</code> è associato a un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo. Questo perché 1 punto percentuale è rappresentato come 0.01 in forma decimale, quindi l’effetto marginale sarebbe 0.5 * 0.01 = 0.005, ovvero un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo.</p>
+</div>
+</div>
 </section>
 </section>
-<section id="probit-e-logit" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="probit-e-logit"><span class="header-section-number">4</span> Probit e Logit</h2>
-<p><strong>Modello Logit</strong>: Utilizza la funzione logistica per modellare la probabilità: <span class="math display">\[
-   \Pr(Y=1|X_1,\dots, X_k) = \frac{e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}} = \Lambda(X\beta)
-\]</span></p>
-<p>dove <span class="math inline">\(\Lambda(z) = \frac{e^z}{1 + e^z}\)</span> è la funzione logistica.</p>
-<p><strong>Modello Probit</strong>: Utilizza la funzione di distribuzione cumulativa normale: <span class="math display">\[
-   \Pr(Y=1|X_1,\dots, X_k) = \Phi(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k) = \Phi(X\beta)
-\]</span></p>
-<p>dove <span class="math inline">\(\Phi(z)\)</span> è la funzione di distribuzione cumulativa della normale standard.</p>
-<p>I modelli Logit e Probit vengono stimati con il metodo della massima verosimiglianza (MLE).</p>
-<p>Sia per Logit che per Probit, i coefficienti stimati <strong>non rappresentano</strong> direttamente gli effetti marginali, che invece variano a seconda dei valori delle variabili esplicative. L’effetto marginale dipende dai valori di tutte le variabili esplicative, a differenza del linear probability model (LPM) dove è costante.</p>
+<section id="probabilità-di-essere-arrestato-crime1" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="probabilità-di-essere-arrestato-crime1"><span class="header-section-number">4</span> Probabilità di essere arrestato <code>crime1</code></h2>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>probit_alcohol <span class="ot">&lt;-</span> <span class="fu">feglm</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">family =</span> <span class="st">&#39;probit&#39;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>logit_alcohol <span class="ot">&lt;-</span> <span class="fu">feglm</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">family =</span> <span class="st">&#39;logit&#39;</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ (LPM)&quot;</span> <span class="ot">=</span> reg_lpm_alcohol, <span class="st">&quot;Employ (Probit)&quot;</span> <span class="ot">=</span> probit_alcohol, <span class="st">&quot;Employ (Logit)&quot;</span><span class="ot">=</span>logit_alcohol), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE&quot;</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;crime1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;wooldridge&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(crime1)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   narr86 nfarr86 nparr86 pcnv avgsen tottime ptime86 qemp86 inc86 durat black
+#&gt; 1      0       0       0 0.38   17.6    35.2      12      0   0.0     0     0
+#&gt; 2      2       2       0 0.44    0.0     0.0       0      1   0.8     0     0
+#&gt; 3      1       1       0 0.33   22.8    22.8       0      0   0.0    11     1
+#&gt; 4      2       2       1 0.25    0.0     0.0       5      2   8.8     0     0
+#&gt; 5      1       1       0 0.00    0.0     0.0       0      2   8.1     1     0
+#&gt; 6      0       0       0 1.00    0.0     0.0       0      4  97.6     0     0
+#&gt;   hispan born60 pcnvsq pt86sq    inc86sq
+#&gt; 1      0      1 0.1444    144    0.00000
+#&gt; 2      1      0 0.1936      0    0.64000
+#&gt; 3      0      1 0.1089      0    0.00000
+#&gt; 4      1      1 0.0625     25   77.44000
+#&gt; 5      0      0 0.0000      0   65.61001
+#&gt; 6      0      1 1.0000      0 9525.75977</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(narr86\)</span> numero di volte arrestato nel 1986. A partire da questa variabile, creiamo una variabile dummy <code>arrested</code> che assume valore 1 se un individuo è stato arrestato almeno una volta nel 1986 e 0 altrimenti.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>crime1 <span class="ot">&lt;-</span> crime1 <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arrested =</span> <span class="fu">ifelse</span>(narr86 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Le altre variabili sono:</p>
+<table class="caption-top table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 20%">
-<col style="width: 25%">
-<col style="width: 23%">
+<col style="width: 11%">
+<col style="width: 89%">
 </colgroup>
 <thead>
 <tr class="header">
-<th></th>
-<th>Employ (LPM)</th>
-<th>Employ (Probit)</th>
-<th>Employ (Logit)</th>
+<th style="text-align: left;">Variabile</th>
+<th style="text-align: left;">Descrizione</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>(Intercept)</td>
-<td>0.741</td>
-<td>0.495</td>
-<td>0.802</td>
+<td style="text-align: left;"><span class="math inline">\(pcnv\)</span></td>
+<td style="text-align: left;">Proporzione di arresti precedenti che hanno portato a una condanna.</td>
 </tr>
 <tr class="even">
-<td></td>
-<td>(0.022)</td>
-<td>(0.114)</td>
-<td>(0.216)</td>
+<td style="text-align: left;"><span class="math inline">\(avgsen\)</span></td>
+<td style="text-align: left;">Sentenza media scontata da condanne precedenti (in mesi).</td>
 </tr>
 <tr class="odd">
-<td>abuse</td>
-<td>-0.018</td>
-<td>-0.110</td>
-<td>-0.223</td>
+<td style="text-align: left;"><span class="math inline">\(tottime\)</span></td>
+<td style="text-align: left;">Mesi trascorsi in prigione dal periodo pre-18 fino al 1986.</td>
 </tr>
 <tr class="even">
-<td></td>
-<td>(0.011)</td>
-<td>(0.056)</td>
-<td>(0.105)</td>
+<td style="text-align: left;"><span class="math inline">\(ptime86\)</span></td>
+<td style="text-align: left;">Mesi trascorsi in prigione nel 1986.</td>
 </tr>
 <tr class="odd">
-<td>educ</td>
-<td>0.017</td>
-<td>0.089</td>
-<td>0.166</td>
+<td style="text-align: left;"><span class="math inline">\(qemp86\)</span></td>
+<td style="text-align: left;">Numero di trimestri in cui l’uomo è stato impiegato nel 1986.</td>
 </tr>
 <tr class="even">
-<td></td>
-<td>(0.001)</td>
-<td>(0.006)</td>
-<td>(0.011)</td>
+<td style="text-align: left;"><span class="math inline">\(black\)</span></td>
+<td style="text-align: left;">Variabile dummy (1=Persona di colore, 0=Altra).</td>
 </tr>
 <tr class="odd">
-<td>age</td>
-<td>-0.003</td>
-<td>-0.018</td>
-<td>-0.035</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.000)</td>
-<td>(0.002)</td>
-<td>(0.004)</td>
-</tr>
-<tr class="odd">
-<td>married</td>
-<td>0.084</td>
-<td>0.455</td>
-<td>0.859</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.009)</td>
-<td>(0.045)</td>
-<td>(0.084)</td>
-</tr>
-<tr class="odd">
-<td>Num.Obs.</td>
-<td>9822</td>
-<td>9822</td>
-<td>9822</td>
-</tr>
-<tr class="even">
-<td>R2</td>
-<td>0.045</td>
-<td>0.064</td>
-<td>0.064</td>
-</tr>
-<tr class="odd">
-<td>R2 Adj.</td>
-<td>0.045</td>
-<td>0.063</td>
-<td>0.063</td>
+<td style="text-align: left;"><span class="math inline">\(hispan\)</span></td>
+<td style="text-align: left;">Variabile dummy (1=Persona di origine ispanica, 0=Altra).</td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</section>
-<section id="effetti-marginali-medi-ame" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="effetti-marginali-medi-ame"><span class="header-section-number">5</span> Effetti Marginali Medi (AME)</h2>
-<p>Il calcolo degli effetti marginali è fondamentale per interpretare correttamente i modelli Logit e Probit.</p>
-<p>Si calcolano gli effetti marginali per ogni osservazione nel dataset e poi si fa la media.</p>
-<p>Matematicamente, l’effetto marginale medio (AME) è calcolato come: <span class="math display">\[
-  \overline{\text{ME}} = \frac{1}{n} \sum_{i=1}^{n} \text{ME}_i
-\]</span> dove <span class="math inline">\(\text{ME}_i\)</span> è l’effetto marginale calcolato per l’osservazione <span class="math inline">\(i\)</span> e <span class="math inline">\(n\)</span> è il numero totale di osservazioni nel dataset.</p>
-<p><strong>Per il modello LPM</strong>: L’effetto marginale è semplicemente il coefficiente <span class="math inline">\(\beta_j\)</span>: <span class="math display">\[
-\frac{\partial \Pr(Y=1|X_1,\dots, X_k)}{\partial X_j} = \beta_j
-\]</span></p>
-<section id="calcolo-manuale" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="calcolo-manuale"><span class="header-section-number">5.1</span> Calcolo manuale</h3>
-<p>Effetto Marginale abuso alcol, modello probit:</p>
+<p>Stimiamo il seguente LPM:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione di due dataset: uno con abuse=1 per tutti e uno con abuse=0 per tutti</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alcohol_tmp1 <span class="ot">&lt;-</span> alcohol</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>alcohol_tmp0 <span class="ot">&lt;-</span> alcohol</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Impostiamo abuse=1 per tutti nel primo dataset</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>alcohol_tmp1<span class="sc">$</span>abuse <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Impostiamo abuse=0 per tutti nel secondo dataset</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>alcohol_tmp0<span class="sc">$</span>abuse <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle probabilità predette per il modello logit</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>proba_employ_probit <span class="ot">&lt;-</span> <span class="fu">predict</span>(probit_alcohol, <span class="at">newdata =</span> alcohol_tmp1)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>proba_nonemploy_probit <span class="ot">&lt;-</span> <span class="fu">predict</span>(probit_alcohol, <span class="at">newdata =</span> alcohol_tmp0)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dell&#39;effetto marginale medio (differenza media nelle probabilità predette)</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ame_manual_probit <span class="ot">&lt;-</span> <span class="fu">mean</span>(proba_employ_probit <span class="sc">-</span> proba_nonemploy_probit)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Effetto marginale medio manuale (Probit):&quot;</span>, <span class="fu">round</span>(ame_manual_probit, <span class="dv">4</span>)))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] &quot;Effetto marginale medio manuale (Probit): -0.0194&quot;</code></pre>
-</div>
-</div>
-<p>Per il modello logit:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle probabilità predette per il modello logit</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>proba_employ_logit <span class="ot">&lt;-</span> <span class="fu">predict</span>(logit_alcohol, <span class="at">newdata =</span> alcohol_tmp1)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>proba_nonemploy_logit <span class="ot">&lt;-</span> <span class="fu">predict</span>(logit_alcohol, <span class="at">newdata =</span> alcohol_tmp0)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dell&#39;effetto marginale medio (differenza media nelle probabilità predette)</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>ame_manual_logit <span class="ot">&lt;-</span> <span class="fu">mean</span>(proba_employ_logit <span class="sc">-</span> proba_nonemploy_logit)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Effetto marginale medio manuale (Logit):&quot;</span>, <span class="fu">round</span>(ame_manual_logit, <span class="dv">4</span>)))</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] &quot;Effetto marginale medio manuale (Logit): -0.0206&quot;</code></pre>
-</div>
-</div>
-<ul>
-<li>Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.</li>
-<li>Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.</li>
-</ul>
-<p>L’approccio dell’effetto marginale medio è generalmente considerato più robusto, perché tiene conto di come l’effetto di <span class="math inline">\(abuse\)</span> può variare a seconda delle altre caratteristiche dei richiedenti.</p>
-</section>
-<section id="con-marginaleffects" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="con-marginaleffects"><span class="header-section-number">5.2</span> Con <code>marginaleffects</code></h3>
-<p>Gli effetti marginali medi calcolati con <code>marginaleffects</code> sono identici a quelli calcolati manualmente in precedenza. Il vantaggio di utilizzare <code>marginaleffects</code> in questo caso è che otteniamo automaticamente anche gli errori standard permettendo una valutazione della significatività statistica dell’effetto.</p>
-<p>La funzione <code>avg_slopes</code> senza l’opzione <code>newdata</code> calcola gli effetti marginali medi, ovvero calcola l’effetto marginale per ogni osservazione nel dataset e poi ne fa la media. Questo approccio tiene conto della distribuzione reale delle variabili nel campione.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>all_effects_logit <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(logit_alcohol)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>all_effects_probit <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(probit_alcohol)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>all_effects_probit</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; 
-#&gt;     Term Contrast Estimate Std. Error     z Pr(&gt;|z|)     S   2.5 %    97.5 %
-#&gt;  abuse      1 - 0 -0.01939   0.010338 -1.88   0.0607   4.0 -0.0397  0.000869
-#&gt;  age        dY/dX -0.00298   0.000313 -9.53   &lt;0.001  69.1 -0.0036 -0.002370
-#&gt;  educ       dY/dX  0.01492   0.000998 14.95   &lt;0.001 165.4  0.0130  0.016873
-#&gt;  married    1 - 0  0.08945   0.010104  8.85   &lt;0.001  60.0  0.0696  0.109250
-#&gt; 
-#&gt; Type: response</code></pre>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabella elegante con modelsummary</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Logit (AME)&quot;</span> <span class="ot">=</span> all_effects_logit, <span class="st">&quot;Probit (AME)&quot;</span> <span class="ot">=</span> all_effects_probit), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2|Adj&quot;</span>)             </span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>reg_lpm_crime <span class="ot">&lt;-</span> <span class="fu">feols</span>(arrested <span class="sc">~</span> pcnv <span class="sc">+</span> avgsen <span class="sc">+</span> tottime <span class="sc">+</span> ptime86 <span class="sc">+</span> qemp86 <span class="sc">+</span> black <span class="sc">+</span> hispan, <span class="at">data =</span> crime1, <span class="at">vcov =</span> <span class="st">&quot;hetero&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Arrested&quot;</span> <span class="ot">=</span> reg_lpm_crime), <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2 Adj.&quot;</span>)</span></code></pre></div><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 19%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Logit (AME)</th>
-<th>Probit (AME)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>abuse</td>
-<td>-0.021</td>
-<td>-0.019</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.010)</td>
-<td>(0.010)</td>
-</tr>
-<tr class="odd">
-<td>age</td>
-<td>-0.003</td>
-<td>-0.003</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.000)</td>
-<td>(0.000)</td>
-</tr>
-<tr class="odd">
-<td>educ</td>
-<td>0.014</td>
-<td>0.015</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.001)</td>
-<td>(0.001)</td>
-</tr>
-<tr class="odd">
-<td>married</td>
-<td>0.091</td>
-<td>0.089</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>(0.010)</td>
-<td>(0.010)</td>
-</tr>
-<tr class="odd">
-<td>Num.Obs.</td>
-<td>9822</td>
-<td>9822</td>
-</tr>
-</tbody>
-</table>
+<!-- preamble start -->
+
+    <script>// TinyTable JavaScript Framework
+// Function factory for creating table-specific operations
+window.TinyTable = {
+  // Helper to create Tabulator instance with Luxon dependency
+  createTabulator: function(elementId, config) {
+    const { DateTime } = window.luxon || {};
+    return new Tabulator(elementId, {
+      dependencies: { DateTime },
+      ...config
+    });
+  },
+
+  createTableFunctions: function (tableId) {
+    const spans = []; // {top, left, rowspan, colspan}
+
+    function resolveToAnchor(i, j) {
+      // find if (i,j) is inside any span; return that span's anchor if so
+      for (const s of spans) {
+        if (
+          i >= s.top && i < s.top + s.rowspan &&
+          j >= s.left && j < s.left + s.colspan
+        ) {
+          return { i: s.top, j: s.left };
+        }
+      }
+      return { i, j };
+    }
+
+    return {
+      styleCell: function (i, j, css_id) {
+        // normalize possible string indices
+        i = +i; j = +j;
+
+        const table = document.getElementById(tableId);
+        const { i: ai, j: aj } = resolveToAnchor(i, j);
+        const cell = table.querySelector(`[data-row="${ai}"][data-col="${aj}"]`);
+        if (!cell) return; // silently skip if not found (e.g., removed)
+        cell.classList.add(css_id);
+      },
+
+      spanCell: function (i, j, rowspan, colspan) {
+        i = +i; j = +j;
+
+        const table = document.getElementById(tableId);
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+          return;
+        }
+
+        // record span so future styleCell calls map to the anchor
+        spans.push({ top: i, left: j, rowspan, colspan });
+
+        // remove covered cells (except anchor)
+        const cellsToRemove = [];
+        for (let r = 0; r < rowspan; r++) {
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue;
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) cellsToRemove.push(cell);
+          }
+        }
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // set HTML attributes for clarity/serialization
+        targetCell.setAttribute('rowspan', rowspan);
+        targetCell.setAttribute('colspan', colspan);
+      }
+    };
+  }
+};
+
+// =============================================================================
+// TABULATOR CUSTOM FORMATTERS (revised)
+// =============================================================================
+
+// SVG sparkline
+function tinytable_sparkline(cell, p = {}) {
+  let values = cell.getValue() ?? [];
+  if (!Array.isArray(values)) values = [values];
+  // coerce to finite numbers & strip NaNs
+  values = values.map(Number).filter(Number.isFinite);
+  const n = values.length;
+  if (n === 0) return "";
+
+  const w = p.width ?? 120, h = p.height ?? 30, pad = p.pad ?? 2;
+  const color = p.color ?? "currentColor", sw = p.strokeWidth ?? 1.5;
+  const fill = p.fillArea ?? false;
+  const showDots = p.showDots ?? false;
+  const dotR = p.dotRadius ?? 1.75;
+  const ariaLabel = p.ariaLabel ?? `sparkline with ${n} points`;
+
+  // single pass for min/max
+  let min = Infinity, max = -Infinity;
+  for (let v of values) { if (v < min) min = v; if (v > max) max = v; }
+  const span = (max - min) || 1;
+
+  const x = i => pad + (i * (w - 2 * pad)) / Math.max(n - 1, 1);
+  const y = v => h - pad - ((v - min) * (h - 2 * pad)) / span;
+
+  let d = `M ${x(0)},${y(values[0])}`;
+  for (let i = 1; i < n; i++) d += ` L ${x(i)},${y(values[i])}`;
+
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("width", w);
+  svg.setAttribute("height", h);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", ariaLabel);
+
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("stroke", color);
+  path.setAttribute("stroke-width", sw);
+  path.setAttribute("vector-effect", "non-scaling-stroke");
+
+  if (fill) {
+    const area = document.createElementNS(NS, "path");
+    area.setAttribute("d", d + ` L ${x(n - 1)},${h - pad} L ${x(0)},${h - pad} Z`);
+    area.setAttribute("fill", color);
+    area.setAttribute("fill-opacity", p.fillOpacity ?? 0.25);
+    svg.appendChild(area);
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+  } else {
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+  }
+  svg.appendChild(path);
+
+  if (showDots) {
+    const dot = (i) => {
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("cx", x(i));
+      c.setAttribute("cy", y(values[i]));
+      c.setAttribute("r", dotR);
+      c.setAttribute("fill", color);
+      return c;
+    };
+    if (p.dots === "end") svg.appendChild(dot(n - 1));
+    else if (p.dots === "minmax") {
+      const iMin = values.indexOf(min), iMax = values.indexOf(max);
+      svg.appendChild(dot(iMin)); svg.appendChild(dot(iMax));
+    } else if (p.dots === true) {
+      for (let i = 0; i < n; i++) svg.appendChild(dot(i));
+    }
+  }
+
+  if (p.title) {
+    const title = document.createElementNS(NS, "title");
+    title.textContent = p.title;
+    svg.appendChild(title);
+  }
+
+  return svg;
+}
+
+// Canvas histogram
+function tinytable_histogram(cell, p = {}) {
+  let data = cell.getValue() ?? [];
+  if (!Array.isArray(data)) data = [data];
+  data = data.map(Number).filter(Number.isFinite);
+  const n = data.length;
+  if (n === 0) return "";
+
+  const cssWidth = p.width ?? 120;
+  const cssHeight = p.height ?? 30;
+  const color = p.color ?? "currentColor";
+  const gap = p.gap ?? 1;         // px gap between bars
+  const pad = p.pad ?? 0;         // inner padding
+  const ariaLabel = p.ariaLabel ?? `histogram with ${n} observations`;
+
+  // robust bins: Sturges as default; allow override
+  const k = Math.max(1, Math.min(64, p.bins ?? Math.ceil(Math.log2(n) + 1)));
+
+  // stats
+  let min = Infinity, max = -Infinity;
+  for (let v of data) { if (v < min) min = v; if (v > max) max = v; }
+
+  // zero-range safeguard -> single centered bar
+  const range = max - min;
+  const binWidth = range > 0 ? range / k : 1;
+
+  const bins = new Array(k).fill(0);
+  if (range === 0) {
+    // put all mass in the middle bin
+    bins[Math.floor(k / 2)] = n;
+  } else {
+    for (let v of data) {
+      let idx = Math.floor((v - min) / binWidth);
+      if (idx >= k) idx = k - 1; // clamp max edge
+      bins[idx]++;
+    }
+  }
+  const maxCount = Math.max(...bins, 1);
+
+  // HiDPI / Retina crispness
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(cssWidth * dpr);
+  canvas.height = Math.round(cssHeight * dpr);
+  canvas.style.width = cssWidth + "px";
+  canvas.style.height = cssHeight + "px";
+  canvas.setAttribute("role", "img");
+  canvas.setAttribute("aria-label", ariaLabel);
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+  ctx.fillStyle = color;
+
+  const innerW = cssWidth - pad * 2;
+  const innerH = cssHeight - pad * 2;
+  const barW = innerW / k;
+
+  for (let i = 0; i < k; i++) {
+    const h = (bins[i] / maxCount) * innerH;
+    const x = pad + i * barW;
+    const y = cssHeight - pad - h;
+    // 0.5 translate helps crisp vertical edges on some displays
+    ctx.fillRect(Math.round(x) + 0.5, Math.floor(y), Math.max(0, barW - gap), Math.ceil(h));
+  }
+
+  if (p.title) canvas.title = p.title;
+  return canvas;
+}
+
+// Unified sorter that uses hidden rank field
+function tinytable_rank_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
+  const rankField = sorterParams.rankField;
+  const aVal = aRow.getData()[rankField] || 0;
+  const bVal = bRow.getData()[rankField] || 0;
+  return aVal - bVal;
+}
+</script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_sud0vzk37qobpk08s27h = TinyTable.createTableFunctions("tinytable_sud0vzk37qobpk08s27h");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '18', j: 2 } ], css_id: 'tinytable_css_hm8gan3479b3nhgmgop3',}, 
+          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_fo53bebiiha3qiy0c2q7',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '17', j: 2 } ], css_id: 'tinytable_css_n1bj3bo6i1r426up5kd4',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_bs3ukfpjfmgt29l88xe5',}, 
+          { positions: [ { i: '18', j: 1 } ], css_id: 'tinytable_css_vb4y5sjlnpq4elvr354f',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_l5rp633kh1mza4g02t1m',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '17', j: 1 } ], css_id: 'tinytable_css_ggc1hlgexqyimxsx3wcg',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_kyxfwfbn7duc2rnih3hd',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_sud0vzk37qobpk08s27h.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style type="text/css">
+
+
+.tinytable {
+
+--tt-text-color: inherit;
+--tt-line-color: black;
+--tt-border-color: var(--tt-line-color);
+--tt-striped-bg: rgba(0, 0, 0, .05);
+--tt-hover-bg: rgba(0, 0, 0, .075);
+--tt-background-color: transparent;
+--tt-footnote-bg: var(--tt-background-color);
+
+--tt-cell-padding: .5rem;
+--tt-cell-padding-sm: calc(var(--tt-cell-padding) / 2);
+--tt-table-margin: .5rem 0;
+--tt-caption-padding: .5rem 0;
+--tt-footnote-padding: .2rem .5rem;
+--tt-footnote-first-padding-top: .5rem;
+--tt-footnote-gap: .1rem;
+--tt-container-padding: 10px;
+
+--tt-font-size-footnote: 0.875rem;
+--tt-font-size-caption: 1rem;
+--tt-font-size-sup: 0.75em;
+--tt-line-height-footnote: 1.25;
+--tt-line-height-footnote-tight: 1.2;
+--tt-font-weight-header: normal;
+
+--tt-cell-valign: top;
+--tt-header-align: left;
+--tt-header-valign: bottom;
+--tt-caption-align: var(--tt-header-align);
+--tt-caption-side: top;
+
+--tt-table-width: 100%;
+
+--tt-border-width: 1px;
+--tt-border-width-tbody: 2px;
+}
+
+.tinytable {
+width: var(--tt-table-width);
+margin: var(--tt-table-margin);
+border-collapse: collapse;
+background-color: var(--tt-background-color);
+color: var(--tt-text-color);
+font-family: inherit;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+.tinytable *:not(mjx-container):not(mjx-container *) {
+font-family: inherit;
+}
+
+.tinytable th,
+.tinytable td {
+position: relative;
+padding: var(--tt-cell-padding);
+vertical-align: var(--tt-cell-valign);
+}
+.tinytable thead th {
+text-align: var(--tt-header-align);
+vertical-align: var(--tt-header-valign);
+font-weight: var(--tt-font-weight-header);
+border-bottom: none;
+}
+.tinytable thead th[align="center"] {
+text-align: center;
+}
+.tinytable tbody + tbody {
+border-top: var(--tt-border-width-tbody) solid var(--tt-border-color);
+}
+
+
+.tinytable-sm th,
+.tinytable-sm td {
+padding: var(--tt-cell-padding-sm);
+}
+
+.tinytable-bordered {
+border: var(--tt-border-width) solid var(--tt-border-color);
+}
+.tinytable-bordered th,
+.tinytable-bordered td {
+border: var(--tt-border-width) solid var(--tt-border-color);
+}
+
+.tinytable-striped tbody tr:nth-of-type(odd) {
+background-color: var(--tt-striped-bg);
+}
+
+.tinytable-hover tbody tr:hover {
+background-color: var(--tt-hover-bg);
+}
+
+.tinytable-responsive {
+width: var(--tt-table-width);
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"] {
+position: relative;
+
+--border-top: 0;
+--border-right: 0;
+--border-bottom: 0;
+--border-left: 0;
+
+--line-color-top: currentColor;
+--line-color-right: currentColor;
+--line-color-bottom: currentColor;
+--line-color-left: currentColor;
+
+--line-width-top: 0.1em;
+--line-width-right: 0.1em;
+--line-width-bottom: 0.1em;
+--line-width-left: 0.1em;
+
+--trim-top-left: 0%;
+--trim-top-right: 0%;
+--trim-right-top: 0%;
+--trim-right-bottom: 0%;
+--trim-bottom-left: 0%;
+--trim-bottom-right: 0%;
+--trim-left-top: 0%;
+--trim-left-bottom: 0%;
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"]::before {
+content: "";
+position: absolute;
+top: var(--trim-top-left, var(--trim-top-right, 0));
+left: var(--trim-left-top, 0);
+right: var(--trim-right-top, 0);
+bottom: 0;
+pointer-events: none;
+z-index: 1;
+border-top: calc(var(--border-top) * var(--line-width-top)) solid var(--line-color-top);
+border-right: calc(var(--border-right) * var(--line-width-right)) solid var(--line-color-right);
+border-left: calc(var(--border-left) * var(--line-width-left)) solid var(--line-color-left);
+}
+
+.tinytable :is(td, th)[class*="tinytable_css_"]::after {
+content: "";
+position: absolute;
+left: var(--trim-bottom-left, 0);
+right: var(--trim-bottom-right, 0);
+bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
+height: calc(var(--border-bottom) * var(--line-width-bottom));
+background: var(--line-color-bottom);
+pointer-events: none;
+z-index: 2;
+}
+
+.tinytable-container {
+padding: var(--tt-container-padding);
+overflow-x: auto;
+overflow-y: auto;
+width: auto;
+height: auto;
+}
+
+.tinytable caption {
+padding: var(--tt-caption-padding);
+caption-side: var(--tt-caption-side);
+font-size: var(--tt-font-size-caption);
+text-align: var(--tt-caption-align);
+}
+
+.tinytable tfoot tr:first-child td {
+padding-top: var(--tt-footnote-first-padding-top);
+}
+.tinytable tfoot td {
+padding: var(--tt-footnote-padding);
+font-size: var(--tt-font-size-footnote);
+line-height: var(--tt-line-height-footnote);
+background-color: var(--tt-footnote-bg);
+}
+
+.tinytable tfoot tr + tr td {
+padding-top: var(--tt-footnote-gap);
+}
+
+.tinytable tfoot sup {
+font-size: var(--tt-font-size-sup);
+line-height: 0;
+vertical-align: text-top;
+}
+
+.tinytable tfoot tr:nth-child(n+2) td {
+line-height: var(--tt-line-height-footnote-tight);
+}
+</style>
+    <style>
+
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_hm8gan3479b3nhgmgop3, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_hm8gan3479b3nhgmgop3 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_fo53bebiiha3qiy0c2q7, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_fo53bebiiha3qiy0c2q7 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_n1bj3bo6i1r426up5kd4, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_n1bj3bo6i1r426up5kd4 { text-align: center }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_bs3ukfpjfmgt29l88xe5, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_bs3ukfpjfmgt29l88xe5 { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_vb4y5sjlnpq4elvr354f, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_vb4y5sjlnpq4elvr354f { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_l5rp633kh1mza4g02t1m, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_l5rp633kh1mza4g02t1m { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_ggc1hlgexqyimxsx3wcg, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_ggc1hlgexqyimxsx3wcg { text-align: left }
+#tinytable_sud0vzk37qobpk08s27h td.tinytable_css_kyxfwfbn7duc2rnih3hd, #tinytable_sud0vzk37qobpk08s27h th.tinytable_css_kyxfwfbn7duc2rnih3hd { position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+</style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_sud0vzk37qobpk08s27h" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Arrested</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">0.380</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.020)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">pcnv</td>
+                  <td data-row="3" data-col="2">-0.152</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.019)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">avgsen</td>
+                  <td data-row="5" data-col="2">0.005</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.006)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">tottime</td>
+                  <td data-row="7" data-col="2">-0.003</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.004)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">ptime86</td>
+                  <td data-row="9" data-col="2">-0.024</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2">(0.003)</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">qemp86</td>
+                  <td data-row="11" data-col="2">-0.038</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1"></td>
+                  <td data-row="12" data-col="2">(0.005)</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">black</td>
+                  <td data-row="13" data-col="2">0.170</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1"></td>
+                  <td data-row="14" data-col="2">(0.026)</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">hispan</td>
+                  <td data-row="15" data-col="2">0.096</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1"></td>
+                  <td data-row="16" data-col="2">(0.021)</td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="1">Num.Obs.</td>
+                  <td data-row="17" data-col="2">2725</td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="1">R2</td>
+                  <td data-row="18" data-col="2">0.068</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
-<p>Gli effetti sono vicini a quelli stimati con il modello LPM.</p>
-<p><strong>Interpretazione</strong> degli effetti marginali medi (AME) del modello Probit:</p>
+<p>Aumentare la probabilità di condanna riduce effettivamente la probabilità di arresto. Attenzione, la variabile <span class="math inline">\(pcnv\)</span> è una proporzione compresa tra zero e uno; quindi, passare <span class="math inline">\(pcnv\)</span> da zero a uno significa essenzialmente passare da nessuna possibilità di essere condannati alla certezza della condanna. Anche un cambiamento così ampio riduce la probabilità di arresto solo di 0.152, cioè 15.2 punti percentuali.</p>
+<p>Quindi se <span class="math inline">\(pcnv\)</span> aumenta di 1 punto percentuale la probabilità di arresto diminuisce di 0.152 punti percentuali.</p>
+<p><span class="math inline">\(qemp86\)</span> è il numero di trimestri di occupazione nel 1986 (da 0 a 4) e ha coefficiente -0.038. Possiamo leggerlo in due modi equivalenti, a parità delle altre variabili:</p>
 <ul>
-<li><p>Aver abusato di alcol riduce la probabilità di essere occupati di 1.9 punti percentuali</p></li>
-<li><p>Un anno in più di istruzione aumenta la probabilità di essere occupati 1.5 punti percenutali</p></li>
-<li><p>Essere sposato aumenta la probabilità di essere occupato di 8.9 punti percentuali</p></li>
+<li><p><strong>Effetto di un trimestre in più</strong>: passare da 0 a 1 trimestre di occupazione (o da 1 a 2, da 2 a 3, ecc.) è associato a una probabilità di essere arrestato inferiore di circa 3.8 punti percentuali.</p></li>
+<li><p><strong>Confronto tra i due estremi</strong>: un uomo occupato in tutti e quattro i trimestri ha una probabilità di essere arrestato inferiore di circa 15.4 punti percentuali (<span class="math inline">\(4 \times 0.038 \approx 0.154\)</span>) rispetto a un uomo mai occupato durante l’anno.</p></li>
 </ul>
+<p>Le due letture sono coerenti perché nel LPM l’effetto marginale è costante: ogni trimestre in più “vale” sempre lo stesso, e quattro trimestri in più valgono <span class="math inline">\(4\)</span> volte tanto.</p>
+<p>Le persone di colore hanno una probabilità di essere arrestate superiore di 17 punti percentuali a parità delle altre variabili. Le persone di origine ispanica hanno una probabilità di essere arrestate superiore di 9.6 punti percentuali a parità delle altre variabili.</p>
 <!-- -->
 
-</section>
 </section>
 
 </main>
@@ -4159,276 +5016,211 @@ line-height: var(--tt-line-height-footnote-tight);
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Eseguire il codice</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Esercitazione N.6&quot;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> &quot;Linear Probability Model (LPM)&quot;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Andrea Recine&quot;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> today</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> it</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    # Layout</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: flatly</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: &quot;Contenuti&quot;</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: right       </span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">    # Codice</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-bg: true</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-border-left: false</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">    highlight-style: github</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">    # Output</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co">    # Tipografia</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 1.1em</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co">    linestretch: 1.6</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="an">knitr:</span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="co">  opts_chunk:</span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co">    comment: &quot;#&gt;&quot;</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.align: &quot;center&quot;</span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.width: 7</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.height: 4.5</span></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setup</span></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fixest)</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wooldridge)</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Linear Probability Model (LPM)</span></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>Stimiamo il seguente modello di probabilità lineare (LPM) che asssume una relazione lineare tra le variabili esplicative e la probabilità dell&#39;evento:</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>\Pr(Y=1|X_1,\dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>$$  </span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>Implicazione, sotto assunzione $E(u_i | X_i) = 0$:</span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>\mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>cioè il valore atteso condizionato coincide con la probabilità che $Y = 1$ dato $X = x$.</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>$\beta_1$ rappresenta la variazione della probabilità che $Y = 1$ per una variazione unitaria in $X$, o più generalmente:</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>\beta_1 = \frac{\Pr(Y = 1 \mid X = x + \Delta x) - \Pr(Y = 1 \mid X = x)}{\Delta x}</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>La procedura di stima tramite OLS resta invariata.</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.</span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>Per i modelli LPM vengono riportati errori standard robusti <span class="in">`vcoc= hetero`</span>.</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title=&quot;Attenzione&quot;}</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>**L&#39;eteroschedasticità** è intrinseca nel LPM.</span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dataset `alcohol`</span></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>Carichiamo i dati <span class="in">`alcohol`</span> che contengono 9822 osservazioni e 33 variabili.</span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;alcohol&quot;</span>, <span class="at">package =</span> <span class="st">&quot;wooldridge&quot;</span>)</span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(alcohol)</span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a><span class="fu">### Descrizione della variabili</span></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Variabile   <span class="pp">|</span> Descrizione                                                                               <span class="pp">|</span></span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a><span class="pp">| :----------</span> <span class="pp">| :----------------------------------------------------------------------------------------</span> <span class="pp">|</span></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $abuse$     <span class="pp">|</span> Variabile dummy (1=Abusa di Alcol, 0=Non abusa).                                  <span class="pp">|</span></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $employ$    <span class="pp">|</span> Variabile dipendente dummy (1=Occupato, 0=Non occupato).                              <span class="pp">|</span></span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $married$   <span class="pp">|</span> Variabile dummy (1=Sposato, 0=Non sposato).                    <span class="pp">|</span></span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $educ$     <span class="pp">|</span> Anni di istruzione       <span class="pp">|</span></span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>In altre parole, la nostra variabile dipendente, $Y$, assume solo due valori: zero e uno (0 - 1).</span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_skim</span>(alcohol)</span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>reg_lpm_alcohol <span class="ot">&lt;-</span> <span class="fu">feols</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">vcov =</span> <span class="st">&quot;hetero&quot;</span>)</span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ&quot;</span> <span class="ot">=</span> reg_lpm_alcohol), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE&quot;</span>)</span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>**Interpretazione dei coefficienti:**</span>
-<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>il coefficiente − 0.018 di $abuse$. Aver abusato di alcol è associato ad una probabilità di essere occupato **inferiore** di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol. A parità di età, anni di istruzione e stato coniugale.</span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>il coefficiente 0.017. Ogni anno in più di istruzione è associato ad un **aumento** della probabilità di essere occupato di 1.7 punti percentuali. A parità di età, abuso di alcol e stato coniugale.</span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a>**Nota:** Attenzioni alle variabili percentuali espresse in forma decimale (0.26). Ad esempio <span class="in">`pirat`</span> (Rapporto tra pagamenti e reddito) nella Lezione *Analisi della Concessione di Mutui su dati HMDA*.</span>
-<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## Probit e Logit</span></span>
-<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a>**Modello Logit**: Utilizza la funzione logistica per modellare la probabilità:</span>
-<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a>   \Pr(Y=1|X_1,\dots, X_k) = \frac{e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}} = \Lambda(X\beta)</span>
-<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a>dove $\Lambda(z) = \frac{e^z}{1 + e^z}$ è la funzione logistica.</span>
-<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a>**Modello Probit**: Utilizza la funzione di distribuzione cumulativa normale:</span>
-<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a>   \Pr(Y=1|X_1,\dots, X_k) = \Phi(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k) = \Phi(X\beta)</span>
-<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a>dove $\Phi(z)$ è la funzione di distribuzione cumulativa della normale standard.</span>
-<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a>I modelli Logit e Probit vengono stimati con il metodo della massima verosimiglianza (MLE).</span>
-<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a>Sia per Logit che per Probit, i coefficienti stimati **non rappresentano** direttamente gli effetti marginali, che invece variano a seconda dei valori delle variabili esplicative. L’effetto marginale dipende dai valori di tutte le variabili esplicative, a differenza del linear probability model (LPM) dove è costante.</span>
-<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a>probit_alcohol <span class="ot">&lt;-</span> <span class="fu">feglm</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">family =</span> <span class="st">&#39;probit&#39;</span>)</span>
-<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a>logit_alcohol <span class="ot">&lt;-</span> <span class="fu">feglm</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">family =</span> <span class="st">&#39;logit&#39;</span>)</span>
-<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ (LPM)&quot;</span> <span class="ot">=</span> reg_lpm_alcohol, <span class="st">&quot;Employ (Probit)&quot;</span> <span class="ot">=</span> probit_alcohol, <span class="st">&quot;Employ (Logit)&quot;</span><span class="ot">=</span>logit_alcohol), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE&quot;</span>)</span>
-<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## Effetti Marginali Medi (AME)</span></span>
-<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>Il calcolo degli effetti marginali è fondamentale per interpretare correttamente i modelli Logit e Probit.</span>
-<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a>Si calcolano gli effetti marginali per ogni osservazione nel dataset e poi si fa la media.</span>
-<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>Matematicamente, l&#39;effetto marginale medio (AME) è calcolato come:</span>
-<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a>  \overline{\text{ME}} = \frac{1}{n} \sum_{i=1}^{n} \text{ME}_i</span>
-<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a>dove $\text{ME}_i$ è l&#39;effetto marginale calcolato per l&#39;osservazione $i$ e $n$ è il numero totale di osservazioni nel dataset.</span>
-<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a>**Per il modello LPM**: L&#39;effetto marginale è semplicemente il coefficiente $\beta_j$:</span>
-<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>\frac{\partial \Pr(Y=1|X_1,\dots, X_k)}{\partial X_j} = \beta_j</span>
-<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a>$$  </span>
-<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a><span class="fu">### Calcolo manuale</span></span>
-<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a>Effetto Marginale abuso alcol, modello probit:</span>
-<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione di due dataset: uno con abuse=1 per tutti e uno con abuse=0 per tutti</span></span>
-<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a>alcohol_tmp1 <span class="ot">&lt;-</span> alcohol</span>
-<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a>alcohol_tmp0 <span class="ot">&lt;-</span> alcohol</span>
-<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="co"># Impostiamo abuse=1 per tutti nel primo dataset</span></span>
-<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a>alcohol_tmp1<span class="sc">$</span>abuse <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="co"># Impostiamo abuse=0 per tutti nel secondo dataset</span></span>
-<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a>alcohol_tmp0<span class="sc">$</span>abuse <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle probabilità predette per il modello logit</span></span>
-<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a>proba_employ_probit <span class="ot">&lt;-</span> <span class="fu">predict</span>(probit_alcohol, <span class="at">newdata =</span> alcohol_tmp1)</span>
-<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a>proba_nonemploy_probit <span class="ot">&lt;-</span> <span class="fu">predict</span>(probit_alcohol, <span class="at">newdata =</span> alcohol_tmp0)</span>
-<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dell&#39;effetto marginale medio (differenza media nelle probabilità predette)</span></span>
-<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a>ame_manual_probit <span class="ot">&lt;-</span> <span class="fu">mean</span>(proba_employ_probit <span class="sc">-</span> proba_nonemploy_probit)</span>
-<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Effetto marginale medio manuale (Probit):&quot;</span>, <span class="fu">round</span>(ame_manual_probit, <span class="dv">4</span>)))</span>
-<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a>Per il modello logit:</span>
-<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle probabilità predette per il modello logit</span></span>
-<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a>proba_employ_logit <span class="ot">&lt;-</span> <span class="fu">predict</span>(logit_alcohol, <span class="at">newdata =</span> alcohol_tmp1)</span>
-<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a>proba_nonemploy_logit <span class="ot">&lt;-</span> <span class="fu">predict</span>(logit_alcohol, <span class="at">newdata =</span> alcohol_tmp0)</span>
-<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dell&#39;effetto marginale medio (differenza media nelle probabilità predette)</span></span>
-<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a>ame_manual_logit <span class="ot">&lt;-</span> <span class="fu">mean</span>(proba_employ_logit <span class="sc">-</span> proba_nonemploy_logit)</span>
-<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Effetto marginale medio manuale (Logit):&quot;</span>, <span class="fu">round</span>(ame_manual_logit, <span class="dv">4</span>)))</span>
-<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.</span>
-<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.</span>
-<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-248"><a href="#cb14-248" aria-hidden="true" tabindex="-1"></a>L’approccio dell’effetto marginale medio è generalmente considerato più robusto, perché tiene conto di come l’effetto di $abuse$ può variare a seconda delle altre caratteristiche dei richiedenti.</span>
-<span id="cb14-249"><a href="#cb14-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-250"><a href="#cb14-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a><span class="fu">### Con `marginaleffects`</span></span>
-<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a>Gli effetti marginali medi calcolati con <span class="in">`marginaleffects`</span> sono identici a quelli calcolati manualmente in precedenza. Il vantaggio di utilizzare <span class="in">`marginaleffects`</span> in questo caso è che otteniamo automaticamente anche gli errori standard permettendo una valutazione della significatività statistica dell&#39;effetto.</span>
-<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a>La funzione <span class="in">`avg_slopes`</span> senza l’opzione <span class="in">`newdata`</span> calcola gli effetti marginali medi, ovvero calcola l’effetto marginale per ogni osservazione nel dataset e poi ne fa la media. Questo approccio tiene conto della distribuzione reale delle variabili nel campione.</span>
-<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-257"><a href="#cb14-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-260"><a href="#cb14-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-261"><a href="#cb14-261" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
-<span id="cb14-262"><a href="#cb14-262" aria-hidden="true" tabindex="-1"></a>all_effects_logit <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(logit_alcohol)</span>
-<span id="cb14-263"><a href="#cb14-263" aria-hidden="true" tabindex="-1"></a>all_effects_probit <span class="ot">&lt;-</span> <span class="fu">avg_slopes</span>(probit_alcohol)</span>
-<span id="cb14-264"><a href="#cb14-264" aria-hidden="true" tabindex="-1"></a>all_effects_probit</span>
-<span id="cb14-265"><a href="#cb14-265" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-266"><a href="#cb14-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-267"><a href="#cb14-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-270"><a href="#cb14-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-271"><a href="#cb14-271" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabella elegante con modelsummary</span></span>
-<span id="cb14-272"><a href="#cb14-272" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Logit (AME)&quot;</span> <span class="ot">=</span> all_effects_logit, <span class="st">&quot;Probit (AME)&quot;</span> <span class="ot">=</span> all_effects_probit), <span class="at">output =</span> <span class="st">&quot;markdown&quot;</span>, <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2|Adj&quot;</span>)             </span>
-<span id="cb14-273"><a href="#cb14-273" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-274"><a href="#cb14-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-275"><a href="#cb14-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-276"><a href="#cb14-276" aria-hidden="true" tabindex="-1"></a>Gli effetti sono vicini a quelli stimati con il modello LPM.</span>
-<span id="cb14-277"><a href="#cb14-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-278"><a href="#cb14-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-279"><a href="#cb14-279" aria-hidden="true" tabindex="-1"></a>**Interpretazione** degli effetti marginali medi (AME) del modello Probit:</span>
-<span id="cb14-280"><a href="#cb14-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-281"><a href="#cb14-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-282"><a href="#cb14-282" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Aver abusato di alcol riduce la probabilità di essere occupati di 1.9 punti percentuali</span>
-<span id="cb14-283"><a href="#cb14-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-284"><a href="#cb14-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Un anno in più di istruzione aumenta la probabilità di essere occupati 1.5 punti percenutali</span>
-<span id="cb14-285"><a href="#cb14-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-286"><a href="#cb14-286" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Essere sposato aumenta la probabilità di essere occupato di 8.9 punti percentuali</span>
-<span id="cb14-287"><a href="#cb14-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-288"><a href="#cb14-288" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;Esercitazione N.6&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> &quot;Linear Probability Model (LPM)&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> &quot;Andrea Recine&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> today</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> it</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">    # Layout</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: flatly</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: &quot;Contenuti&quot;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: right       </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">    # Codice</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-bg: true</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-border-left: false</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">    highlight-style: github</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">    # Output</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co">    # Tipografia</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 1.1em</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co">    linestretch: 1.6</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="an">knitr:</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="co">  opts_chunk:</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co">    comment: &quot;#&gt;&quot;</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.align: &quot;center&quot;</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.width: 7</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co">    fig.height: 4.5</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setup</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fixest)</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wooldridge)</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Linear Probability Model (LPM)</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>Stimiamo il seguente modello di probabilità lineare (LPM) che assume una relazione lineare tra le variabili esplicative e la probabilità dell&#39;evento:</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>\Pr(Y=1 \mid X_1, \dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_k X_k</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>Implicazione, sotto assunzione $\mathbb{E}(u_i \mid X_i) = 0$:</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>\mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>cioè il valore atteso condizionato coincide con la probabilità che $Y = 1$ dato $X = x$.</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>$\beta_1$ rappresenta la variazione della probabilità che $Y = 1$ per una variazione unitaria in $X$, o più generalmente:</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>\beta_1 = \frac{\Pr(Y = 1 \mid X = x + \Delta x) - \Pr(Y = 1 \mid X = x)}{\Delta x}</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>La procedura di stima tramite OLS resta invariata.</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.</span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>Per i modelli LPM vengono riportati errori standard robusti (<span class="in">`vcov = &quot;hetero&quot;`</span>).</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title=&quot;Attenzione&quot;}</span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>**L&#39;eteroschedasticità** è intrinseca nel LPM.</span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dataset `alcohol`</span></span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>Carichiamo i dati <span class="in">`alcohol`</span> che contengono 9822 osservazioni e 33 variabili.</span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;alcohol&quot;</span>, <span class="at">package =</span> <span class="st">&quot;wooldridge&quot;</span>)</span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(alcohol)</span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a><span class="fu">### Descrizione delle variabili</span></span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Variabile   <span class="pp">|</span> Descrizione                                                                               <span class="pp">|</span></span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a><span class="pp">| :----------</span> <span class="pp">| :----------------------------------------------------------------------------------------</span> <span class="pp">|</span></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $abuse$     <span class="pp">|</span> Variabile dummy (1=Abusa di Alcol, 0=Non abusa).                                  <span class="pp">|</span></span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $employ$    <span class="pp">|</span> Variabile dipendente dummy (1=Occupato, 0=Non occupato).                              <span class="pp">|</span></span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $married$   <span class="pp">|</span> Variabile dummy (1=Sposato, 0=Non sposato).                    <span class="pp">|</span></span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $educ$      <span class="pp">|</span> Anni di istruzione.       <span class="pp">|</span></span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $age$       <span class="pp">|</span> Età in anni.       <span class="pp">|</span></span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a>In altre parole, la nostra variabile dipendente, $Y$, è una variabile dummy che assume solo due valori (0-1).</span>
+<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_skim</span>(alcohol)</span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a>reg_lpm_alcohol <span class="ot">&lt;-</span> <span class="fu">feols</span>(employ <span class="sc">~</span> abuse <span class="sc">+</span> educ <span class="sc">+</span> age <span class="sc">+</span> married, <span class="at">data =</span> alcohol, <span class="at">vcov =</span> <span class="st">&quot;hetero&quot;</span>)</span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Employ&quot;</span> <span class="ot">=</span> reg_lpm_alcohol), <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2 Adj.&quot;</span>)</span>
+<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>**Interpretazione dei coefficienti:**</span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Coefficiente di $abuse$ pari a -0.018: aver abusato di alcol è associato a una probabilità di essere occupato **inferiore** di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol, a parità di età, anni di istruzione e stato coniugale.</span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Coefficiente di $educ$ pari a 0.017: ogni anno aggiuntivo di istruzione è associato a un **aumento** della probabilità di essere occupato di 1.7 punti percentuali, a parità di età, abuso di alcol e stato coniugale.</span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Coefficiente di $married$ pari a 0.084: essere sposato è associato a una probabilità di essere occupato superiore di 8.4 punti percentuali rispetto a un uomo non sposato, a parità di età, abuso di alcol e anni di istruzione.</span>
+<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title=&quot;Nota&quot;}</span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>Attenzione alle variabili percentuali espresse in forma decimale (ad esempio 0.26 che rappresenta il 26%). <span class="in">`pirat`</span> (rapporto tra pagamenti e reddito) nella Lezione *Analisi della Concessione di Mutui su dati HMDA*.</span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>Se il coefficiente stimato associato a <span class="in">`pirat`</span> fosse 0.5, allora un aumento di 1 punto percentuale in <span class="in">`pirat`</span> è associato a un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo. Questo perché 1 punto percentuale è rappresentato come 0.01 in forma decimale, quindi l&#39;effetto marginale sarebbe 0.5 * 0.01 = 0.005, ovvero un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo.</span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Probabilità di essere arrestato `crime1`</span></span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;crime1&quot;</span>, <span class="at">package =</span> <span class="st">&quot;wooldridge&quot;</span>)</span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(crime1)</span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a>$narr86$ numero di volte arrestato nel 1986. A partire da questa variabile, creiamo una variabile dummy <span class="in">`arrested`</span> che assume valore 1 se un individuo è stato arrestato almeno una volta nel 1986 e 0 altrimenti.</span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a>crime1 <span class="ot">&lt;-</span> crime1 <span class="sc">%&gt;%</span></span>
+<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arrested =</span> <span class="fu">ifelse</span>(narr86 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a>Le altre variabili sono:</span>
+<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Variabile   <span class="pp">|</span> Descrizione                                                                               <span class="pp">|</span></span>
+<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a><span class="pp">| :----------</span> <span class="pp">| :----------------------------------------------------------------------------------------</span> <span class="pp">|</span></span>
+<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $pcnv$     <span class="pp">|</span> Proporzione di arresti precedenti che hanno portato a una condanna.                      <span class="pp">|</span></span>
+<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $avgsen$    <span class="pp">|</span> Sentenza media scontata da condanne precedenti (in mesi).                              <span class="pp">|</span></span>
+<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $tottime$   <span class="pp">|</span> Mesi trascorsi in prigione dal periodo pre-18 fino al 1986.                    <span class="pp">|</span></span>
+<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $ptime86$     <span class="pp">|</span> Mesi trascorsi in prigione nel 1986.       <span class="pp">|</span></span>
+<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $qemp86$     <span class="pp">|</span> Numero di trimestri in cui l&#39;uomo è stato impiegato nel 1986.       <span class="pp">|</span></span>
+<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $black$     <span class="pp">|</span> Variabile dummy (1=Persona di colore, 0=Altra).       <span class="pp">|</span></span>
+<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> $hispan$     <span class="pp">|</span> Variabile dummy (1=Persona di origine ispanica, 0=Altra).       <span class="pp">|</span></span>
+<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a>Stimiamo il seguente LPM:</span>
+<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a>reg_lpm_crime <span class="ot">&lt;-</span> <span class="fu">feols</span>(arrested <span class="sc">~</span> pcnv <span class="sc">+</span> avgsen <span class="sc">+</span> tottime <span class="sc">+</span> ptime86 <span class="sc">+</span> qemp86 <span class="sc">+</span> black <span class="sc">+</span> hispan, <span class="at">data =</span> crime1, <span class="at">vcov =</span> <span class="st">&quot;hetero&quot;</span>)</span>
+<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(<span class="fu">list</span>(<span class="st">&quot;Arrested&quot;</span> <span class="ot">=</span> reg_lpm_crime), <span class="at">gof_omit =</span> <span class="st">&quot;AIC|BIC|RMSE|R2 Adj.&quot;</span>)</span>
+<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a>Aumentare la probabilità di condanna riduce effettivamente la probabilità di arresto. Attenzione, la variabile $pcnv$ è una proporzione compresa tra zero e uno; quindi, passare $pcnv$ da zero a uno significa essenzialmente passare da nessuna possibilità di essere condannati alla certezza della condanna. Anche un cambiamento così ampio riduce la probabilità di arresto solo di 0.152, cioè 15.2 punti percentuali.</span>
+<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a>Quindi se $pcnv$ aumenta di 1 punto percentuale la probabilità di arresto diminuisce di 0.152 punti percentuali.</span>
+<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a>$qemp86$ è il numero di trimestri di occupazione nel 1986 (da 0 a 4) e ha coefficiente -0.038. Possiamo leggerlo in due modi equivalenti, a parità delle altre variabili:</span>
+<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Effetto di un trimestre in più**: passare da 0 a 1 trimestre di occupazione (o da 1 a 2, da 2 a 3, ecc.) è associato a una probabilità di essere arrestato inferiore di circa 3.8 punti percentuali.</span>
+<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confronto tra i due estremi**: un uomo occupato in tutti e quattro i trimestri ha una probabilità di essere arrestato inferiore di circa 15.4 punti percentuali ($4 \times 0.038 \approx 0.154$) rispetto a un uomo mai occupato durante l&#39;anno.</span>
+<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a>Le due letture sono coerenti perché nel LPM l&#39;effetto marginale è costante: ogni trimestre in più &quot;vale&quot; sempre lo stesso, e quattro trimestri in più valgono $4$ volte tanto.</span>
+<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a>Le persone di colore hanno una probabilità di essere arrestate superiore di 17 punti percentuali a parità delle altre variabili. Le persone di origine ispanica hanno una probabilità di essere arrestate superiore di 9.6 punti percentuali a parità delle altre variabili.</span>
+<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a></span>
 </code></pre></div><button title="Copia negli appunti" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
