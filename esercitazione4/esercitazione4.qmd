@@ -351,3 +351,23 @@ tt(desc_exper, digits = 3)
 ```
 
 La media di $exper$ è il valore che sottraiamo per ottenere $exper\_center$: per costruzione, quest'ultima ha **media zero**.
+
+
+
+::: {.callout-caution}
+## Centratura e multicollinearità
+
+Oltre al vantaggio interpretativo che abbiamo visto, centrare $exper$ ha anche un vantaggio **computazionale**: riduce la multicollinearità tra il termine lineare e quello quadratico.
+
+L'intuizione è la seguente. Se $exper$ varia in un intorno della sua media $\overline{exper}$, possiamo approssimare $exper^2$ con uno sviluppo del primo ordine attorno a $\overline{exper}$:
+
+$$
+exper^2 \approx \overline{exper}^{\,2} + 2\,\overline{exper}\,(exper - \overline{exper}) = -\overline{exper}^{\,2} + 2\,\overline{exper}\cdot exper.
+$$
+
+Quando $\overline{exper}$ è lontana da zero (nel nostro caso $\overline{exper} \approx 17$), $exper^2$ si comporta **quasi come una funzione lineare di $exper$**, con pendenza $2\,\overline{exper}$. I due regressori $exper$ ed $exper^2$ tendono perciò a muoversi insieme: per OLS diventa difficile separare il contributo di ciascuno, gli errori standard si gonfiano e il calcolo numerico è meno stabile.
+
+Se invece usiamo $exper\_center = exper - \overline{exper}$, lo stesso sviluppo dà $exper\_center^2 \approx 0$ in prossimità della media: le potenze pari ($exper\_center^2$) e quelle dispari ($exper\_center$) tendono a essere **ortogonali tra loro**. La matrice dei regressori è meglio condizionata e gli errori standard si riducono.
+
+Lo stesso argomento vale per polinomi di ordine superiore ($exper^3$, $exper^4$, ...): centrare prima di elevare a potenza migliora sempre il condizionamento numerico.
+:::
