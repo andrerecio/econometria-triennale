@@ -118,6 +118,57 @@ modelsummary(list("Wage" = reg_wage1, "Log Wage" = reg_logwage1), gof_omit = "AI
 
 
 
+### Istruzione dei genitori: dataset `wage2`
+
+Usiamo il dataset `wage2` considerando $pareduc$ che rappresenta la somma degli anni di istruzione dei genitori. $wage$ in `wage2` è il salario espresso in dollari mensili:
+
+```{r}
+wage2 <- wage2 %>%
+  mutate(pareduc = meduc + feduc)
+```
+
+```{r}
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_intlog <- feols(log(wage) ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Log Wage " = regeduc_intlog), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
+
+## Deviazione dalla media
+
+
+
+```{r}
+wage2 <- wage2 %>%
+  mutate(
+    pareduc_center = pareduc - mean(pareduc, na.rm = TRUE),
+    educ_center = educ - mean(educ, na.rm = TRUE)
+  )
+
+```
+
+
+Confronto con la precedente regressione:
+
+```{r}
+regeduc_int <- feols(wage ~ educ*pareduc + exper + tenure, data = wage2, vcov = "hetero")
+regeduc_int_mean <- feols(wage ~ educ_center * pareduc_center + exper + tenure, data = wage2, vcov = "hetero")
+modelsummary(list("Wage " = regeduc_int, "Wage " = regeduc_int_mean), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+
+
+
+
+
+
+
+
+
+
+
 **Riferimenti**
 
 **Fonte dei dati**: I dati utilizzati provengono dal CPS ASEC 2024, 

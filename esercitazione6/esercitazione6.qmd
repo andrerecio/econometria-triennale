@@ -60,12 +60,12 @@ library(wooldridge)
 ## Linear Probability Model (LPM)
 
 
-Stimiamo il seguente modello di probabilità lineare (LPM) che asssume una relazione lineare tra le variabili esplicative e la probabilità dell'evento:
+Stimiamo il seguente modello di probabilità lineare (LPM) che assume una relazione lineare tra le variabili esplicative e la probabilità dell'evento:
 $$
-\Pr(Y=1|X_1,\dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k
-$$  
+\Pr(Y=1 \mid X_1, \dots, X_k) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_k X_k
+$$
 
-Implicazione, sotto assunzione $E(u_i | X_i) = 0$:
+Implicazione, sotto assunzione $\mathbb{E}(u_i \mid X_i) = 0$:
 $$
 \mathbb{E}(Y \mid X = x) = \Pr(Y = 1 \mid X = x)
 $$
@@ -82,7 +82,7 @@ La procedura di stima tramite OLS resta invariata.
 
 Il LPM è semplice da stimare e interpretare. Tuttavia, può produrre probabilità previste inferiori a zero o superiori a uno e gli effetti marginali sono costanti.
 
-Per i modelli LPM vengono riportati errori standard robusti `vcoc= hetero`.
+Per i modelli LPM vengono riportati errori standard robusti (`vcov = "hetero"`).
 
 ::: {.callout-important title="Attenzione"}
 
@@ -101,18 +101,19 @@ data("alcohol", package = "wooldridge")
 head(alcohol)
 ```
 
-### Descrizione della variabili
+### Descrizione delle variabili
 
 | Variabile   | Descrizione                                                                               |
 | :---------- | :---------------------------------------------------------------------------------------- |
 | $abuse$     | Variabile dummy (1=Abusa di Alcol, 0=Non abusa).                                  |
 | $employ$    | Variabile dipendente dummy (1=Occupato, 0=Non occupato).                              |
 | $married$   | Variabile dummy (1=Sposato, 0=Non sposato).                    |
-| $educ$     | Anni di istruzione       |
+| $educ$      | Anni di istruzione.       |
+| $age$       | Età in anni.       |
 
 
 
-In altre parole, la nostra variabile dipendente, $Y$, assume solo due valori: zero e uno (0 - 1).
+In altre parole, la nostra variabile dipendente, $Y$, è una variabile dummy che assume solo due valori (0-1).
 
 
 ```{r}
@@ -120,152 +121,86 @@ datasummary_skim(alcohol)
 ```
 
 
-
-
 ```{r}
 reg_lpm_alcohol <- feols(employ ~ abuse + educ + age + married, data = alcohol, vcov = "hetero")
-modelsummary(list("Employ" = reg_lpm_alcohol), output = "markdown", gof_omit = "AIC|BIC|RMSE")
+modelsummary(list("Employ" = reg_lpm_alcohol), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
 **Interpretazione dei coefficienti:**
 
-- il coefficiente − 0.018 di $abuse$. Aver abusato di alcol è associato ad una probabilità di essere occupato **inferiore** di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol. A parità di età, anni di istruzione e stato coniugale.
+- Coefficiente di $abuse$ pari a -0.018: aver abusato di alcol è associato a una probabilità di essere occupato **inferiore** di circa 1.8 punti percentuali rispetto a un uomo che non ha abusato di alcol, a parità di età, anni di istruzione e stato coniugale.
 
-- il coefficiente 0.017. Ogni anno in più di istruzione è associato ad un **aumento** della probabilità di essere occupato di 1.7 punti percentuali. A parità di età, abuso di alcol e stato coniugale.
+- Coefficiente di $educ$ pari a 0.017: ogni anno aggiuntivo di istruzione è associato a un **aumento** della probabilità di essere occupato di 1.7 punti percentuali, a parità di età, abuso di alcol e stato coniugale.
 
-
-**Nota:** Attenzioni alle variabili percentuali espresse in forma decimale (0.26). Ad esempio `pirat` (Rapporto tra pagamenti e reddito) nella Lezione *Analisi della Concessione di Mutui su dati HMDA*.
-
-
-## Probit e Logit
-
-**Modello Logit**: Utilizza la funzione logistica per modellare la probabilità:
-$$
-   \Pr(Y=1|X_1,\dots, X_k) = \frac{e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k}} = \Lambda(X\beta)
-$$
-   
-dove $\Lambda(z) = \frac{e^z}{1 + e^z}$ è la funzione logistica.
-
-**Modello Probit**: Utilizza la funzione di distribuzione cumulativa normale:
-$$
-   \Pr(Y=1|X_1,\dots, X_k) = \Phi(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k) = \Phi(X\beta)
-$$
-
-dove $\Phi(z)$ è la funzione di distribuzione cumulativa della normale standard.
+- Coefficiente di $married$ pari a 0.084: essere sposato è associato a una probabilità di essere occupato superiore di 8.4 punti percentuali rispetto a un uomo non sposato, a parità di età, abuso di alcol e anni di istruzione.
 
 
-I modelli Logit e Probit vengono stimati con il metodo della massima verosimiglianza (MLE).
+
+::: {.callout-note title="Nota"}
+Attenzione alle variabili percentuali espresse in forma decimale (ad esempio 0.26 che rappresenta il 26%). `pirat` (rapporto tra pagamenti e reddito) nella Lezione *Analisi della Concessione di Mutui su dati HMDA*.
+
+Se il coefficiente stimato associato a `pirat` fosse 0.5, allora un aumento di 1 punto percentuale in `pirat` è associato a un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo. Questo perché 1 punto percentuale è rappresentato come 0.01 in forma decimale, quindi l'effetto marginale sarebbe 0.5 * 0.01 = 0.005, ovvero un aumento di 0.5 punti percentuali nella probabilità di concessione del mutuo.
+:::
 
 
-Sia per Logit che per Probit, i coefficienti stimati **non rappresentano** direttamente gli effetti marginali, che invece variano a seconda dei valori delle variabili esplicative. L’effetto marginale dipende dai valori di tutte le variabili esplicative, a differenza del linear probability model (LPM) dove è costante.
+## Probabilità di essere arrestato `crime1`
 
 
 ```{r}
-probit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'probit')
-
-logit_alcohol <- feglm(employ ~ abuse + educ + age + married, data = alcohol, family = 'logit')
-
-modelsummary(list("Employ (LPM)" = reg_lpm_alcohol, "Employ (Probit)" = probit_alcohol, "Employ (Logit)"=logit_alcohol), output = "markdown", gof_omit = "AIC|BIC|RMSE")
-
+data("crime1", package = "wooldridge")
+head(crime1)
 ```
 
 
-## Effetti Marginali Medi (AME)
-
-Il calcolo degli effetti marginali è fondamentale per interpretare correttamente i modelli Logit e Probit.
-
-Si calcolano gli effetti marginali per ogni osservazione nel dataset e poi si fa la media.
-
-Matematicamente, l'effetto marginale medio (AME) è calcolato come:
-$$
-  \overline{\text{ME}} = \frac{1}{n} \sum_{i=1}^{n} \text{ME}_i
-$$
-dove $\text{ME}_i$ è l'effetto marginale calcolato per l'osservazione $i$ e $n$ è il numero totale di osservazioni nel dataset.
-
-
-
-**Per il modello LPM**: L'effetto marginale è semplicemente il coefficiente $\beta_j$:
-$$
-\frac{\partial \Pr(Y=1|X_1,\dots, X_k)}{\partial X_j} = \beta_j
-$$  
-
-
-### Calcolo manuale
-
-Effetto Marginale abuso alcol, modello probit:
+$narr86$ numero di volte arrestato nel 1986. A partire da questa variabile, creiamo una variabile dummy `arrested` che assume valore 1 se un individuo è stato arrestato almeno una volta nel 1986 e 0 altrimenti.
 
 ```{r}
-# Creazione di due dataset: uno con abuse=1 per tutti e uno con abuse=0 per tutti
-alcohol_tmp1 <- alcohol
-alcohol_tmp0 <- alcohol
-
-# Impostiamo abuse=1 per tutti nel primo dataset
-alcohol_tmp1$abuse <- 1
-# Impostiamo abuse=0 per tutti nel secondo dataset
-alcohol_tmp0$abuse <- 0
-
-# Calcolo delle probabilità predette per il modello logit
-proba_employ_probit <- predict(probit_alcohol, newdata = alcohol_tmp1)
-proba_nonemploy_probit <- predict(probit_alcohol, newdata = alcohol_tmp0)
-
-# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
-ame_manual_probit <- mean(proba_employ_probit - proba_nonemploy_probit)
-print(paste("Effetto marginale medio manuale (Probit):", round(ame_manual_probit, 4)))
+crime1 <- crime1 %>%
+  mutate(arrested = ifelse(narr86 > 0, 1, 0))
 ```
 
+Le altre variabili sono:
 
-Per il modello logit:
+
+| Variabile   | Descrizione                                                                               |
+| :---------- | :---------------------------------------------------------------------------------------- |
+| $pcnv$     | Proporzione di arresti precedenti che hanno portato a una condanna.                      |
+| $avgsen$    | Sentenza media scontata da condanne precedenti (in mesi).                              |
+| $tottime$   | Mesi trascorsi in prigione dal periodo pre-18 fino al 1986.                    |
+| $ptime86$     | Mesi trascorsi in prigione nel 1986.       |
+| $qemp86$     | Numero di trimestri in cui l'uomo è stato impiegato nel 1986.       |
+| $black$     | Variabile dummy (1=Persona di colore, 0=Altra).       |
+| $hispan$     | Variabile dummy (1=Persona di origine ispanica, 0=Altra).       |
+
+
+
+
+Stimiamo il seguente LPM:
 
 ```{r}
-# Calcolo delle probabilità predette per il modello logit
-proba_employ_logit <- predict(logit_alcohol, newdata = alcohol_tmp1)
-proba_nonemploy_logit <- predict(logit_alcohol, newdata = alcohol_tmp0)
-
-# Calcolo dell'effetto marginale medio (differenza media nelle probabilità predette)
-ame_manual_logit <- mean(proba_employ_logit - proba_nonemploy_logit)
-print(paste("Effetto marginale medio manuale (Logit):", round(ame_manual_logit, 4)))
+reg_lpm_crime <- feols(arrested ~ pcnv + avgsen + tottime + ptime86 + qemp86 + black + hispan, data = crime1, vcov = "hetero")
+modelsummary(list("Arrested" = reg_lpm_crime), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 
-- Secondo il modello Probit, abusare di alcol riduce la probabilità di essere occupato di 1.9 p.p.
-- Secondo il modello Logit, abusare di alcol riduce la probabilità di essere occupato di 2.1 p.p.
 
-L’approccio dell’effetto marginale medio è generalmente considerato più robusto, perché tiene conto di come l’effetto di $abuse$ può variare a seconda delle altre caratteristiche dei richiedenti.
+Aumentare la probabilità di condanna riduce effettivamente la probabilità di arresto. Attenzione, la variabile $pcnv$ è una proporzione compresa tra zero e uno; quindi, passare $pcnv$ da zero a uno significa essenzialmente passare da nessuna possibilità di essere condannati alla certezza della condanna. Anche un cambiamento così ampio riduce la probabilità di arresto solo di 0.152, cioè 15.2 punti percentuali.
 
 
-### Con `marginaleffects`
-
-Gli effetti marginali medi calcolati con `marginaleffects` sono identici a quelli calcolati manualmente in precedenza. Il vantaggio di utilizzare `marginaleffects` in questo caso è che otteniamo automaticamente anche gli errori standard permettendo una valutazione della significatività statistica dell'effetto.
-
-La funzione `avg_slopes` senza l’opzione `newdata` calcola gli effetti marginali medi, ovvero calcola l’effetto marginale per ogni osservazione nel dataset e poi ne fa la media. Questo approccio tiene conto della distribuzione reale delle variabili nel campione.
+Quindi se $pcnv$ aumenta di 1 punto percentuale la probabilità di arresto diminuisce di 0.152 punti percentuali.
 
 
-```{r}
-library(marginaleffects)
-all_effects_logit <- avg_slopes(logit_alcohol)
-all_effects_probit <- avg_slopes(probit_alcohol)
-all_effects_probit
-```
+$qemp86$ è il numero di trimestri di occupazione nel 1986 (da 0 a 4) e ha coefficiente -0.038. Possiamo leggerlo in due modi equivalenti, a parità delle altre variabili:
+
+- **Effetto di un trimestre in più**: passare da 0 a 1 trimestre di occupazione (o da 1 a 2, da 2 a 3, ecc.) è associato a una probabilità di essere arrestato inferiore di circa 3.8 punti percentuali.
+
+- **Confronto tra i due estremi**: un uomo occupato in tutti e quattro i trimestri ha una probabilità di essere arrestato inferiore di circa 15.4 punti percentuali ($4 \times 0.038 \approx 0.154$) rispetto a un uomo mai occupato durante l'anno.
+
+Le due letture sono coerenti perché nel LPM l'effetto marginale è costante: ogni trimestre in più "vale" sempre lo stesso, e quattro trimestri in più valgono $4$ volte tanto.
 
 
-```{r}
-# Tabella elegante con modelsummary
-modelsummary(list("Logit (AME)" = all_effects_logit, "Probit (AME)" = all_effects_probit), output = "markdown", gof_omit = "AIC|BIC|RMSE|R2|Adj")             
-```
-
-
-Gli effetti sono vicini a quelli stimati con il modello LPM.
-
-
-**Interpretazione** degli effetti marginali medi (AME) del modello Probit:
-
-
-- Aver abusato di alcol riduce la probabilità di essere occupati di 1.9 punti percentuali
-
-- Un anno in più di istruzione aumenta la probabilità di essere occupati 1.5 punti percenutali
-
-- Essere sposato aumenta la probabilità di essere occupato di 8.9 punti percentuali
+Le persone di colore hanno una probabilità di essere arrestate superiore di 17 punti percentuali a parità delle altre variabili. Le persone di origine ispanica hanno una probabilità di essere arrestate superiore di 9.6 punti percentuali a parità delle altre variabili.
 
 
 
