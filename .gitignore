@@ -12,6 +12,7 @@
 /_site/
 /_book/
 /_freeze/
+tinytable_assets/
 
 # Editor
 .vscode/
