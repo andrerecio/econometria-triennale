@@ -52,6 +52,9 @@ crime1 <- crime1 %>%
   mutate(arrested = ifelse(narr86 > 0, 1, 0))
 
 # Stima del LPM con errori standard robusti all'eteroschedasticità
+# Categoria omessa per le dummy etniche: uomini bianchi/altra etnia
+# (black = 0 e hispan = 0). I coefficienti di black e hispan si leggono
+# rispetto a questo gruppo di riferimento.
 reg_lpm_crime <- feols(arrested ~ pcnv + avgsen + tottime + ptime86 + qemp86 + black + hispan,
                        data = crime1,
                        vcov = "hetero")

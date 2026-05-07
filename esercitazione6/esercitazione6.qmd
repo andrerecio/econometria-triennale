@@ -268,7 +268,11 @@ $qemp86$ è il numero di trimestri di occupazione nel 1986 (da 0 a 4) e ha coeff
 - **Confronto tra i due estremi**: un uomo occupato in tutti e quattro i trimestri ha una probabilità di essere arrestato inferiore di circa 15.2 punti percentuali ($4 \times 0.038 = 0.152$) rispetto a un uomo mai occupato durante l'anno.
 
 
-Le persone di colore ($black$) hanno una probabilità di essere arrestate superiore di 17 punti percentuali a parità delle altre variabili. Le persone di origine ispanica ($hispan$) hanno una probabilità di essere arrestate superiore di 9.6 punti percentuali a parità delle altre variabili.
+La categoria omessa è quella degli uomini né di colore né di origine ispanica (bianchi/altra etnia, cioè $black=0$ e $hispan=0$): i coefficienti di $black$ e $hispan$ vanno letti **rispetto a questo gruppo di riferimento**.
+
+- Coefficiente di $black$ pari a 0.17: a parità delle altre variabili, un uomo di colore ha una probabilità di essere arrestato superiore di 17 punti percentuali rispetto a un uomo bianco/altra etnia.
+
+- Coefficiente di $hispan$ pari a 0.096: a parità delle altre variabili, un uomo di origine ispanica ha una probabilità di essere arrestato superiore di 9.6 punti percentuali rispetto a un uomo bianco/altra etnia.
 
 
 
