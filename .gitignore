@@ -39,6 +39,9 @@ Desktop.ini
 *.bak
 *.swp
 
+# PDF (es. Rplots.pdf, output rendering)
+*.pdf
+
 # all Claude Code files
 *.claude
 CLAUDE.md
