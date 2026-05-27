@@ -1,6 +1,6 @@
 ---
-title: Esercitazione 10
-subtitle: Regressione con variabili strumentali (Parte 2)
+title: Esercitazione 7
+subtitle: Regressione con variabili strumentali
 format: clean-typst
 author:
   - name: Econometria I
@@ -21,38 +21,66 @@ execute:
   error: false        
 ---
 
-# Angrist e Evans (1998)
+# Card (1995)
 
-## Dataset "labsup"
+## College Proximity
+
+### Abstract
+
+- A convincing analysis of the causal link between schooling and earnings requires an
+exogenous source of variation in education outcomes. 
+
+- This paper explores the use of college proximity as an exogenous determinant of schooling. 
+  
+- Men who grew up in local labor markets with a nearby college have significantly higher education and earnings than other men. 
+  
+- The education and earnings gains are concentrated among men with poorly-educated parents -- men who would otherwise stop schooling 
+  
+- IV estimates of the return to schooling are higher than conventional OLS estimates
+
+
+
+## College Proximity
+
+
+## Dataset "card"
 
 
 ```{r}
 library(tidyverse)
 library(wooldridge)
 library(modelsummary)
-data("labsup", package = "wooldridge")
+data("card", package = "wooldridge")
 ```
 
-- $hours$: ore di lavoro settimanali della madre
-- $kids$: numero di figli
-- $educ$: anni di istruzione
-- $age$: età in anni compiuti
-- $black$: dummy
-- $hispan$: dummy
-- $samesex$: **variabile dummy =1 se i primi due figli sono dello stesso genere**
-- $multi2nd$: **variabile dummy =1 se il secondo parto è gemellare**
+- $wage$: sono le retribuzioni orarie **in centesimi** di dollari
+- $educ$: sono gli anni di istruzione
+- $exper$: anni di esperienza 
+- $smsa$: residenza in area metropolitana (dummy)
+- $black$: se la persona è nera (dummy)
+- $south$: se l'individuo risiede al sud
+- $nearc4$: dummy uguale ad 1 se l'individuo vive vicino a un college di 4 anni
+- $nearc2$: dummy uguale ad 1 se l'individuo vive vicino a un college di 2 anni
+
 
 
 ## Regressione OLS (Esercizio)
 
-Regressione delle ore lavorate (settimanali) sul numero di figli
+Regressione del salario orario in centesimi di dollari sugli anni di istruzione e gli anni di esperienza.
 
 ```{r}
 library(fixest)
-ols_labsup <- feols(hours ~ kids + educ + age + black + hispan, data = labsup, vcov = "hetero")
+wage_educ <- feols(wage ~ educ + exper, data = card, vcov = "hetero")
+logwage_educ <- feols(log(wage) ~ educ + exper, data = card, vcov = "hetero")
 ```
 
-- Come si interpreta il coefficiente associato a $kids$ e $educ$?
+Cosa cambia se il salario viene espresso in dollari? (wage / 100)
+
+```{r}
+wage_educdoll <- feols(wage/100 ~ educ + exper, data = card, vcov = "hetero")
+logwage_educdoll <- feols(log(wage/100) ~ educ + exper, data = card, vcov = "hetero")
+```
+
 
 ## Regressione OLS (Esercizio)
 
@@ -60,13 +88,37 @@ ols_labsup <- feols(hours ~ kids + educ + age + black + hispan, data = labsup, v
 ```{r}
 #| echo: false
 #| results: 'asis'
-modelsummary(list("Hours" = ols_labsup), gof_omit = "AIC|BIC|RMSE|R2 Adj.|R2")
+modelsummary(list("Wage" = wage_educ, "Log Wage" = logwage_educ), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
 ```
 
 :::
 
-- Avere un figlio in più è associato ad una riduzione, in media, di 2.254 ore settimanali lavorate. A parità delle altre variabili
-- Un anno aggiuntivo di istruzione è associato ad un aumento, in media, di 0.509 ore lavorate. A parità delle altre variabili.
+- Un anno aggiuntivo di istruzione è associato ad un aumento in media del salario di 55.055 centesimi di dollari (Un anno aggiuntivo di istruzione è associato ad aumento del salario, in media, di circa il 9.3%) a parità di anni esperienza.
+
+
+## Regressione OLS (Esercizio)
+
+::: {.slide .center .large}
+```{r}
+#| echo: false
+#| results: 'asis'
+modelsummary(list("Wage" = wage_educdoll, "Log Wage" = logwage_educdoll), gof_omit = "AIC|BIC|RMSE|R2 Adj.")
+```
+
+:::
+
+- Nella prima regressione i coefficienti e errori standard sono divisi per 100. 
+
+- Nella regressione "Log Wage" i coefficienti associati a $educ$ e $exper$ rimangono invariati. L'intercetta è uguale a $\beta_0 - log(100)$ cioè $4.666 - log(100) = 4.666 - 4.605 = 0.061$
+
+
+- Questo perché $log(\frac{wage}{100}) = log(wage) - log(100)$
+
+- Se avessi moltiplicato come nel caso dell'**Esercitazione 4** per 140 (traformazione costante da ore a mesi) otterrei $\beta_0 + log(140)$
+
+- Gli errori standard rimangono invariati (nella Regressione "Log Wage")
+ 
+- L'$R^2$ rimane invariato in entrambe le regressioni
 
 
 ## Regressione con variabili strumentali
@@ -79,10 +131,9 @@ modelsummary(list("Hours" = ols_labsup), gof_omit = "AIC|BIC|RMSE|R2 Adj.|R2")
   2. **Esogeneità:** $cor(Z_i, u_i) = 0$
 
 
-- Nel caso di Angrist e Evans (1999), lo strumento $samesex$:
-  1. Avere i primi due figli dello stesso genere deve essere associato ad un maggiore numero di figli
-  2. Avere i primi due figli dello stesso genere non deve influenzare direttamente l'offerta di lavoro (la composizione dei figli, due maschi o due femmini non dovrebbe essere associato a diversa offerta di lavoro. Ad esempio a un maschio e una femmina)
-   
+- Nel caso di Card (1995):
+  1. Vicinanza al college deve essere associata a maggiori anni di istruzione
+  2. La vicinanza al college deve essere incorrelata con l'errore. La vicinanza al college deve influenzare il salario (futuro) solo indirettamente attraverso gli anni di istruzione
 
 
 
@@ -93,52 +144,81 @@ modelsummary(list("Hours" = ols_labsup), gof_omit = "AIC|BIC|RMSE|R2 Adj.|R2")
 La prima condizione può essere testata (come vedremo nel primo stadio). La seconda riguarda la covarianza tra $Z$ e l'errore non osservato $u$. Generalmente non possiamo testare questa assunzione e in molti casi assumiamo $Cov(Z, u) = 0$ basandoci sul ragionamento (ad esempio teoria). Testeremo le "restrizioni da sovraidentificazione".
 
 ## TSLS
+### Uno strumento e una variabile endogena
 
 ```{r}
-iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ samesex, data = labsup, vcov = "hetero")
+iv_card <- feols(log(wage) ~ 1 | educ ~ nearc4, data = card, vcov = "hetero")
+iv_card
 ```
 
-- Stima un modello IV in cui $kids$ è la variabile endogena, strumentata con $samesex$.
+- Usiamo `~` 1 perché non abbiamo altre variabili
 
-- Nel primo stadio regredisce l'endogena sullo strumento ($kids$ su $samsex$) e le altre variabili esogene
+- Stima un modello IV in cui $educ$ è endogena, strumentata con $nearc4$, e l’unica variabile esplicativa (oltre a $educ$) è una costante.
 
-- Nel secondo stadio regredisce la variabile dipendente sui valori predetti del primo stadio (hours su $\hat{kids}$ e le altre variabili)
+- Nel primo stadio regredisce l'endogena sullo strumento ($educ$ su $nearc4$)
+
+- Nel secondo stadio regredisce la variabile dipendente sui valori predetti del primo stadio (log(wage) su $\hat{educ}$)
 
 - Gli errori standard tengono conto della stima nel primo stadio
 
-
-## TSLS Risultati ($samesex$ strumento)
-
-::: {.slide .center .large}
+## TSLS (Primo Stadio da `iv_card`)
 ```{r}
-#| echo: false
-#| results: 'asis'
-modelsummary(list("Hours" = iv_labsup), gof_omit = "AIC|BIC|RMSE|R2 Adj.|R2")
-```
-
-:::
-
-
-## TSLS (Primo Stadio)
-```{r}
-summary(iv_labsup , stage = 1)
+summary(iv_card, stage = 1)
 ```
 
 ## TSLS (Primo Stadio)
 
 ```{r}
-fs_labsup <- feols(kids ~ samesex + educ + age + black + hispan, data = labsup, vcov = "hetero")
-fs_labsup
+fs_card <- feols(educ ~ nearc4, data = card, vcov = "hetero")
+fs_card
 ```
 
 ## TSLS (Secondo Stadio)
 
 ```{r}
-labsup$kids_hat <- predict(fs_labsup)
-feols(hours ~ kids_hat + educ + age + black + hispan, data = labsup, vcov = "hetero")
+card$educ_hat <- predict(fs_card)
+feols(log(wage) ~ educ_hat, data = card, vcov = "hetero")
 ```
 
-- Con questa procedura otteniamo gli stessi risultati di `iv_labsup`. Ma gli errori standard **non** sono corretti (non tengono conto della stima nel primo stadio)
+- Con questa procedura otteniamo gli stessi risultati di `iv_card`. Ma gli errori standard **non** sono corretti (non tengono conto della stima nel primo stadio)
+
+## Derivazione diretta
+
+Lo stimatore della regressione con variabili strumentali può essere ottenuto in questo modo:
+ 
+$$
+\beta_{1}^{TSLS} = \frac{cov(Z,Y)}{cov(Z,X)}
+$$
+
+- Notate come $cov(Z,X)$ è ciò che stimiamo nel primo stadio. Se fosse uguale a zero non potremmo stimare $\beta_{1}^{TSLS}$
+
+Nel nostro caso utilizzando i dati:
+
+```{r}
+cov(card$nearc4, card$lwage)/cov(card$nearc4, card$educ)
+```
+
+
+## "Forma Ridotta"
+
+### Definizioni
+
+- Il termine "Forma Ridotta" proviene dalla tradizione dei modelli ad equazioni simultanee (SEM): nel modello in forma ridotta le endogene sono espresse come funzione delle esogene.
+
+Il libro definisce la forma ridotta di $X$, che di fatto coincide con il primo stadio: 
+$$
+X_i = \pi_0 + \pi_1 Z_i + v_i
+$$
+
+Sostituendo $X_i$ nella seguente:
+$$
+Y_i = \beta_0 + \beta_1 X_i + u_i
+$$
+
+Oteniamo "forma ridotta" per $Y$:
+$$
+Y_i = \gamma_0 + \gamma_1 Z_i + \omega_i
+$$
 
 
 ## Rilevanza dello strumento
@@ -158,52 +238,28 @@ feols(hours ~ kids_hat + educ + age + black + hispan, data = labsup, vcov = "het
 
 ```{r}
 library(car)
-linearHypothesis(fs_labsup , "samesex=0")
+linearHypothesis(fs_card , "nearc4=0")
 ```
 
-- La statistica Wald è pari a 48.758 > a 1*10
-
-
-## Rilevanza dello strumento (F)
+## Rilevanza dello strumento
 
 ```{r}
-linearHypothesis(fs_labsup , "samesex=0", test="F")
+library(car)
+linearHypothesis(fs_card , "nearc4=0", test="F")
 ```
-
-
-## `multi2nd` (secondo parto gemellare) come strumento
-
-```{r}
-iv_labsup <- feols(hours ~ educ + age + black + hispan | kids ~ multi2nd, data = labsup, vcov = "hetero")
-iv_labsup
-```
-
-Rilevanza ed esogeneità in questo caso:
-
-- **Rilevanza:** secondo parto gemellare deve essere essere associato ad un maggiore numero di figli
-- **Esogeneità:** Avere un secondo parto gemellare non deve influenzare direttamente l'offerta di lavoro della madre
-
-
 
 ## Rilevanza dello strumento (2 strumenti)
 Calcoliamo il primo stadio della regressione:
 
 ```{r}
-fs_labsup_overid <- feols(kids ~ samesex + multi2nd + educ + age + black + hispan, data = labsup, vcov = "hetero")
+fs_card_overid <- feols(educ ~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "hetero")
 ```
-
-Testiamo la rilevanza di entrambi gli strumenti: $multi2nd$ e $samesex$
-
-
-234.72 > 2*10
 
 ## Rilevanza dello strumento (2 strumenti)
 
 ```{r}
-linearHypothesis(fs_labsup_overid, c("samesex=0", "multi2nd=0"))
+linearHypothesis(fs_card_overid, c("nearc4=0", "nearc2=0"))
 ```
-
-
 
 ## Restrizioni da Sovraidentificazione
 ###  J di Sargan
@@ -232,52 +288,39 @@ $m-k$ è il grado di sovraidentificazione ($k$ sono i regressori endogeni)
 ## J di Sargan
 
 ```{r}
-iv_labsup_overid <- feols(hours ~ educ + age + black + hispan | kids ~ samesex + multi2nd, data = labsup, vcov = "hetero")
+iv_card_overid <- feols(log(wage) ~ exper + black +smsa + south + married | educ ~ nearc4 + nearc2, data = card, vcov = "hetero")
 ```
 
 ```{r}
-labsup <- labsup |> mutate(uhat = hours - iv_labsup_overid$fitted.values)
-Jlm <- feols(uhat~ samesex + multi2nd + educ +age + black + hispan, data = labsup, vcov = "iid")
+library(car)
+library(dplyr)
+card <- card |> mutate(uhat = log(wage) - iv_card_overid$fitted.values)
+Jlm <- feols(uhat~ nearc4 + nearc2 + exper + black +smsa + south + married, data = card, vcov = "iid")
 ```
 
 
-## J di Sargan
+## J Test
 
 ```{r}
-linearHypothesis(Jlm, c("samesex=0", "multi2nd=0"))
+linearHypothesis(Jlm, c("nearc4=0", "nearc2=0"))
 ```
 
+## J Test
 
 ## J di Sargan
 
 ::: {.callout-important title="Attenzione"}
 
 Il test di sovraidentificazione restituisce una statistica 
-$J=0.583$.
+$J=9.3421$.
 
 La statistica $J$ si distribuisce come una $\chi^2_{(m - k)}$ Nel nostro caso $m -k = 1$​. Il valore da confrontare **non** è 6 ma **3.84** ($\alpha = 0.05$)
 
-Quindi 0.583 < 3.84. Non rigetto $H_0$. Il p-value corretto è: 
+Quindi 9.3421 > 3.84. Rigetto $H_0$. Il p-value corretto è: 
 
 ```{r}
-pchisq(0.583, df = 1, lower.tail = FALSE)
+pchisq(9.3421, df = 1, lower.tail = FALSE)
 ```
 
-o in modo equivalente `1 - pchisq(J$Chisq[2], df = 1)` quindi non rifiutiamo l’ipotesi nulla di esogeneità degli strumenti. **Non rigetto $H_0$. Tutti gli strumenti sono esogeni.**
+o in modo equivalente `1 - pchisq(J$Chisq[2], df = 1)` quindi rifiutiamo l’ipotesi nulla di esogeneità degli strumenti. **Rigetto $H_0$. Almeno uno degli strumenti è esogeno**
 :::
-
-
-## Regressione IV con due strumenti
-
-
-::: {.slide .center .large}
-```{r}
-#| echo: false
-#| results: 'asis'
-modelsummary(list("Hours" = iv_labsup_overid), gof_omit = "AIC|BIC|RMSE|R2 Adj.|R2|Num\\.Obs", stars =TRUE)
-```
-
-:::
-
-
-
