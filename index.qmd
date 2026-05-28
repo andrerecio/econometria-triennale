@@ -53,6 +53,7 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 | 6 | Linear Probability Model (LPM) | [📄 Note](esercitazione6/esercitazione6.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione6/esercitazione6_script.R) |
 | 7 | Probit e Logit | [📄 Note](esercitazione7/esercitazione7.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_script.R) |
 | 8 | Regressione con dati panel | [📄 Note](esercitazione8/esercitazione8.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
+| 9 | Regressione con variabili strumentali | [📄 Note](esercitazione9/esercitazione9.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_script.R) |
 
 
 ----
