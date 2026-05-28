@@ -127,7 +127,6 @@ reg_pooled
 
 
 
-
 # T=2: Effetti fissi individuali
 
 Iniziamo dal caso più semplice: due soli periodi di osservazione (1980 e 1987). Costruiamo un sottocampione con queste due annate.
@@ -391,7 +390,7 @@ Il coefficiente di $union$ scende da 0.18 (cioè 18%) a 0.08 (circa 8% con effet
 
 
 
-## Errori standard clustered
+# Errori standard clustered
 
 Finora abbiamo usato errori standard robusti all'eteroschedasticità (Eicker-Huber-White). Con i dati sezionali sono adeguati: ogni osservazione è un'unità indipendente, e l'unico problema da correggere è che la varianza degli errori non sia costante. Questi errori standard **lasciano variare** la varianza $\text{Var}(u_i)$ da osservazione a osservazione, ma **assumono** che gli errori di osservazioni diverse siano incorrelati, $\text{Cov}(u_i, u_j) = 0$ per $i \neq j$.
 
@@ -544,6 +543,6 @@ modelsummary(
 )
 ```
 
-Controllando sia per gli effetti fissi per unità sia per quelli temporali, un punto in più di disoccupazione è associato a un aumento di circa 2.2 crimini per 1.000 abitanti.
+Controllando sia per gli effetti fissi per unità sia per quelli temporali, un punto percentuale in più di disoccupazione è associato a un aumento di circa 2.2 crimini per 1.000 abitanti.
 
 
