@@ -498,7 +498,7 @@ $$
 Si usa una statistica $F$. La regola empirica più diffusa, per il caso di un solo regressore endogeno, è semplice da ricordare: se $F > 10$ gli strumenti si considerano sufficientemente forti; se $F < 10$ c'è un serio rischio di strumenti deboli e la stima IV va trattata con grande cautela. 
 
 
-> **Nota: — la regola "F > 10"** [Montiel Olea & Pflueger (2013)](https://joseluismontielolea.com/Montiel-OleaJBES.pdf), hanno proposto un *effective F-statistic* robusto all'eteroschedasticità e all'autocorrelazione e nuove soglie critiche calibrate sul livello di distorsione "worst-case" che si è disposti a tollerare rispetto a OLS (es. 10%, 20%, 30%). Le soglie di Montiel Olea & Pflueger (2013) più alte di 10. Per il resto del corso continueremo a usare la regola classica (rule of thumb) di $F > 10$ come riferimento intuitivo. [Andrews (2019)](https://www.annualreviews.org/content/journals/10.1146/annurev-economics-080218-025643) fornisce una rassegna del problema degli strumenti deboli nella letteratura economica.
+> **Nota: — la regola "F > 10"** [Montiel Olea & Pflueger (2013)](https://joseluismontielolea.com/Montiel-OleaJBES.pdf), hanno proposto un *effective F-statistic* robusto all'eteroschedasticità e all'autocorrelazione e nuove soglie critiche calibrate sul livello di distorsione "worst-case" che si è disposti a tollerare rispetto a OLS (es. 10%, 20%, 30%). Le soglie di Montiel Olea & Pflueger (2013) sono più alte di 10. Per il resto del corso continueremo a usare la regola classica (rule of thumb) di $F > 10$ come riferimento intuitivo. [Andrews (2019)](https://www.annualreviews.org/content/journals/10.1146/annurev-economics-080218-025643) fornisce una rassegna del problema degli strumenti deboli nella letteratura economica.
 
 
 
