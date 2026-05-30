@@ -515,9 +515,6 @@ linearHypothesis(fs_card_ctrl, "nearc4=0", test="F")
 
 La statistica $F \approx 17.5$ è sopra la soglia di 10: $nearc4$ è sufficientemente rilevante per identificare $\beta_1$.
 
-::: {.callout-note}
-Con un solo strumento ($m=1$), il test $F$ sull'unico coefficiente $\pi_1$ e il test $t$ sullo stesso coefficiente contengono la stessa informazione: vale infatti $F = t^2$, e i due test conducono esattamente alla stessa conclusione. La statistica $F$ diventa indispensabile, e non riducibile a un test $t$, soltanto quando gli strumenti sono più di uno e l'ipotesi nulla $H_0:\ \pi_1 = \dots = \pi_m = 0$ è genuinamente **congiunta**.
-:::
 
 
 
