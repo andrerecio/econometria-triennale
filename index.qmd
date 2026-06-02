@@ -63,7 +63,7 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 
 | Domande | Soluzioni |
 |-------------|-----------|
-| 📄 [Homework 1](homework/homework01.html)  | Soluzioni (TBA) |
+| 📄 [Homework 1](homework/homework_01.html)  | Soluzioni (TBA) |
 
 
 
