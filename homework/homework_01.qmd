@@ -46,10 +46,8 @@ knitr:
 
 # Homework 1
 
-## Introduzione
 
-Rispondete alla domande utilizzando il Google Form presente nella pagina del corso.
-
+**Librerie da caricare**:
 
 ```{r}
 #| message: false
