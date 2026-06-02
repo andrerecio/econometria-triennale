@@ -60,7 +60,12 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 
 ## Homework
 
-1. 📄 Homework 1 (TBA)
+
+| Domande | Soluzioni |
+|-------------|-----------|
+| 📄 [Homework 1](homework/homework01.html)  | Soluzioni (TBA) |
+
+
 
 ---
 
