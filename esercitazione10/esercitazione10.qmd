@@ -323,4 +323,4 @@ Il $p$-value corretto è:
 fitstat(iv_labsup_twins_over, "sargan")
 ```
 
-Quindi **non rifiutiamo** l'ipotesi nulla di esogeneità congiunta degli strumenti. Vale comunque l'avvertenza ricordata in Card (cfr. "Asimmetria del test"). Il non-rifiuto non dimostra la validità — strumenti tutti endogeni *nello stesso modo* sfuggirebbero al test.
+Quindi **non rifiutiamo** l'ipotesi nulla di esogeneità congiunta degli strumenti. Vale comunque l'avvertenza ricordata in Card (cfr. "Asimmetria del test").
