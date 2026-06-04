@@ -54,6 +54,7 @@ Ulteriori comunicazioni relative al corso (esercitazioni, simulazioni, ecc.) sar
 | 7 | Probit e Logit | [📄 Note](esercitazione7/esercitazione7.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione7/esercitazione7_script.R) |
 | 8 | Regressione con dati panel | [📄 Note](esercitazione8/esercitazione8.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione8/esercitazione8_script.R) |
 | 9 | Regressione con variabili strumentali | [📄 Note](esercitazione9/esercitazione9.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione9_script.R) |
+| 10 | Regressione con variabili strumentali (parte 2) | [📄 Note](esercitazione10/esercitazione10.html) · [Script R](https://github.com/andrerecio/econometria-triennale/raw/main/esercitazione9/esercitazione10_script.R) |
 
 
 ----
