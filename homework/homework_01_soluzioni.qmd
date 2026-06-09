@@ -48,7 +48,6 @@ knitr:
 
 ## Introduzione
 
-Rispondete alla domande utilizzando il Google Form presente nella pagina del corso.
 
 ::: {.callout-note}
 Le soluzioni sono nei riquadri collassabili: provate a rispondere **prima** di aprirli.
@@ -154,7 +153,7 @@ c) Entrambe le precedenti, una per ciascun modello.
 ::: {.callout-note collapse="true" title="Soluzione"}
 **Risposta corretta: c)**.
 
-Entrambe le interpretazioni sono corrette nei rispettivi modelli: in livello $\hat\beta_{black} =$ `r round(coef(modelloA)["black"], 2)` dollari; in log $\hat\beta_{black} =$ `r round(coef(modelloB)["black"], 3)`, che con l'approssimazione $100\cdot\hat\beta$ dà circa **`r round(100*coef(modelloB)["black"], 1)`%** (più precisamente $100\cdot(e^{\hat\beta}-1) =$ **`r round(100*(exp(coef(modelloB)["black"])-1), 1)`%**).
+Entrambe le interpretazioni sono corrette nei rispettivi modelli: in livello $\hat\beta_{black} =$ `r round(coef(modelloA)["black"], 2)` dollari; in log $\hat\beta_{black} =$ `r round(coef(modelloB)["black"], 3)`, che con l'approssimazione $100\cdot\hat\beta$ dà circa **`r round(100*coef(modelloB)["black"], 1)`%**.
 
 Il coefficiente *misura* un'associazione condizionale, non un effetto causale.
 :::
@@ -196,9 +195,8 @@ linearHypothesis(modelloB, c("exper = 0", "tenure = 0"))
 ```
 
 ::: {.callout-note collapse="true" title="Soluzione"}
-La statistica $F$ (versione robusta) vale circa **30.0** con $p$-value $\approx 2{,}4 \cdot 10^{-13}$.
 
-Si **rifiuta** $H_0$ al 5% (e a qualunque livello convenzionale): $exper$ e $tenure$ sono congiuntamente significative.
+Si **rifiuta** $H_0$ al 5%. $exper$ e $tenure$ sono congiuntamente significative. 60.01 > di 6 (valore critico al 5% con due restrizioni).
 :::
 
 
@@ -349,7 +347,6 @@ Nel Modello F il rendimento dell'istruzione è $\hat\beta_{educ}$ per gli uomini
 - **donne**: circa **`r round(100*(coef(mF)["educ"] + coef(mF)["educ:female"]), 1)`%**;
 - **differenza** (in valore assoluto): circa **`r round(100*abs(coef(mF)["educ:female"]), 1)` punti percentuali** ($= 100\cdot|\hat\beta_{educ:female}|$).
 
-In questo campione il termine di interazione $educ:female$ non è statisticamente significativo ($p \approx$ `r round(pvalue(mF)["educ:female"], 2)`): la differenza stimata fra i due rendimenti è piccola e compatibile col caso campionario.
 :::
 
 
@@ -580,8 +577,8 @@ La differenza apparente è di circa `r round(100*coef(modello_int)["years:nl"], 
 ::: {.callout-tip title="Domanda 3 — Significatività dell'interazione (multiple choice)"}
 Il coefficiente dell'interazione è statisticamente significativo al 5%? Cosa posso concludere?
 
-a) Il ritorno all'esperienza è zero.
-b) Il ritorno all'esperienza **non** differisce significativamente tra AL e NL.
+a) Il ritorno dell'esperienza è zero.
+b) Il ritorno dell'esperienza **non** differisce significativamente tra AL e NL.
 c) La variabile $nl$ non ha alcun effetto sul salario.
 d) Il modello è mal specificato.
 :::
@@ -589,7 +586,7 @@ d) Il modello è mal specificato.
 ::: {.callout-note collapse="true" title="Soluzione"}
 **Risposta corretta: b)**.
 
-L'interazione $years:nl$ ha $p$-value $\approx$ `r round(pvalue(modello_int)["years:nl"], 2)`, quindi **non è significativa al 5%**: in base ai dati non possiamo rifiutare l'ipotesi che il ritorno all'esperienza sia **uguale** nelle due leghe. La differenza stimata potrebbe essere dovuta al caso campionario.
+L'interazione $years:nl$ ha $|t| \approx 0.96$, quindi **non è significativa al 5%**. Non possiamo rifiutare l'ipotesi nulla che il coefficiente dell'interazione sia diverso da zero.
 
 - a) è sbagliato: $\hat\beta_1$ è altamente significativo, l'esperienza paga.
 - c) confonde l'interazione con l'effetto principale di $nl$.
